@@ -6,6 +6,7 @@ import SiteFooter from '@/components/SiteFooter';
 import MobileContactBar from '@/components/MobileContactBar';
 import JsonLd from '@/components/JsonLd';
 import { business } from '@/lib/business';
+import { cssUrl, noIndex } from '@/lib/assets';
 import { localBusinessSchema, websiteSchema } from '@/lib/schema';
 
 /* Schriften werden von Next.js beim Build heruntergeladen und selbst ausgeliefert.
@@ -67,11 +68,13 @@ export const metadata: Metadata = {
     description: business.shortDescription,
     images: ['/og-image.jpg'],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
-  },
+  robots: noIndex
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+      },
   category: 'Handwerk',
   formatDetection: { telephone: true, address: true, email: true },
 };
@@ -85,7 +88,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${inter.variable} ${fraunces.variable}`}>
+    <html
+      lang="de"
+      className={`${inter.variable} ${fraunces.variable}`}
+      /* Hintergrundbilder als Variablen, damit sie auch unter einem Unterpfad geladen werden. */
+      style={
+        {
+          '--img-wood-hero': cssUrl('/media/wood-hero.jpg'),
+          '--img-wood-detail': cssUrl('/media/wood-detail.jpg'),
+          '--img-wood-dark': cssUrl('/media/wood-dark.jpg'),
+        } as React.CSSProperties
+      }
+    >
       <body>
         <a href="#inhalt" className="skip-link">
           Zum Inhalt springen

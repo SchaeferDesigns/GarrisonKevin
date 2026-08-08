@@ -49,6 +49,34 @@ Für Canonical-URLs, Sitemap und JSON-LD wird `NEXT_PUBLIC_SITE_URL` verwendet
 NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
 ```
 
+## Deployment
+
+### GitHub Pages (Testumgebung)
+
+`.github/workflows/deploy.yml` baut bei jedem Push einen statischen Export und
+veröffentlicht ihn auf GitHub Pages. Einmalig nötig:
+**Repository → Settings → Pages → Source: „GitHub Actions"**.
+
+Die Adresse lautet dann `https://<owner>.github.io/<repo>/`.
+
+Der Workflow setzt drei Umgebungsvariablen:
+
+| Variable | Zweck |
+| --- | --- |
+| `NEXT_OUTPUT=export` | statischer Export statt Server-Build |
+| `NEXT_PUBLIC_BASE_PATH` | Unterpfad, unter dem Pages ausliefert |
+| `NEXT_PUBLIC_NOINDEX=true` | Testadresse wird nicht indexiert |
+
+### Echte Domain
+
+Sobald die richtige Domain steht:
+
+1. `NEXT_PUBLIC_NOINDEX` im Workflow entfernen, damit die Seite indexiert wird
+2. `NEXT_PUBLIC_SITE_URL` auf die echte Domain setzen
+3. Bei eigener Domain auf Pages entfällt `NEXT_PUBLIC_BASE_PATH`
+4. Auf einem Host mit Node.js entfällt `NEXT_OUTPUT` – dann greifen zusätzlich
+   die Sicherheits-Header aus `next.config.mjs`
+
 ## Datenschutz
 
 - Keine Cookies, kein Local Storage, daher kein Cookie-Banner erforderlich

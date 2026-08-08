@@ -74,11 +74,11 @@ export default function PreisePage() {
                 </p>
               </div>
               <div>
-                <h2 style={{ fontSize: '1.4rem' }}>Anfahrt</h2>
+                <h2 style={{ fontSize: '1.4rem' }}>Einsatzgebiet</h2>
                 <p className="small muted mt-2">
-                  Innerhalb von {business.serviceRadiusKm} km um Aalen ist die Anfahrt in den genannten Preisen
-                  enthalten. Liegt Ihr Objekt weiter entfernt, sprechen wir das vorher offen an – Sie erfahren den
-                  Aufschlag, bevor Sie zusagen.
+                  Gearbeitet wird in {business.serviceAreaLabel}, in einem Radius von rund{' '}
+                  {business.serviceRadiusKm} km. Was das für Ihr Objekt bedeutet, klären wir bei der Anfrage – alle
+                  Positionen stehen anschließend im schriftlichen Angebot.
                 </p>
               </div>
             </div>
@@ -119,7 +119,6 @@ export default function PreisePage() {
                   'Montage der Sockelleisten inklusive Gehrung',
                   'Ziehen der Acryl- und Silikonfugen',
                   'Abdecken der Baustelle und besenreine Übergabe',
-                  'Anfahrt innerhalb des Einsatzgebiets',
                 ].map((item) => (
                   <li key={item}>
                     <Icon name="check" size={18} />
@@ -139,7 +138,7 @@ export default function PreisePage() {
                 </li>
                 <li>
                   <Icon name="ban" size={18} />
-                  Entsorgung des Altbelags (nach Aufwand, auf Wunsch im Angebot)
+                  Entsorgung des Altbelags
                 </li>
                 <li>
                   <Icon name="ban" size={18} />

@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { business, services } from '@/lib/business';
 
+// Beim statischen Export als Datei erzeugen.
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = business.siteUrl;
   const now = new Date();

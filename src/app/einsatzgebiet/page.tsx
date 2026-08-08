@@ -29,8 +29,8 @@ export default function EinsatzgebietPage() {
           Sitz in {business.postalCode} {business.city}
         </span>
         <span className="badge badge--dark">
-          <Icon name="euro" size={15} />
-          Anfahrt im Gebiet inklusive
+          <Icon name="handshake" size={15} />
+          Regionaler Betrieb
         </span>
       </PageHero>
 
@@ -39,10 +39,10 @@ export default function EinsatzgebietPage() {
         <div className="container">
           <div className="section-head">
             <span className="kicker">Orte</span>
-            <h2>Hier bin ich regelmäßig unterwegs</h2>
+            <h2>Orte im Umkreis von rund 20 km</h2>
             <p className="lead">
-              Die Liste ist nicht abschließend. Wenn Ihr Ort nicht dabei ist, fragen Sie einfach nach – oft liegt er
-              trotzdem im Radius.
+              Die Liste zeigt Orte, die im genannten Radius liegen, und ist nicht abschließend. Wenn Ihr Ort nicht
+              dabei ist, fragen Sie einfach nach.
             </p>
           </div>
 
@@ -64,8 +64,8 @@ export default function EinsatzgebietPage() {
               </span>
               <h3>Kurze Wege, gehaltene Termine</h3>
               <p className="small muted">
-                Weil die Anfahrt selten mehr als eine halbe Stunde beträgt, lassen sich Termine realistisch planen. Ein
-                Stau auf der Autobahn wirft hier keinen ganzen Arbeitstag um.
+                Kurze Wege im Einsatzgebiet machen die Terminplanung realistisch. Es hängt kein Arbeitstag an einer
+                langen Autobahnfahrt.
               </p>
             </Reveal>
 
@@ -110,8 +110,8 @@ export default function EinsatzgebietPage() {
                 <span className="stat__label">Radius um Aalen</span>
               </div>
               <div className="stat">
-                <span className="stat__value">0 €</span>
-                <span className="stat__label">Anfahrt im Gebiet</span>
+                <span className="stat__value">ab 18 €</span>
+                <span className="stat__label">pro m² Arbeitsleistung</span>
               </div>
               <div className="stat">
                 <span className="stat__value">24 Std.</span>

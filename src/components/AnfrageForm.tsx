@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useMemo, useState, type FormEvent } from 'react';
 import Icon, { type IconName } from './Icon';
@@ -303,7 +304,7 @@ export default function AnfrageForm() {
             Diese Website verarbeitet keine Formulardaten. Mit einem Klick wird Ihre Nachricht in Ihrem eigenen
             E-Mail-Programm beziehungsweise in WhatsApp geöffnet – erst dort entscheiden Sie, ob Sie sie absenden. Es
             werden keine Cookies gesetzt und keine Daten an Dritte übermittelt. Mehr dazu in der{' '}
-            <a href="/datenschutz">Datenschutzerklärung</a>. Sie erreichen mich auch direkt unter {business.phone}.
+            <Link href="/datenschutz">Datenschutzerklärung</Link>. Sie erreichen mich auch direkt unter {business.phone}.
           </span>
         </p>
       </div>

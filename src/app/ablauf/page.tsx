@@ -33,7 +33,7 @@ const preparation = [
   },
   {
     title: 'Untergrund trocken',
-    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Bei Zweifeln messe ich die Restfeuchte bei der Besichtigung.',
+    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Wenn Sie sich unsicher sind, schauen wir uns den Untergrund bei der Besichtigung gemeinsam an.',
     icon: 'ruler' as const,
   },
 ];
@@ -71,15 +71,15 @@ export default function AblaufPage() {
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
-                  <strong>Besichtigung:</strong> meist innerhalb weniger Tage, je nach Auftragslage.
+                  <strong>Besichtigungstermin:</strong> wird direkt bei der Rückmeldung abgestimmt.
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
-                  <strong>Angebot:</strong> schriftlich, spätestens zwei Werktage nach der Besichtigung.
+                  <strong>Angebot:</strong> schriftlich nach der Besichtigung, mit Festpreis für die Arbeitsleistung.
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
-                  <strong>Ausführung:</strong> ein durchschnittliches Zimmer mit Leisten an einem Tag.
+                  <strong>Ausführungsdauer:</strong> hängt von Fläche und Zuschnitt ab und steht im Angebot.
                 </li>
               </ul>
 

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { cssUrl } from '@/lib/assets';
 import styles from './PageHero.module.css';
 
 export type Crumb = { name: string; path: string };
@@ -23,7 +24,7 @@ export default function PageHero({
   image = '/media/wood-dark.jpg',
 }: PageHeroProps) {
   return (
-    <section className={styles.hero} style={{ ['--hero-image' as string]: `url(${image})` }}>
+    <section className={styles.hero} style={{ ['--hero-image' as string]: cssUrl(image) }}>
       <div className={styles.texture} aria-hidden="true" />
       <div className={styles.veil} aria-hidden="true" />
       <div className="container">

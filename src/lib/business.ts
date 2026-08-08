@@ -23,7 +23,6 @@ export const business = {
   adId: '3463842102',
   /** Wird für Canonical-URLs, Sitemap und JSON-LD verwendet. */
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kevin-garrison.de',
-  geo: { latitude: 48.8756, longitude: 10.1247 },
   serviceRadiusKm: 20,
   serviceAreaLabel: 'Aalen und Umgebung',
   /** Kleinunternehmerregelung – Preise ohne Umsatzsteuer. */
@@ -39,13 +38,6 @@ export const mailtoLink = (subject: string, body?: string) =>
   }`;
 
 export const telLink = `tel:${business.phoneE164}`;
-
-/** Öffnungs-/Erreichbarkeitszeiten. Bei Bedarf hier zentral anpassen. */
-export const availability = [
-  { days: 'Montag – Freitag', hours: '07:00 – 18:00 Uhr' },
-  { days: 'Samstag', hours: 'nach Absprache' },
-  { days: 'Sonntag', hours: 'geschlossen' },
-] as const;
 
 export type Price = {
   id: string;
@@ -136,7 +128,7 @@ export const services: Service[] = [
       'Saubere Anschlüsse an Türzargen und Heizungsnischen',
       'Kabelkanalleisten auf Wunsch',
       'Abdichten der Anschlussfuge zur Wand',
-      'Demontage und Entsorgung alter Leisten',
+      'Demontage alter Leisten nach Absprache',
     ],
     priceId: 'sockelleisten',
     metaTitle: 'Sockelleisten montieren – Aalen und Umgebung',
@@ -236,7 +228,7 @@ export const faqs: Faq[] = [
   {
     question: 'Muss der Raum leer geräumt sein?',
     answer:
-      'Der Raum sollte möglichst leer und der alte Belag entfernt sein. Wenn das nicht möglich ist, sprechen wir das bei der Besichtigung ab – Ausräumen und Entsorgen des Altbelags lassen sich als zusätzliche Position einplanen.',
+      'Der Raum sollte möglichst leer und der alte Belag entfernt sein. Wenn das nicht möglich ist oder der Altbelag noch liegt, sprechen wir bei der Besichtigung ab, wie wir damit umgehen.',
   },
   {
     question: 'Wird Umsatzsteuer berechnet?',

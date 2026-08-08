@@ -5,7 +5,7 @@ import AnfrageForm from '@/components/AnfrageForm';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import { availability, business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
+import { business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function KontaktPage() {
       >
         <span className="badge badge--dark">
           <Icon name="clock" size={15} />
-          Antwort meist am selben Tag
+          Antwort in der Regel binnen 24 Stunden
         </span>
         <span className="badge badge--dark">
           <Icon name="shield" size={15} />
@@ -85,22 +85,27 @@ export default function KontaktPage() {
               </Reveal>
 
               <Reveal className="panel" delay={90}>
-                <span className="kicker">Erreichbarkeit</span>
-                <ul className="datalist">
-                  {availability.map((slot) => (
-                    <li key={slot.days}>
-                      <Icon name="clock" size={18} />
-                      <span>
-                        <span className="datalist__label">{slot.days}</span>
-                        {slot.hours}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="tiny">
-                  Während der Arbeit auf der Baustelle kann ich nicht immer ans Telefon gehen. Eine Nachricht wird
-                  spätestens am Abend beantwortet.
+                <span className="kicker">Rückmeldung</span>
+                <h3 style={{ fontSize: '1.2rem' }}>Antwort in der Regel binnen 24 Stunden</h3>
+                <p className="small muted">
+                  Während der Arbeit auf der Baustelle ist ein Anruf nicht immer möglich. Eine schriftliche Nachricht
+                  über WhatsApp oder E-Mail erreicht mich sicher und wird in der Regel innerhalb von 24 Stunden
+                  beantwortet.
                 </p>
+                <ul className="list list--dense small">
+                  <li>
+                    <Icon name="check" size={16} />
+                    Am schnellsten: WhatsApp mit einem Foto des Raums
+                  </li>
+                  <li>
+                    <Icon name="check" size={16} />
+                    Besichtigung und schriftliches Angebot sind kostenlos
+                  </li>
+                  <li>
+                    <Icon name="check" size={16} />
+                    Sie entscheiden erst, wenn der Festpreis vorliegt
+                  </li>
+                </ul>
               </Reveal>
 
               <Reveal className="panel panel--muted" delay={160}>

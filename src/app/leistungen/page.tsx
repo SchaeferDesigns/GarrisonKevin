@@ -88,15 +88,15 @@ export default function LeistungenPage() {
           <div className="split split--wide-left">
             <div>
               <span className="kicker">Zusatzarbeiten</span>
-              <h2 className="mt-4">Was sich sinnvoll mitmachen lässt</h2>
+              <h2 className="mt-4">Was sich auf Anfrage mitmachen lässt</h2>
               <p className="lead mt-4">
-                Manches fällt beim Verlegen ohnehin an. Wenn es zusammen erledigt wird, sparen Sie sich einen zweiten
-                Termin und die doppelte Anfahrt.
+                Manches fällt beim Verlegen ohnehin an. Diese Arbeiten gehören nicht automatisch zum Angebot –
+                sprechen Sie mich bei der Besichtigung darauf an, dann planen wir sie mit ein.
               </p>
 
               <ul className="list mt-6">
                 {[
-                  'Alten Belag aufnehmen und entsorgen',
+                  'Alten Belag aufnehmen',
                   'Untergrund reinigen, ausgleichen und grundieren',
                   'Übergangsprofile an Türen und Raumwechseln setzen',
                   'Türblätter am unteren Rand kürzen lassen (nach Absprache)',

@@ -1,15 +1,6 @@
-import { availability, business, faqs, prices, services, serviceAreas } from './business';
+import { business, faqs, prices, services, serviceAreas } from './business';
 
 const url = business.siteUrl;
-
-const openingHoursSpecification = [
-  {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '07:00',
-    closes: '18:00',
-  },
-];
 
 /** Zentrale Beschreibung des Betriebs – Basis für lokale Suche und KI-Antworten. */
 export const localBusinessSchema = {
@@ -23,9 +14,7 @@ export const localBusinessSchema = {
   telephone: business.phoneE164,
   email: business.email,
   image: `${url}/og-image.jpg`,
-  priceRange: '€€',
   currenciesAccepted: 'EUR',
-  paymentAccepted: 'Barzahlung, Überweisung',
   address: {
     '@type': 'PostalAddress',
     streetAddress: business.street,
@@ -34,26 +23,9 @@ export const localBusinessSchema = {
     addressRegion: 'Baden-Württemberg',
     addressCountry: business.country,
   },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: business.geo.latitude,
-    longitude: business.geo.longitude,
-  },
-  areaServed: [
-    {
-      '@type': 'GeoCircle',
-      geoMidpoint: {
-        '@type': 'GeoCoordinates',
-        latitude: business.geo.latitude,
-        longitude: business.geo.longitude,
-      },
-      geoRadius: business.serviceRadiusKm * 1000,
-    },
-    ...serviceAreas.map((place) => ({ '@type': 'City', name: place })),
-  ],
+  areaServed: serviceAreas.map((place) => ({ '@type': 'City', name: place })),
   founder: { '@type': 'Person', name: business.name },
   knowsLanguage: ['de'],
-  openingHoursSpecification,
   availableLanguage: 'Deutsch',
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -92,11 +64,6 @@ export const localBusinessSchema = {
     url: `${url}/leistungen/${service.slug}`,
   })),
   slogan: 'Sauber, termingerecht, fair kalkuliert.',
-  additionalProperty: availability.map((a) => ({
-    '@type': 'PropertyValue',
-    name: a.days,
-    value: a.hours,
-  })),
 };
 
 export const websiteSchema = {

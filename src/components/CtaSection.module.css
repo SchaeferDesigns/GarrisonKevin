@@ -21,7 +21,7 @@
 .texture {
   position: absolute;
   inset: 0;
-  background-image: url('/media/wood-hero.jpg');
+  background-image: var(--img-wood-hero);
   background-size: cover;
   background-position: center;
   opacity: 0.13;

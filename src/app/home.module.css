@@ -15,7 +15,7 @@
 .heroImage {
   position: absolute;
   inset: 0;
-  background-image: url('/media/wood-hero.jpg');
+  background-image: var(--img-wood-hero);
   background-size: cover;
   background-position: center 35%;
   transform: scale(1.04);

@@ -45,7 +45,7 @@ export default function CtaSection({
               </a>
               <p className={styles.sideNote}>
                 <Icon name="clock" size={16} />
-                Antwort in der Regel innerhalb von 24 Stunden – auch abends und am Wochenende.
+                Antwort in der Regel innerhalb von 24 Stunden.
               </p>
             </div>
           </div>
