@@ -1,0 +1,65 @@
+.prose {
+  max-width: 74ch;
+  font-size: 0.985rem;
+  line-height: 1.78;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.prose a {
+  color: var(--forest-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:hover {
+  color: var(--oak-700);
+}
+
+.prose strong:first-child {
+  margin-top: 0 !important;
+}
+
+/* Hinweis, solange die Rechtstexte noch nicht eingepflegt sind */
+.placeholder {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1.35rem 1.5rem;
+  border-radius: var(--r-lg);
+  background-color: rgba(226, 217, 200, 0.45);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(196, 165, 116, 0.38);
+  max-width: 70ch;
+}
+
+.placeholder svg {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--oak-700);
+}
+
+.placeholder h2 {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--forest-800);
+  margin-bottom: 0.35rem;
+}
+
+.placeholder p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.placeholder code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.12em 0.4em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+}

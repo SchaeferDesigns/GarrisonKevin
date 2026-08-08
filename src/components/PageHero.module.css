@@ -1,0 +1,79 @@
+.hero {
+  position: relative;
+  padding-top: calc(var(--nav-h) + clamp(3rem, 2rem + 4vw, 5.5rem));
+  padding-bottom: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+  background: linear-gradient(165deg, var(--forest-700), var(--forest-900) 68%, #0b1610);
+  color: rgba(238, 240, 234, 0.8);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Holzstruktur als dezente Textur hinter dem Farbverlauf */
+.texture {
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.16;
+  mix-blend-mode: luminosity;
+  z-index: -2;
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 15% 0%, rgba(196, 165, 116, 0.2), transparent 58%),
+    radial-gradient(90% 80% at 100% 100%, rgba(53, 106, 83, 0.4), transparent 62%);
+  z-index: -1;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  max-width: 800px;
+}
+
+.title {
+  color: #fbfaf6;
+  font-size: clamp(2.05rem, 1.5rem + 2.6vw, 3.35rem);
+}
+
+.lead {
+  color: rgba(238, 240, 234, 0.76);
+  max-width: 65ch;
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  list-style: none;
+  font-size: 0.79rem;
+  color: rgba(238, 240, 234, 0.55);
+  margin-bottom: 0.35rem;
+}
+
+.crumbs a:hover {
+  color: var(--oak-400);
+}
+
+.crumbs li:not(:last-child)::after {
+  content: "/";
+  margin-left: 0.45rem;
+  opacity: 0.45;
+}
+
+.crumbs [aria-current] {
+  color: var(--oak-400);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.4rem;
+}

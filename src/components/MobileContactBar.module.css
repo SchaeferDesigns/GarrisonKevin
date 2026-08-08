@@ -1,0 +1,56 @@
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.4rem;
+  padding: 0.5rem calc(var(--gutter) * 0.6);
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  background-color: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 -10px 34px -20px rgba(16, 29, 23, 0.5);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.24rem;
+  padding: 0.55rem 0.3rem;
+  border-radius: var(--r-md);
+  font-size: 0.735rem;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  color: var(--forest-800);
+  background-color: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: background-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.item:active {
+  transform: scale(0.97);
+}
+
+.itemPrimary {
+  color: var(--forest-900);
+  background: linear-gradient(140deg, var(--oak-500), var(--oak-600));
+  border-color: rgba(196, 165, 116, 0.6);
+}
+
+/* Platz schaffen, damit die Leiste nichts überdeckt */
+.spacer {
+  height: 78px;
+}
+
+@media (min-width: 768px) {
+  .bar,
+  .spacer {
+    display: none;
+  }
+}

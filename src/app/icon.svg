@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#27503f" />
+      <stop offset="1" stop-color="#101d17" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#bg)" />
+  <g fill="none" stroke="#d8c19a" stroke-width="3" stroke-linecap="round">
+    <path d="M13 24h38" opacity=".45" />
+    <path d="M13 34h38" opacity=".45" />
+    <path d="M13 44h38" opacity=".45" />
+    <path d="M30 24v10M40 34v10M22 44v6" opacity=".3" />
+  </g>
+  <text x="32" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#f8f5ef">KG</text>
+</svg>
