@@ -54,8 +54,14 @@ NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
 ### GitHub Pages (Testumgebung)
 
 `.github/workflows/deploy.yml` baut bei jedem Push einen statischen Export und
-veröffentlicht ihn auf GitHub Pages. Einmalig nötig:
-**Repository → Settings → Pages → Source: „GitHub Actions"**.
+veröffentlicht ihn auf GitHub Pages.
+
+**Einmalig nötig:** **Repository → Settings → Pages → Source: „GitHub Actions"**.
+Der Workflow versucht das zwar selbst, darf es aber nicht: Das Erstellen der
+Pages-Site verlangt Administrationsrechte, die der Workflow-Token nicht hat.
+Solange der Schalter nicht gesetzt ist, läuft der Build durch und nur der
+Deploy-Schritt bricht mit 404 ab. Danach genügt ein erneuter Lauf
+(„Re-run jobs" oder der nächste Push).
 
 Die Adresse lautet dann `https://<owner>.github.io/<repo>/`.
 

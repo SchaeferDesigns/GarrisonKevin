@@ -23,9 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Aktiviert GitHub Pages beim ersten Lauf selbst, damit nichts manuell
-      # eingeschaltet werden muss.
+      # Versucht, GitHub Pages selbst einzuschalten. Der Workflow-Token darf das
+      # nur, wenn Pages bereits einmal aktiviert wurde – deshalb blockiert ein
+      # Fehlschlag hier den Build nicht. Falls der Deploy-Schritt mit 404
+      # abbricht, muss Pages einmalig unter
+      # Settings → Pages → Source: „GitHub Actions" gesetzt werden.
       - uses: actions/configure-pages@v5
+        continue-on-error: true
         with:
           enablement: true
 
