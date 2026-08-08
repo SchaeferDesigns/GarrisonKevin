@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Aktiviert GitHub Pages beim ersten Lauf selbst, damit nichts manuell
+      # eingeschaltet werden muss.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
