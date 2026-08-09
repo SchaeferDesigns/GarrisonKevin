@@ -29,7 +29,10 @@ export type IconName =
   | 'calendar'
   | 'handshake'
   | 'info'
-  | 'ban';
+  | 'ban'
+  | 'paperclip'
+  | 'image'
+  | 'trash';
 
 const paths: Record<IconName, React.ReactNode> = {
   plank: (
@@ -184,6 +187,26 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="8.8" />
       <path d="M5.8 5.8l12.4 12.4" />
+    </>
+  ),
+  paperclip: (
+    <>
+      <path d="M19 11.2l-7.4 7.4a4.3 4.3 0 0 1-6.1-6.1l8-8a2.9 2.9 0 0 1 4.1 4.1l-7.9 8a1.4 1.4 0 0 1-2-2l7.3-7.3" />
+    </>
+  ),
+  image: (
+    <>
+      <rect x="3" y="4.6" width="18" height="14.8" rx="2" />
+      <circle cx="8.6" cy="9.8" r="1.6" />
+      <path d="M3.4 16.6l4.8-4.4 3.6 3.2 3.2-2.8 5.6 5" />
+    </>
+  ),
+  trash: (
+    <>
+      <path d="M4.5 6.5h15" />
+      <path d="M9.5 6.5V4.8h5v1.7" />
+      <path d="M6.4 6.5l.9 12.2a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.9-12.2" />
+      <path d="M10.4 10v6.4M13.6 10v6.4" />
     </>
   ),
 };

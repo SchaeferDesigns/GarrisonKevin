@@ -2,16 +2,21 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type DragEvent, type FormEvent } from 'react';
 import Icon, { type IconName } from './Icon';
 import { business, mailtoLink, whatsappLink } from '@/lib/business';
 import {
+  acceptFiles,
+  acceptedFileTypes,
   buildMessage,
   contactPreferences,
   customerTypes,
   emptyAnfrage,
+  formatBytes,
   hasFormEndpoint,
   materialOptions,
+  maxFileBytes,
+  maxFiles,
   oldFloorOptions,
   sendAnfrage,
   timeframes,
@@ -19,18 +24,64 @@ import {
 } from '@/lib/anfrage';
 import styles from './AnfrageForm.module.css';
 
-const workTypes: { id: string; label: string; hint: string; icon: IconName }[] = [
+/** Felder aus Schritt 2, die je nach gewählter Leistung überhaupt Sinn ergeben. */
+type ScopeField = 'area' | 'skirting' | 'joints' | 'oldFloor';
+
+const workTypes: { id: string; label: string; hint: string; icon: IconName; fields: ScopeField[] }[] = [
   {
     id: 'Bodenverlegung (Laminat, Vinyl, Klickboden)',
     label: 'Bodenverlegung',
     hint: 'Laminat, Vinyl, Klickboden',
     icon: 'plank',
+    fields: ['area', 'oldFloor'],
   },
-  { id: 'Sockelleisten montieren', label: 'Sockelleisten', hint: 'Zuschnitt und Montage', icon: 'skirting' },
-  { id: 'Acryl- & Silikonfugen', label: 'Fugen erneuern', hint: 'Acryl und Silikon', icon: 'joint' },
-  { id: 'Ausbesserung / Teilfläche', label: 'Ausbesserung', hint: 'auch an fremd verlegten Böden', icon: 'ruler' },
-  { id: 'Material gemeinsam aussuchen', label: 'Materialberatung', hint: 'Auswahl und Anlieferung', icon: 'handshake' },
+  {
+    id: 'Sockelleisten montieren',
+    label: 'Sockelleisten',
+    hint: 'Zuschnitt und Montage',
+    icon: 'skirting',
+    fields: ['skirting'],
+  },
+  {
+    id: 'Acryl- & Silikonfugen',
+    label: 'Fugen erneuern',
+    hint: 'Acryl und Silikon',
+    icon: 'joint',
+    fields: ['joints'],
+  },
+  {
+    id: 'Ausbesserung / Teilfläche',
+    label: 'Ausbesserung',
+    hint: 'auch an fremd verlegten Böden',
+    icon: 'ruler',
+    fields: ['area', 'oldFloor'],
+  },
+  {
+    id: 'Material gemeinsam aussuchen',
+    label: 'Materialberatung',
+    hint: 'Auswahl und Anlieferung',
+    icon: 'handshake',
+    fields: [],
+  },
 ];
+
+/** Welche Felder aus Schritt 2 zur aktuellen Auswahl gehören. */
+function scopeOf(services: string[]): Set<ScopeField> {
+  const fields = workTypes.filter((type) => services.includes(type.id)).flatMap((type) => type.fields);
+  return new Set(fields);
+}
+
+/** Angaben verwerfen, die nach einer Änderung in Schritt 1 nicht mehr gefragt sind. */
+function pruneToScope(data: AnfrageData): AnfrageData {
+  const scope = scopeOf(data.services);
+  return {
+    ...data,
+    area: scope.has('area') ? data.area : '',
+    skirting: scope.has('skirting') ? data.skirting : '',
+    joints: scope.has('joints') ? data.joints : '',
+    oldFloor: scope.has('oldFloor') ? data.oldFloor || oldFloorOptions[0] : '',
+  };
+}
 
 type Step = {
   id: string;
@@ -91,9 +142,11 @@ function validateStep(step: number, data: AnfrageData): FieldErrors {
   }
 
   if (step === 1) {
-    const numeric: (keyof AnfrageData)[] = ['area', 'skirting', 'joints'];
+    const scope = scopeOf(data.services);
+    const numeric: ScopeField[] = ['area', 'skirting', 'joints'];
     for (const key of numeric) {
-      const value = String(data[key]).trim();
+      if (!scope.has(key)) continue;
+      const value = data[key].trim();
       if (value && !(Number(value.replace(',', '.')) > 0)) {
         errors[key] = 'Bitte eine Zahl größer als 0 eintragen oder das Feld leer lassen.';
       }
@@ -137,7 +190,8 @@ type Status = 'idle' | 'sending' | 'success' | 'handoff' | 'error';
  * Der Versand läuft über `sendAnfrage` an den in NEXT_PUBLIC_FORM_ENDPOINT
  * hinterlegten Endpunkt. Solange kein Endpunkt konfiguriert ist, übergibt der
  * letzte Schritt die fertige Nachricht an das E-Mail-Programm oder an WhatsApp,
- * damit jeder Button auch ohne Anbindung eine echte Funktion hat.
+ * damit jeder Button auch ohne Anbindung eine echte Funktion hat. Anhänge
+ * gibt es nur mit Endpunkt – über mailto lassen sich keine Dateien mitgeben.
  */
 export default function AnfrageForm() {
   const params = useSearchParams();
@@ -162,9 +216,12 @@ export default function AnfrageForm() {
       preset.services.push(workTypes[2].id);
     }
 
-    return preset;
+    return pruneToScope(preset);
   });
 
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState('');
+  const [dragging, setDragging] = useState(false);
   const [step, setStep] = useState(0);
   const [furthest, setFurthest] = useState(0);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -172,6 +229,7 @@ export default function AnfrageForm() {
   const [sendError, setSendError] = useState('');
 
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const shownStep = useRef(step);
 
   /* Nach jedem Schrittwechsel den Fokus auf die neue Überschrift setzen,
@@ -183,6 +241,15 @@ export default function AnfrageForm() {
     headingRef.current?.focus({ preventScroll: true });
     headingRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }, [step]);
+
+  /* Vorschaubilder der Anhänge; die Objekt-URLs werden wieder freigegeben,
+     sobald sich die Auswahl ändert oder das Formular verschwindet. */
+  const previews = useMemo(
+    () => files.map((file) => (file.type.startsWith('image/') ? URL.createObjectURL(file) : '')),
+    [files],
+  );
+
+  useEffect(() => () => previews.forEach((url) => url && URL.revokeObjectURL(url)), [previews]);
 
   const update = <K extends keyof AnfrageData>(key: K, value: AnfrageData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -206,7 +273,26 @@ export default function AnfrageForm() {
       return { ...prev, services };
     });
 
-  const message = useMemo(() => buildMessage(data), [data]);
+  const addFiles = (incoming: FileList | null) => {
+    if (!incoming?.length) return;
+    const result = acceptFiles(files, Array.from(incoming));
+    setFiles(result.files);
+    setFileError(result.error);
+  };
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, position) => position !== index));
+    setFileError('');
+  };
+
+  const onDrop = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setDragging(false);
+    addFiles(e.dataTransfer.files);
+  };
+
+  const scope = scopeOf(data.services);
+  const message = useMemo(() => buildMessage(data, files), [data, files]);
 
   const goTo = (target: number) => {
     setErrors({});
@@ -220,6 +306,8 @@ export default function AnfrageForm() {
       setErrors(found);
       return;
     }
+    /* Beim Verlassen von Schritt 1 alles verwerfen, was nicht mehr gefragt ist. */
+    if (step === 0) setData(pruneToScope);
     goTo(Math.min(step + 1, lastStep));
   };
 
@@ -271,7 +359,7 @@ export default function AnfrageForm() {
     setSendError('');
 
     try {
-      await sendAnfrage(data);
+      await sendAnfrage(data, files);
       setStatus('success');
     } catch (error) {
       setStatus('error');
@@ -294,6 +382,8 @@ export default function AnfrageForm() {
 
   const restart = () => {
     setData({ ...emptyAnfrage, services: [] });
+    setFiles([]);
+    setFileError('');
     setErrors({});
     setStatus('idle');
     setSendError('');
@@ -340,6 +430,7 @@ export default function AnfrageForm() {
 
   const current = steps[step];
   const percent = Math.round((step / lastStep) * 100);
+  const measured = scope.has('area') || scope.has('skirting') || scope.has('joints');
 
   return (
     <div className={styles.wrap}>
@@ -385,9 +476,13 @@ export default function AnfrageForm() {
           </span>
           <h3 className={styles.stepHeading} ref={headingRef} tabIndex={-1}>
             <Icon name={current.icon} size={19} />
-            {current.heading}
+            {step === 1 && !measured ? 'Noch eine Frage zum Material' : current.heading}
           </h3>
-          <p className={styles.stepHint}>{current.hint}</p>
+          <p className={styles.stepHint}>
+            {step === 1 && !measured
+              ? 'Für die gewählte Leistung sind keine Maße nötig.'
+              : current.hint}
+          </p>
 
           {/* ---------------------------------------------- 1 · Leistung */}
           {step === 0 && (
@@ -431,72 +526,87 @@ export default function AnfrageForm() {
           {step === 1 && (
             <fieldset className={styles.group}>
               <legend className="visually-hidden">Umfang der Arbeiten</legend>
-              <div className={styles.rows}>
-                <div className={styles.field}>
-                  <label htmlFor="f-area">
-                    Bodenfläche <span>(m², optional)</span>
-                  </label>
-                  <input
-                    id="f-area"
-                    className={styles.control}
-                    type="number"
-                    inputMode="decimal"
-                    min="0"
-                    step="0.5"
-                    placeholder="z. B. 32"
-                    value={data.area}
-                    onChange={text('area')}
-                    aria-invalid={Boolean(errors.area)}
-                  />
-                  {errors.area && <FieldError text={errors.area} />}
+              {measured && (
+                <div className={styles.rows}>
+                  {scope.has('area') && (
+                    <div className={styles.field}>
+                      <label htmlFor="f-area">
+                        Bodenfläche <span>(m², optional)</span>
+                      </label>
+                      <input
+                        id="f-area"
+                        className={styles.control}
+                        type="number"
+                        inputMode="decimal"
+                        min="0"
+                        step="0.5"
+                        placeholder="z. B. 32"
+                        value={data.area}
+                        onChange={text('area')}
+                        aria-invalid={Boolean(errors.area)}
+                      />
+                      {errors.area && <FieldError text={errors.area} />}
+                    </div>
+                  )}
+                  {scope.has('skirting') && (
+                    <div className={styles.field}>
+                      <label htmlFor="f-skirting">
+                        Sockelleisten <span>(lfm, optional)</span>
+                      </label>
+                      <input
+                        id="f-skirting"
+                        className={styles.control}
+                        type="number"
+                        inputMode="decimal"
+                        min="0"
+                        step="0.5"
+                        placeholder="z. B. 24"
+                        value={data.skirting}
+                        onChange={text('skirting')}
+                        aria-invalid={Boolean(errors.skirting)}
+                      />
+                      {errors.skirting && <FieldError text={errors.skirting} />}
+                    </div>
+                  )}
+                  {scope.has('joints') && (
+                    <div className={styles.field}>
+                      <label htmlFor="f-joints">
+                        Fugen <span>(lfm, optional)</span>
+                      </label>
+                      <input
+                        id="f-joints"
+                        className={styles.control}
+                        type="number"
+                        inputMode="decimal"
+                        min="0"
+                        step="0.5"
+                        placeholder="z. B. 8"
+                        value={data.joints}
+                        onChange={text('joints')}
+                        aria-invalid={Boolean(errors.joints)}
+                      />
+                      {errors.joints && <FieldError text={errors.joints} />}
+                    </div>
+                  )}
                 </div>
-                <div className={styles.field}>
-                  <label htmlFor="f-skirting">
-                    Sockelleisten <span>(lfm, optional)</span>
-                  </label>
-                  <input
-                    id="f-skirting"
-                    className={styles.control}
-                    type="number"
-                    inputMode="decimal"
-                    min="0"
-                    step="0.5"
-                    placeholder="z. B. 24"
-                    value={data.skirting}
-                    onChange={text('skirting')}
-                    aria-invalid={Boolean(errors.skirting)}
-                  />
-                  {errors.skirting && <FieldError text={errors.skirting} />}
-                </div>
-                <div className={styles.field}>
-                  <label htmlFor="f-joints">
-                    Fugen <span>(lfm, optional)</span>
-                  </label>
-                  <input
-                    id="f-joints"
-                    className={styles.control}
-                    type="number"
-                    inputMode="decimal"
-                    min="0"
-                    step="0.5"
-                    placeholder="z. B. 8"
-                    value={data.joints}
-                    onChange={text('joints')}
-                    aria-invalid={Boolean(errors.joints)}
-                  />
-                  {errors.joints && <FieldError text={errors.joints} />}
-                </div>
-              </div>
+              )}
 
               <div className={styles.rows}>
-                <div className={styles.field}>
-                  <label htmlFor="f-oldFloor">Liegt noch ein alter Belag?</label>
-                  <select id="f-oldFloor" className={styles.control} value={data.oldFloor} onChange={text('oldFloor')}>
-                    {oldFloorOptions.map((option) => (
-                      <option key={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
+                {scope.has('oldFloor') && (
+                  <div className={styles.field}>
+                    <label htmlFor="f-oldFloor">Liegt noch ein alter Belag?</label>
+                    <select
+                      id="f-oldFloor"
+                      className={styles.control}
+                      value={data.oldFloor}
+                      onChange={text('oldFloor')}
+                    >
+                      {oldFloorOptions.map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
                 <div className={styles.field}>
                   <label htmlFor="f-material">Material</label>
                   <select id="f-material" className={styles.control} value={data.material} onChange={text('material')}>
@@ -510,8 +620,9 @@ export default function AnfrageForm() {
               <p className={styles.note}>
                 <Icon name="info" size={16} />
                 <span>
-                  Entfernen und Abtransport eines alten Belags kommen nach Aufwand dazu. Boden und Leisten stellt der
-                  Kunde; auf Wunsch suchen wir das Material gemeinsam aus.
+                  {scope.has('oldFloor')
+                    ? 'Entfernen und Abtransport eines alten Belags kommen nach Aufwand dazu. Material stellt der Kunde; auf Wunsch suchen wir es gemeinsam aus.'
+                    : 'Material stellt der Kunde; auf Wunsch suchen wir es gemeinsam aus und liefern es gegen Transportkosten an.'}
                 </span>
               </p>
             </fieldset>
@@ -520,7 +631,7 @@ export default function AnfrageForm() {
           {/* --------------------------------------------- 3 · Ort & Termin */}
           {step === 2 && (
             <fieldset className={styles.group}>
-              <legend className="visually-hidden">Ort und Wunschtermin</legend>
+              <legend className="visually-hidden">Ort, Wunschtermin und Unterlagen</legend>
               <div className={styles.rows}>
                 <div className={styles.field}>
                   <label htmlFor="f-place">Ort oder Postleitzahl</label>
@@ -564,6 +675,85 @@ export default function AnfrageForm() {
                   onChange={text('message')}
                 />
               </div>
+
+              {hasFormEndpoint ? (
+                <div className={styles.field}>
+                  <span className={styles.pseudoLabel}>
+                    Fotos oder Unterlagen <span className={styles.labelHint}>(optional)</span>
+                  </span>
+
+                  <label
+                    className={styles.dropzone}
+                    data-dragging={dragging || undefined}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setDragging(true);
+                    }}
+                    onDragLeave={() => setDragging(false)}
+                    onDrop={onDrop}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept={acceptedFileTypes}
+                      className="visually-hidden"
+                      onChange={(e) => {
+                        addFiles(e.target.files);
+                        e.target.value = '';
+                      }}
+                    />
+                    <Icon name="paperclip" size={20} />
+                    <span>
+                      <strong>Dateien auswählen</strong> oder hierher ziehen
+                      <span className={styles.choiceHint}>
+                        Fotos des Raums helfen bei der Einschätzung. JPG, PNG, HEIC oder PDF, bis{' '}
+                        {formatBytes(maxFileBytes)} je Datei, höchstens {maxFiles} Stück.
+                      </span>
+                    </span>
+                  </label>
+
+                  {fileError && <FieldError text={fileError} />}
+
+                  {files.length > 0 && (
+                    <ul className={styles.fileList}>
+                      {files.map((file, index) => (
+                        <li key={`${file.name}-${file.size}`} className={styles.fileItem}>
+                          {previews[index] ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={previews[index]} alt="" className={styles.fileThumb} />
+                          ) : (
+                            <span className={styles.fileThumb} data-placeholder="">
+                              <Icon name="document" size={18} />
+                            </span>
+                          )}
+                          <span className={styles.fileMeta}>
+                            <span className={styles.fileName}>{file.name}</span>
+                            <span className={styles.choiceHint}>{formatBytes(file.size)}</span>
+                          </span>
+                          <button
+                            type="button"
+                            className={styles.fileRemove}
+                            onClick={() => removeFile(index)}
+                            title="Datei entfernen"
+                          >
+                            <Icon name="trash" size={16} />
+                            <span className="visually-hidden">{file.name} entfernen</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : (
+                <p className={styles.note}>
+                  <Icon name="image" size={16} />
+                  <span>
+                    Ein Foto des Raums hilft bei der ersten Einschätzung – schicken Sie es am einfachsten per WhatsApp
+                    an {business.phone}.
+                  </span>
+                </p>
+              )}
 
               <p className={styles.note}>
                 <Icon name="map-pin" size={16} />
@@ -672,25 +862,34 @@ export default function AnfrageForm() {
                   value={data.services.length ? data.services.join(', ') : 'noch offen'}
                   onEdit={() => goTo(0)}
                 />
-                <SummaryRow
-                  label="Umfang"
-                  value={
-                    [
-                      data.area && `${data.area} m² Boden`,
-                      data.skirting && `${data.skirting} lfm Leisten`,
-                      data.joints && `${data.joints} lfm Fugen`,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ') || 'noch offen'
-                  }
-                  onEdit={() => goTo(1)}
-                />
-                <SummaryRow label="Alter Belag" value={data.oldFloor} onEdit={() => goTo(1)} />
+                {measured && (
+                  <SummaryRow
+                    label="Umfang"
+                    value={
+                      [
+                        data.area && `${data.area} m² Boden`,
+                        data.skirting && `${data.skirting} lfm Leisten`,
+                        data.joints && `${data.joints} lfm Fugen`,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ') || 'noch offen'
+                    }
+                    onEdit={() => goTo(1)}
+                  />
+                )}
+                {data.oldFloor && <SummaryRow label="Alter Belag" value={data.oldFloor} onEdit={() => goTo(1)} />}
                 <SummaryRow label="Material" value={data.material} onEdit={() => goTo(1)} />
                 <SummaryRow label="Ort" value={data.place} onEdit={() => goTo(2)} />
                 <SummaryRow label="Wunschzeitraum" value={data.timeframe} onEdit={() => goTo(2)} />
                 {data.message.trim() && (
                   <SummaryRow label="Beschreibung" value={data.message.trim()} onEdit={() => goTo(2)} />
+                )}
+                {files.length > 0 && (
+                  <SummaryRow
+                    label="Anhänge"
+                    value={files.map((file) => file.name).join(', ')}
+                    onEdit={() => goTo(2)}
+                  />
                 )}
                 <SummaryRow
                   label="Kontakt"
@@ -710,8 +909,9 @@ export default function AnfrageForm() {
                       aria-invalid={Boolean(errors.consent)}
                     />
                     <span>
-                      Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage übermittelt und
-                      gespeichert werden. Näheres in der <Link href="/datenschutz">Datenschutzerklärung</Link>.
+                      Ich bin damit einverstanden, dass meine Angaben{files.length > 0 ? ' samt Anhängen' : ''} zur
+                      Bearbeitung der Anfrage übermittelt und gespeichert werden. Näheres in der{' '}
+                      <Link href="/datenschutz">Datenschutzerklärung</Link>.
                     </span>
                   </label>
                   {errors.consent && <FieldError text={errors.consent} />}
@@ -738,6 +938,7 @@ export default function AnfrageForm() {
                   <span>
                     Die Anfrage konnte nicht übermittelt werden ({sendError}). Bitte noch einmal versuchen – oder die
                     Nachricht direkt per WhatsApp oder E-Mail senden, damit nichts verloren geht.
+                    {files.length > 0 && ' Angehängte Dateien müssten Sie dann noch einmal auswählen.'}
                   </span>
                 </div>
               )}
@@ -808,7 +1009,7 @@ export default function AnfrageForm() {
           <span>
             Diese Website setzt keine Cookies und bindet keine externen Dienste ein.{' '}
             {hasFormEndpoint
-              ? 'Übermittelt werden ausschließlich die Angaben aus diesem Formular, und nur zur Bearbeitung Ihrer Anfrage.'
+              ? 'Übermittelt werden ausschließlich die Angaben und Dateien aus diesem Formular, und nur zur Bearbeitung Ihrer Anfrage.'
               : 'Es werden derzeit keine Formulardaten an einen Server übertragen.'}{' '}
             Mehr dazu in der <Link href="/datenschutz">Datenschutzerklärung</Link>. Sie erreichen mich auch direkt unter{' '}
             {business.phone}.

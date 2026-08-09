@@ -59,16 +59,31 @@ Variable:
 NEXT_PUBLIC_FORM_ENDPOINT=https://…   # Ziel für den POST
 ```
 
-- **gesetzt:** Der letzte Schritt sendet die Anfrage per `POST` als JSON an
-  diese Adresse (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich wird
-  dann eine Einwilligungs-Checkbox verlangt. Der Endpunkt muss mit einem
-  2xx-Status antworten und CORS für die Website-Domain erlauben.
+- **gesetzt:** Der letzte Schritt sendet die Anfrage per `POST` an diese Adresse
+  (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich erscheinen dann der
+  Datei-Upload in Schritt 3 und die Einwilligungs-Checkbox in Schritt 5. Der
+  Endpunkt muss mit einem 2xx-Status antworten und CORS für die Website-Domain
+  erlauben.
 - **nicht gesetzt (aktueller Stand):** Das Formular bleibt vollständig
   bedienbar und übergibt die fertige Nachricht am Ende an das E-Mail-Programm
-  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen.
+  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen, und
+  statt des Uploads steht dort der Hinweis, Fotos per WhatsApp zu schicken –
+  über `mailto:` lassen sich keine Dateien mitgeben.
 
-Der gesendete Datensatz stammt aus `buildPayload` und ist bewusst stabil
-aufgebaut:
+#### Aufbau des Requests
+
+Gesendet wird immer `multipart/form-data`, damit Fotos und PDF ohne Umweg
+mitgehen (`buildFormData`):
+
+| Feld | Inhalt |
+| --- | --- |
+| `payload` | kompletter Datensatz als JSON-Text (siehe unten) |
+| `summary` | dieselbe Anfrage als Fließtext, direkt als E-Mail-Body nutzbar |
+| `name`, `phone`, `email`, `place` | flach, für einfache Weiterleitungen |
+| `fileCount` | Anzahl der Anhänge |
+| `file0` … `fileN` | die Anhänge selbst |
+
+`payload` stammt aus `buildPayload` und ist bewusst stabil aufgebaut:
 
 ```json
 {
@@ -80,16 +95,55 @@ aufgebaut:
     "oldFloor": "", "material": "", "customerType": "", "place": "",
     "timeframe": "", "notes": ""
   },
+  "attachments": [{ "name": "", "size": 0, "type": "" }],
   "consent": true,
   "summary": "fertig formatierte Fassung als Text"
 }
 ```
 
-Als Endpunkt eignet sich jeder Dienst, der JSON annimmt und als E-Mail
-weiterreicht, ebenso eine eigene Funktion beim Hoster. Gegen Spam-Bots gibt es
-ein verstecktes Honeypot-Feld; wird es ausgefüllt, unterbleibt der Versand.
-Sobald ein Endpunkt aktiv ist, muss die Datenschutzerklärung die Verarbeitung
-der Formulardaten abdecken.
+Nicht gefragte Felder bleiben leer: Schritt 2 zeigt nur die Maße, die zur
+Auswahl aus Schritt 1 passen, der Rest wird beim Weitergehen verworfen.
+
+#### Anhänge
+
+Erlaubt sind JPG, PNG, WebP, HEIC und PDF, bis 10 MB je Datei, höchstens 6
+Dateien und zusammen 30 MB (Konstanten am Anfang von `src/lib/anfrage.ts`).
+Geprüft wird im Browser; der Endpunkt sollte dieselben Grenzen noch einmal
+durchsetzen. HEIC-Fotos von iPhones melden je nach Browser gar keinen MIME-Typ
+und werden deshalb durchgelassen.
+
+#### Beispiel Supabase Edge Function
+
+```ts
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+
+  const form = await req.formData();
+  const payload = JSON.parse(String(form.get('payload')));
+
+  const { data: row } = await supabase.from('anfragen')
+    .insert({ payload, summary: form.get('summary') }).select('id').single();
+
+  for (let i = 0; i < Number(form.get('fileCount')); i++) {
+    const file = form.get(`file${i}`) as File;
+    await supabase.storage.from('anfragen')
+      .upload(`${row.id}/${file.name}`, file, { contentType: file.type });
+  }
+
+  await resend.emails.send({
+    from: 'website@…', to: 'kevingarrison@outlook.de',
+    subject: `Anfrage von ${form.get('name')}`,
+    text: String(form.get('summary')),
+  });
+
+  return new Response('{"ok":true}', { headers: cors });
+});
+```
+
+Gegen Spam-Bots gibt es ein verstecktes Honeypot-Feld; wird es ausgefüllt,
+unterbleibt der Versand schon im Browser. Sobald ein Endpunkt aktiv ist, muss
+die Datenschutzerklärung die Verarbeitung der Formulardaten und der Anhänge
+abdecken – inklusive Speicherort und Aufbewahrungsdauer.
 
 ## Deployment
 

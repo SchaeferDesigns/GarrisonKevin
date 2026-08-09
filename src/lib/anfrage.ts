@@ -6,13 +6,14 @@
  *
  *   NEXT_PUBLIC_FORM_ENDPOINT=https://…
  *
- * Ist die Variable gesetzt, sendet das Formular die Anfrage per POST als JSON
- * dorthin (siehe `sendAnfrage`). Ist sie nicht gesetzt, bleibt das Formular
- * voll bedienbar und übergibt die fertige Nachricht am Ende an das
- * E-Mail-Programm oder an WhatsApp – es werden dann keine Daten übertragen.
+ * Ist die Variable gesetzt, sendet das Formular die Anfrage samt angehängten
+ * Fotos per POST dorthin (siehe `sendAnfrage`). Ist sie nicht gesetzt, bleibt
+ * das Formular voll bedienbar und übergibt die fertige Nachricht am Ende an
+ * das E-Mail-Programm oder an WhatsApp – es werden dann keine Daten
+ * übertragen und keine Dateien angeboten.
  *
- * Zum Anbinden muss nur die Variable gesetzt werden. Der Endpunkt bekommt
- * genau das Objekt aus `buildPayload` und muss mit einem 2xx-Status antworten.
+ * Zum Anbinden muss nur die Variable gesetzt werden. Aufbau des Requests
+ * siehe `buildFormData`; der Endpunkt muss mit einem 2xx-Status antworten.
  */
 
 export const formEndpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? '';
@@ -29,7 +30,7 @@ export type AnfrageData = {
   skirting: string;
   /** Fugen in laufenden Metern. */
   joints: string;
-  /** Muss ein alter Belag raus? */
+  /** Muss ein alter Belag raus? Leer, wenn für die Auswahl ohne Belang. */
   oldFloor: string;
   /** Stand beim Material. */
   material: string;
@@ -90,8 +91,65 @@ export const emptyAnfrage: AnfrageData = {
   website: '',
 };
 
+/* ------------------------------------------------------------- Anhänge */
+
+export const maxFiles = 6;
+export const maxFileBytes = 10 * 1024 * 1024;
+export const maxTotalBytes = 30 * 1024 * 1024;
+export const acceptedFileTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf';
+
+const acceptedList = acceptedFileTypes.split(',');
+
+export function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  const mb = bytes / (1024 * 1024);
+  /* Glatte Werte ohne Nachkommastelle: „10 MB“ statt „10,0 MB“. */
+  return `${(Math.round(mb * 10) % 10 === 0 ? String(Math.round(mb)) : mb.toFixed(1).replace('.', ','))} MB`;
+}
+
+/**
+ * Prüft neu gewählte Dateien gegen die bereits vorhandenen.
+ * Gibt die übernehmbaren Dateien und eine Meldung für alles Abgelehnte zurück.
+ */
+export function acceptFiles(existing: File[], incoming: File[]): { files: File[]; error: string } {
+  const files = [...existing];
+  const rejected: string[] = [];
+  let total = files.reduce((sum, file) => sum + file.size, 0);
+
+  for (const file of incoming) {
+    const duplicate = files.some((known) => known.name === file.name && known.size === file.size);
+    if (duplicate) continue;
+
+    if (files.length >= maxFiles) {
+      rejected.push(`Mehr als ${maxFiles} Dateien sind nicht möglich.`);
+      break;
+    }
+    /* HEIC-Fotos von iPhones melden je nach Browser gar keinen Typ. */
+    if (file.type && !acceptedList.includes(file.type)) {
+      rejected.push(`${file.name}: nur Fotos (JPG, PNG, WebP, HEIC) und PDF.`);
+      continue;
+    }
+    if (file.size > maxFileBytes) {
+      rejected.push(`${file.name} ist größer als ${formatBytes(maxFileBytes)}.`);
+      continue;
+    }
+    if (total + file.size > maxTotalBytes) {
+      rejected.push(`Zusammen mehr als ${formatBytes(maxTotalBytes)} sind nicht möglich.`);
+      continue;
+    }
+
+    files.push(file);
+    total += file.size;
+  }
+
+  return { files, error: [...new Set(rejected)].join(' ') };
+}
+
+/* -------------------------------------------------------------- Inhalte */
+
 /** Für Menschen lesbare Zusammenfassung – Vorschau, E-Mail und WhatsApp. */
-export function buildMessage(data: AnfrageData): string {
+export function buildMessage(data: AnfrageData, files: File[] = []): string {
   const lines = [
     'Anfrage über die Website',
     '',
@@ -101,9 +159,9 @@ export function buildMessage(data: AnfrageData): string {
   if (data.area) lines.push(`Bodenfläche: ca. ${data.area} m²`);
   if (data.skirting) lines.push(`Sockelleisten: ca. ${data.skirting} lfm`);
   if (data.joints) lines.push(`Fugen: ca. ${data.joints} lfm`);
+  if (data.oldFloor) lines.push(`Alter Belag: ${data.oldFloor}`);
 
   lines.push(
-    `Alter Belag: ${data.oldFloor}`,
     `Material: ${data.material}`,
     `Auftrag: ${data.customerType}`,
     '',
@@ -115,6 +173,10 @@ export function buildMessage(data: AnfrageData): string {
     lines.push('', 'Beschreibung:', data.message.trim());
   }
 
+  if (files.length) {
+    lines.push('', `Anhänge (${files.length}):`, ...files.map((file) => `- ${file.name} (${formatBytes(file.size)})`));
+  }
+
   lines.push('', 'Kontakt:', data.name || '(Name)');
   if (data.phone) lines.push(`Telefon: ${data.phone}`);
   if (data.email) lines.push(`E-Mail: ${data.email}`);
@@ -123,8 +185,8 @@ export function buildMessage(data: AnfrageData): string {
   return lines.join('\n');
 }
 
-/** Struktur, die an den Endpunkt geht. Feldnamen bewusst stabil halten. */
-export function buildPayload(data: AnfrageData) {
+/** Struktur, die als JSON mitgeschickt wird. Feldnamen bewusst stabil halten. */
+export function buildPayload(data: AnfrageData, files: File[] = []) {
   return {
     form: 'anfrage',
     submittedAt: new Date().toISOString(),
@@ -146,28 +208,56 @@ export function buildPayload(data: AnfrageData) {
       timeframe: data.timeframe,
       notes: data.message.trim(),
     },
+    attachments: files.map((file) => ({ name: file.name, size: file.size, type: file.type })),
     consent: data.consent,
     /** Fertig formatierte Fassung, damit die Weiterleitung nichts bauen muss. */
-    summary: buildMessage(data),
+    summary: buildMessage(data, files),
   };
 }
 
 export type AnfragePayload = ReturnType<typeof buildPayload>;
 
 /**
+ * Baut den Request-Body. Immer `multipart/form-data`, damit Fotos und PDF
+ * ohne Umweg mitgehen:
+ *
+ * - `payload`  – die Struktur aus `buildPayload` als JSON-Text
+ * - `summary`  – dieselbe Anfrage als Fließtext, direkt als E-Mail-Body nutzbar
+ * - `name`, `phone`, `email`, `place` – flach, für einfache Weiterleitungen
+ * - `file0` … `fileN` – die Anhänge, dazu `fileCount`
+ */
+export function buildFormData(data: AnfrageData, files: File[] = []): FormData {
+  const payload = buildPayload(data, files);
+  const body = new FormData();
+
+  body.append('payload', JSON.stringify(payload));
+  body.append('summary', payload.summary);
+  body.append('name', payload.contact.name);
+  body.append('phone', payload.contact.phone);
+  body.append('email', payload.contact.email);
+  body.append('place', payload.project.place);
+  body.append('fileCount', String(files.length));
+
+  files.forEach((file, index) => body.append(`file${index}`, file, file.name));
+
+  return body;
+}
+
+/**
  * Sendet die Anfrage an den konfigurierten Endpunkt.
  * Wirft bei fehlender Konfiguration oder bei einer Fehlerantwort.
  */
-export async function sendAnfrage(data: AnfrageData): Promise<void> {
+export async function sendAnfrage(data: AnfrageData, files: File[] = []): Promise<void> {
   if (!hasFormEndpoint) {
     throw new Error('Es ist kein Endpunkt für den Versand hinterlegt.');
   }
 
+  /* Content-Type bewusst nicht setzen – der Browser ergänzt die Multipart-Grenze. */
   const response = await fetch(formEndpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(buildPayload(data)),
-    signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(20000) : undefined,
+    headers: { Accept: 'application/json' },
+    body: buildFormData(data, files),
+    signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(60000) : undefined,
   });
 
   if (!response.ok) {

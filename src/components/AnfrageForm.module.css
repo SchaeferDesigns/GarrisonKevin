@@ -345,6 +345,122 @@ textarea.control {
   outline-offset: 2px;
 }
 
+.labelHint {
+  color: var(--muted-light);
+  font-weight: 400;
+}
+
+/* --------------------------------------------------------------- Anhänge */
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--r-md);
+  border: 1px dashed rgba(21, 32, 26, 0.28);
+  background-color: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+}
+
+.dropzone:hover,
+.dropzone[data-dragging] {
+  border-color: var(--forest-600);
+  border-style: solid;
+  background-color: rgba(39, 80, 63, 0.07);
+}
+
+.dropzone:has(input:focus-visible) {
+  outline: 2px solid var(--forest-600);
+  outline-offset: 2px;
+}
+
+.dropzone > svg {
+  flex: none;
+  color: var(--oak-600);
+}
+
+.dropzone strong {
+  color: var(--forest-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fileList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.fileThumb {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background-color: var(--sand);
+}
+
+.fileThumb[data-placeholder] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--oak-700);
+}
+
+.fileMeta {
+  min-width: 0;
+  flex: 1;
+}
+
+.fileName {
+  display: block;
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileRemove {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.fileRemove:hover {
+  color: #8c2f24;
+  border-color: rgba(160, 60, 45, 0.3);
+  background-color: rgba(160, 60, 45, 0.08);
+}
+
 /* Spamfalle – nicht sichtbar, aber im DOM vorhanden. */
 .honeypot {
   position: absolute;
