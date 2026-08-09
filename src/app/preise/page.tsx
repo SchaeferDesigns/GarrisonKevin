@@ -194,12 +194,12 @@ export default function PreisePage() {
             </p>
           </div>
 
-          <div className="grid grid--3">
+          <div className="grid grid--4">
             {extras.map((extra, i) => (
               <Reveal key={extra.title} delay={i * 80}>
                 <article className="card" style={{ height: '100%' }}>
                   <span className="card__icon">
-                    <Icon name={(['handshake', 'plank', 'ruler'] as const)[i] ?? 'check'} size={21} />
+                    <Icon name={(['handshake', 'plank', 'skirting', 'ruler'] as const)[i] ?? 'check'} size={21} />
                   </span>
                   <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}>{extra.title}</h3>
                   <p className="small muted">{extra.text}</p>
@@ -261,7 +261,7 @@ export default function PreisePage() {
         <div className="container container--narrow">
           <div className="section-head">
             <span className="kicker">Gut zu wissen</span>
-            <h2>Die Kleingedruckten in ganz normal</h2>
+            <h2>Das Kleingedruckte in ganz normal</h2>
           </div>
           <ul className="list">
             {importantNotes.map((note) => (

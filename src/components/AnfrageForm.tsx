@@ -12,6 +12,7 @@ const workTypes: { id: string; label: string; icon: IconName }[] = [
   { id: 'Sockelleisten montieren', label: 'Sockelleisten', icon: 'skirting' },
   { id: 'Acryl- & Silikonfugen', label: 'Fugen erneuern', icon: 'joint' },
   { id: 'Ausbesserung / Teilfläche', label: 'Ausbesserung', icon: 'ruler' },
+  { id: 'Material gemeinsam aussuchen', label: 'Materialberatung', icon: 'handshake' },
 ];
 
 const timeframes = [

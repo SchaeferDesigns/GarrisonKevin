@@ -18,22 +18,17 @@ export const metadata: Metadata = {
 const preparation = [
   {
     title: 'Raum und Zuwege frei',
-    text: 'Zum Termin sollten der Raum und der Weg dorthin leer und begehbar sein – Flur, Treppenhaus, Eingang. Dann kann ich sofort anfangen, statt erst zu räumen.',
+    text: 'Zum Termin sollten der Raum und der Weg dorthin leer und begehbar sein – Flur, Treppenhaus, Eingang.',
     icon: 'sparkle' as const,
   },
   {
-    title: 'Material bereitstellen',
-    text: 'Boden, Leisten und Dämmung sollten am Tag vorher geliefert sein. Laminat und Vinyl brauchen mindestens 48 Stunden Akklimatisierung im Raum.',
+    title: 'Belag rechtzeitig da',
+    text: 'Boden und Leisten sollten am Vortag geliefert sein. Dämmung und Dampfsperre bringe ich mit.',
     icon: 'plank' as const,
   },
   {
-    title: 'Strom und Zugang',
-    text: 'Eine Steckdose in Reichweite und ein Zugang zum Objekt genügen. Bei Mietwohnungen bitte vorher die Erlaubnis zum Belagswechsel klären.',
-    icon: 'shield' as const,
-  },
-  {
     title: 'Untergrund trocken',
-    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Wenn Sie sich unsicher sind, schauen wir uns den Untergrund bei der Besichtigung gemeinsam an.',
+    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Im Zweifel schauen wir bei der Besichtigung gemeinsam.',
     icon: 'ruler' as const,
   },
 ];
@@ -110,12 +105,12 @@ export default function AblaufPage() {
             <span className="kicker">Vorbereitung</span>
             <h2>Was Sie vorbereiten – und was ich mitbringe</h2>
             <p className="lead">
-              Vier Dinge von Ihrer Seite, damit der Termin sitzt. Werkzeug, Maschinen und Verbrauchsmaterial für die
-              Ausführung bringe ich mit.
+              Drei Dinge von Ihrer Seite, damit der Termin sitzt. Werkzeug, Maschinen, Abdeckmaterial sowie
+              Trittschalldämmung und Dampfsperre bringe ich mit. Die vollständige Checkliste steht im Ratgeber.
             </p>
           </div>
 
-          <div className="grid grid--4">
+          <div className="grid grid--3">
             {preparation.map((item, i) => (
               <Reveal key={item.title} delay={i * 80}>
                 <article className="card" style={{ height: '100%' }}>
@@ -127,6 +122,13 @@ export default function AblaufPage() {
                 </article>
               </Reveal>
             ))}
+          </div>
+
+          <div className="btn-row mt-8">
+            <Link href="/ratgeber" className="btn btn--glass">
+              Vollständige Checkliste im Ratgeber
+              <Icon name="arrow-right" size={17} />
+            </Link>
           </div>
         </div>
       </section>
@@ -154,10 +156,6 @@ export default function AblaufPage() {
           <div className="btn-row mt-8">
             <Link href="/preise" className="btn btn--ghost">
               Preise ansehen
-              <Icon name="arrow-right" size={17} />
-            </Link>
-            <Link href="/ratgeber" className="btn btn--ghost">
-              Raum vorbereiten
               <Icon name="arrow-right" size={17} />
             </Link>
             <Link href="/faq" className="btn btn--ghost">

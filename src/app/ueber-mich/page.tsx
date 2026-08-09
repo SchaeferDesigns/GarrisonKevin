@@ -28,31 +28,13 @@ const principles = [
   },
   {
     title: 'Kein Materialaufschlag',
-    text: 'Sie kaufen Boden, Leisten und Dämmung selbst. Ich verdiene an meiner Arbeit, nicht an Ihrem Baumarkteinkauf.',
+    text: 'Boden und Leisten kaufen Sie selbst, Dämmung und Dampfsperre bringe ich mit. Ich verdiene an meiner Arbeit, nicht an Ihrem Baumarkteinkauf.',
     icon: 'euro' as const,
   },
   {
     title: 'Sauber hinterlassen',
     text: 'Abdecken, absaugen, Reste mitnehmen. Ein fertiger Raum ist erst fertig, wenn man ihn ohne Aufräumen benutzen kann.',
     icon: 'sparkle' as const,
-  },
-];
-
-const materialTips = [
-  {
-    title: 'Nutzungsklasse beachten',
-    text: 'Für Wohnräume genügt in der Regel NK 23/31, für Flure und stark genutzte Bereiche besser NK 23/32 oder höher. Ein zu dünner Boden spart beim Kauf und ärgert nach zwei Jahren.',
-    icon: 'shield' as const,
-  },
-  {
-    title: 'Verschnitt einplanen',
-    text: 'Rechnen Sie rund 10 Prozent auf die reine Fläche auf, bei diagonaler Verlegung oder verwinkelten Räumen eher 15 Prozent. Nachkaufen bedeutet oft eine andere Charge und einen sichtbaren Farbunterschied.',
-    icon: 'ruler' as const,
-  },
-  {
-    title: 'Unterlage nicht vergessen',
-    text: 'Trittschalldämmung und Dampfsperre bringe ich mit und verlege sie im Quadratmeterpreis. Beim Belag selbst zählt vor allem, dass Dekor und Charge zusammenpassen – Restposten aus zwei Lieferungen sieht man später.',
-    icon: 'plank' as const,
   },
 ];
 
@@ -209,27 +191,39 @@ export default function UeberMichPage() {
 
           <hr className="rule" />
 
-          <div className="section-head">
-            <span className="kicker">Materialeinkauf</span>
-            <h2>Worauf Sie beim Kauf achten sollten</h2>
-            <p className="lead">
-              Weil Sie das Material selbst besorgen, hier die drei Punkte, bei denen im Baumarkt am häufigsten etwas
-              schiefgeht. Wenn Sie unsicher sind: schicken Sie mir vor dem Kauf ein Foto des Produktdatenblatts.
-            </p>
-          </div>
+          <div className="split split--wide-left">
+            <div>
+              <span className="kicker">Materialeinkauf</span>
+              <h2 className="mt-4" style={{ fontSize: '1.7rem' }}>
+                Unsicher beim Einkauf?
+              </h2>
+              <p className="lead mt-4">
+                Nutzungsklasse, Verschnitt, gleiche Charge – bei diesen drei Punkten geht im Baumarkt am häufigsten
+                etwas schief. Im Ratgeber steht, worauf es ankommt. Und wenn Sie mögen, gehen wir das Material einfach
+                gemeinsam durch.
+              </p>
+              <div className="btn-row mt-6">
+                <Link href="/ratgeber" className="btn btn--glass">
+                  Zum Ratgeber
+                  <Icon name="arrow-right" size={17} />
+                </Link>
+              </div>
+            </div>
 
-          <div className="grid grid--3">
-            {materialTips.map((tip, i) => (
-              <Reveal key={tip.title} delay={i * 80}>
-                <article className="panel" style={{ height: '100%' }}>
-                  <span className="card__icon">
-                    <Icon name={tip.icon} size={21} />
-                  </span>
-                  <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}>{tip.title}</h3>
-                  <p className="small">{tip.text}</p>
-                </article>
-              </Reveal>
-            ))}
+            <div className="stats" style={{ gridTemplateColumns: '1fr' }}>
+              <div className="stat">
+                <span className="stat__value">{business.experienceYears}</span>
+                <span className="stat__label">Erfahrung am Bau</span>
+              </div>
+              <div className="stat">
+                <span className="stat__value">seit 2009</span>
+                <span className="stat__label">Böden verlegt</span>
+              </div>
+              <div className="stat">
+                <span className="stat__value">{business.serviceRadiusKm} km</span>
+                <span className="stat__label">rund um Aalen</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

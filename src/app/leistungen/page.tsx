@@ -105,10 +105,11 @@ export default function LeistungenPage() {
             </div>
 
             <Reveal className="panel panel--muted">
-              <h3>Diese Beläge verlege ich nicht</h3>
+              <h3>Das mache ich nicht</h3>
               <p className="small muted">
-                Der Schwerpunkt liegt bewusst auf Laminat, Vinyl und Klickböden. Für die folgenden Beläge braucht es
-                anderes Werkzeug und andere Routine – da wären Sie bei einem spezialisierten Betrieb besser aufgehoben.
+                Der Schwerpunkt liegt bewusst auf Klicksystemen bei Laminat und Vinyl. Für die folgenden Arbeiten
+                braucht es anderes Werkzeug und andere Routine – da wären Sie bei einem spezialisierten Betrieb besser
+                aufgehoben.
               </p>
               <ul className="badge-row">
                 {[...notOffered, ...notOfferedExtra].map((item) => (
