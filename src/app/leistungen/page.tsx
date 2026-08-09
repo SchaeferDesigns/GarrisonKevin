@@ -5,7 +5,7 @@ import CtaSection from '@/components/CtaSection';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import { business, notOffered, prices, services } from '@/lib/business';
+import { business, extras, notOffered, notOfferedExtra, prices, services } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -88,24 +88,17 @@ export default function LeistungenPage() {
           <div className="split split--wide-left">
             <div>
               <span className="kicker">Zusatzarbeiten</span>
-              <h2 className="mt-4">Was sich auf Anfrage mitmachen lässt</h2>
+              <h2 className="mt-4">Was sich dazubuchen lässt</h2>
               <p className="lead mt-4">
-                Manches fällt beim Verlegen ohnehin an. Diese Arbeiten gehören nicht automatisch zum Angebot –
-                sprechen Sie mich bei der Besichtigung darauf an, dann planen wir sie mit ein.
+                Manches fällt beim Verlegen ohnehin an. Diese Arbeiten gehören nicht automatisch dazu – sagen Sie
+                einfach Bescheid, dann stehen sie als eigene Position im Angebot.
               </p>
 
               <ul className="list mt-6">
-                {[
-                  'Alten Belag aufnehmen',
-                  'Untergrund reinigen, ausgleichen und grundieren',
-                  'Übergangsprofile an Türen und Raumwechseln setzen',
-                  'Türblätter am unteren Rand kürzen lassen (nach Absprache)',
-                  'Dehnungsfugen und Anschlüsse sauber abdichten',
-                  'Nacharbeiten an einzelnen Dielen oder Teilflächen',
-                ].map((item) => (
-                  <li key={item}>
+                {extras.map((extra) => (
+                  <li key={extra.title}>
                     <Icon name="check" size={18} />
-                    {item}
+                    <strong>{extra.title}:</strong> {extra.text}
                   </li>
                 ))}
               </ul>
@@ -118,7 +111,7 @@ export default function LeistungenPage() {
                 anderes Werkzeug und andere Routine – da wären Sie bei einem spezialisierten Betrieb besser aufgehoben.
               </p>
               <ul className="badge-row">
-                {notOffered.map((item) => (
+                {[...notOffered, ...notOfferedExtra].map((item) => (
                   <li key={item} className="badge badge--accent">
                     <Icon name="ban" size={14} />
                     {item}
@@ -127,7 +120,8 @@ export default function LeistungenPage() {
               </ul>
               <hr className="rule" style={{ marginBlock: '0.5rem' }} />
               <p className="small muted">
-                Gut zu wissen: Material stellt und bezahlt der Kunde. {business.vatNote}
+                Gut zu wissen: Material stellt und bezahlt der Kunde – auf Wunsch suchen wir es gemeinsam aus und
+                ich liefere es gegen Transportkosten an. {business.vatNote}
               </p>
               <Link href="/preise" className="btn btn--ghost">
                 Preise ansehen

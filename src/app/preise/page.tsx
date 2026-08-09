@@ -7,13 +7,13 @@ import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
 import FaqList from '@/components/FaqList';
-import { business, faqs, hourlyRate, importantNotes, notOffered, prices } from '@/lib/business';
+import { business, extras, faqs, hourlyRate, importantNotes, notOffered, notOfferedExtra, prices } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Preise – Bodenverlegung, Sockelleisten & Fugen',
   description:
-    'Transparente Richtwerte: Bodenverlegung ab 18 €/m², Sockelleisten ab 7 €/lfm, Fugen ab 6 €/lfm. Nur Arbeitsleistung, Material stellt der Kunde. Mit Preisrechner.',
+    'Transparente Richtwerte: Bodenverlegung ab 18 €/m² inklusive Trittschalldämmung und Anfahrt, Sockelleisten ab 7 €/lfm, Fugen ab 6 €/lfm. Mit Preisrechner.',
   alternates: { canonical: '/preise' },
 };
 
@@ -33,6 +33,10 @@ export default function PreisePage() {
         <span className="badge badge--dark">
           <Icon name="shield" size={15} />
           Kostenlose Besichtigung
+        </span>
+        <span className="badge badge--dark">
+          <Icon name="map-pin" size={15} />
+          Anfahrt inklusive
         </span>
       </PageHero>
 
@@ -74,11 +78,11 @@ export default function PreisePage() {
                 </p>
               </div>
               <div>
-                <h2 style={{ fontSize: '1.4rem' }}>Einsatzgebiet</h2>
+                <h2 style={{ fontSize: '1.4rem' }}>Anfahrt inklusive</h2>
                 <p className="small muted mt-2">
-                  Gearbeitet wird in {business.serviceAreaLabel}, in einem Radius von rund{' '}
-                  {business.serviceRadiusKm} km. Was das für Ihr Objekt bedeutet, klären wir bei der Anfrage – alle
-                  Positionen stehen anschließend im schriftlichen Angebot.
+                  Innerhalb des Einsatzgebiets – {business.serviceAreaLabel}, rund {business.serviceRadiusKm} km – ist
+                  die Anfahrt im Preis enthalten. Es kommt also nichts obendrauf, nur weil Sie zwei Orte weiter wohnen.
+                  Bezahlt wird per {business.paymentMethods}.
                 </p>
               </div>
             </div>
@@ -115,9 +119,11 @@ export default function PreisePage() {
                 {[
                   'Aufmaß und Zuschnitt',
                   'Verlegen des Belags nach Herstellervorgabe',
-                  'Einbau von Dämmung und Dampfsperre',
+                  'Trittschalldämmung und Dampfsperre',
+                  'Untergrund reinigen, grundieren, kleine Unebenheiten ausgleichen',
                   'Montage der Sockelleisten inklusive Gehrung',
                   'Ziehen der Acryl- und Silikonfugen',
+                  'Anfahrt innerhalb des Einsatzgebiets',
                   'Abdecken der Baustelle und besenreine Übergabe',
                 ].map((item) => (
                   <li key={item}>
@@ -134,11 +140,15 @@ export default function PreisePage() {
               <ul className="list mt-6">
                 <li>
                   <Icon name="ban" size={18} />
-                  Material: Boden, Leisten, Dämmung, Profile und Silikon
+                  Material: Boden, Leisten, Profile und Silikon
                 </li>
                 <li>
                   <Icon name="ban" size={18} />
-                  Entsorgung des Altbelags
+                  Alten Belag entfernen und abtransportieren – nach Aufwand als eigene Position
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  Übergangsprofile und Türblätter kürzen – auf Wunsch, separat berechnet
                 </li>
                 <li>
                   <Icon name="ban" size={18} />
@@ -147,6 +157,10 @@ export default function PreisePage() {
                 <li>
                   <Icon name="ban" size={18} />
                   Beläge außerhalb des Angebots: {notOffered.join(', ')}
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  {notOfferedExtra.join(', ')}
                 </li>
               </ul>
 
@@ -157,8 +171,86 @@ export default function PreisePage() {
                   entscheiden frei über Dekor, Qualität und Budget, und die Rechnung bleibt für beide Seiten
                   nachvollziehbar.
                 </p>
+                <p className="small">
+                  Aussuchen müssen Sie es trotzdem nicht allein: Auf Wunsch gehen wir gemeinsam durch, welche
+                  Nutzungsklasse und welche Menge Sie brauchen. Gegen Transportkosten liefere ich das Material auch an.
+                </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Zusatzleistungen */}
+      <section className="section section--sand">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container">
+          <div className="section-head">
+            <span className="kicker">Auf Wunsch</span>
+            <h2>Was sich dazubuchen lässt</h2>
+            <p className="lead">
+              Diese Arbeiten gehören nicht automatisch dazu. Wenn Sie sie brauchen, stehen sie als eigene Position im
+              Angebot – Sie sehen also genau, was sie kosten.
+            </p>
+          </div>
+
+          <div className="grid grid--3">
+            {extras.map((extra, i) => (
+              <Reveal key={extra.title} delay={i * 80}>
+                <article className="card" style={{ height: '100%' }}>
+                  <span className="card__icon">
+                    <Icon name={(['handshake', 'plank', 'ruler'] as const)[i] ?? 'check'} size={21} />
+                  </span>
+                  <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}>{extra.title}</h3>
+                  <p className="small muted">{extra.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Antwort auf den häufigsten Einwand */}
+      <section className="section">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container container--narrow">
+          <div className="section-head">
+            <span className="kicker">Ehrlich gerechnet</span>
+            <h2>„Das ist mir zu teuer“ – der häufigste Satz</h2>
+            <p className="lead">
+              Den höre ich regelmäßig, und meistens liegt es daran, dass Angebote sich schlecht vergleichen lassen. Vier
+              Punkte, die den Unterschied ausmachen.
+            </p>
+          </div>
+
+          <ul className="list">
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Es ist reine Arbeitsleistung.</strong> Wo andere Material mit Aufschlag weiterverkaufen, kaufen
+              Sie es selbst zum Ladenpreis. Vergleichen Sie also nicht Quadratmeterpreise, sondern Endsummen.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Dämmung, Dampfsperre und Anfahrt sind drin.</strong> Genau die Positionen, die andernorts erst auf
+              der Schlussrechnung auftauchen.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Der Preis steht vor Beginn.</strong> Nach der Besichtigung bekommen Sie einen Festpreis für die
+              Arbeitsleistung. Nachträge gibt es nur, wenn Sie sie beauftragen.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Nachbessern kostet mehr als sauber verlegen.</strong> Eine schlecht geschnittene Leiste oder eine
+              gerissene Fuge sieht man jeden Tag – und der zweite Handwerker ist immer teurer als der erste.
+            </li>
+          </ul>
+
+          <div className="panel panel--muted mt-8">
+            <p className="small muted">
+              Wenn es am Budget hängt, sagen Sie es einfach. Oft lässt sich der Auftrag in Abschnitte teilen, oder wir
+              fangen mit dem Raum an, der es am nötigsten hat.
+            </p>
           </div>
         </div>
       </section>

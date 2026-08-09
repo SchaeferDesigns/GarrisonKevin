@@ -5,7 +5,7 @@ import AnfrageForm from '@/components/AnfrageForm';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import { business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
+import { availability, business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -92,6 +92,17 @@ export default function KontaktPage() {
                   über WhatsApp oder E-Mail erreicht mich sicher und wird in der Regel innerhalb von 24 Stunden
                   beantwortet.
                 </p>
+                <ul className="datalist" style={{ marginBottom: '0.4rem' }}>
+                  {availability.map((slot) => (
+                    <li key={slot.days}>
+                      <Icon name="clock" size={18} />
+                      <span>
+                        <span className="datalist__label">{slot.days}</span>
+                        {slot.hours}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
                 <ul className="list list--dense small">
                   <li>
                     <Icon name="check" size={16} />
@@ -103,7 +114,7 @@ export default function KontaktPage() {
                   </li>
                   <li>
                     <Icon name="check" size={16} />
-                    Sie entscheiden erst, wenn der Festpreis vorliegt
+                    Termine aktuell mit {business.leadTimeShort}
                   </li>
                 </ul>
               </Reveal>

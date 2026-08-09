@@ -5,7 +5,7 @@ import CtaSection from '@/components/CtaSection';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import { processSteps } from '@/lib/business';
+import { business, processSteps } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 
 const preparation = [
   {
-    title: 'Raum leer räumen',
-    text: 'Möbel und lose Gegenstände sollten aus dem Raum. Wenn das nicht geht, planen wir das Umstellen gemeinsam ein.',
+    title: 'Raum und Zuwege frei',
+    text: 'Zum Termin sollten der Raum und der Weg dorthin leer und begehbar sein – Flur, Treppenhaus, Eingang. Dann kann ich sofort anfangen, statt erst zu räumen.',
     icon: 'sparkle' as const,
   },
   {
@@ -76,6 +76,10 @@ export default function AblaufPage() {
                 <li>
                   <Icon name="clock" size={17} />
                   <strong>Angebot:</strong> schriftlich nach der Besichtigung, mit Festpreis für die Arbeitsleistung.
+                </li>
+                <li>
+                  <Icon name="clock" size={17} />
+                  <strong>Vorlauf bis zum Termin:</strong> aktuell {business.leadTime}.
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
@@ -150,6 +154,10 @@ export default function AblaufPage() {
           <div className="btn-row mt-8">
             <Link href="/preise" className="btn btn--ghost">
               Preise ansehen
+              <Icon name="arrow-right" size={17} />
+            </Link>
+            <Link href="/ratgeber" className="btn btn--ghost">
+              Raum vorbereiten
               <Icon name="arrow-right" size={17} />
             </Link>
             <Link href="/faq" className="btn btn--ghost">

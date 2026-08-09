@@ -29,8 +29,8 @@ export default function EinsatzgebietPage() {
           Sitz in {business.postalCode} {business.city}
         </span>
         <span className="badge badge--dark">
-          <Icon name="handshake" size={15} />
-          Regionaler Betrieb
+          <Icon name="euro" size={15} />
+          Anfahrt im Gebiet inklusive
         </span>
       </PageHero>
 
@@ -110,8 +110,8 @@ export default function EinsatzgebietPage() {
                 <span className="stat__label">Radius um Aalen</span>
               </div>
               <div className="stat">
-                <span className="stat__value">ab 18 €</span>
-                <span className="stat__label">pro m² Arbeitsleistung</span>
+                <span className="stat__value">0 €</span>
+                <span className="stat__label">Anfahrt im Einsatzgebiet</span>
               </div>
               <div className="stat">
                 <span className="stat__value">24 Std.</span>

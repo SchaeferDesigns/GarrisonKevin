@@ -13,6 +13,7 @@ import {
   processSteps,
   serviceAreas,
   services,
+  notOfferedExtra,
   trustPoints,
   whatsappLink,
 } from '@/lib/business';
@@ -67,6 +68,10 @@ export default function HomePage() {
                   <Icon name="map-pin" size={15} />
                   {business.serviceRadiusKm} km um Aalen
                 </span>
+                <span className="badge badge--dark">
+                  <Icon name="calendar" size={15} />
+                  Aktuell {business.leadTimeShort}
+                </span>
               </div>
 
               <div className={styles.heroActions}>
@@ -103,7 +108,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <p className={styles.priceFoot}>
-                Material stellt der Kunde. Verbindlich wird der Preis nach der Besichtigung vor Ort.
+                Inklusive Dämmung und Anfahrt. Material stellt der Kunde. Verbindlich nach der Besichtigung.
               </p>
               <Link href="/preise" className="btn btn--glass btn--block btn--sm">
                 Alle Preise ansehen
@@ -253,11 +258,12 @@ export default function HomePage() {
               <ul className="list">
                 {[
                   'Verlegen von Laminat, Vinyl und Klickböden',
-                  'Untergrund prüfen und vorbereiten',
-                  'Trittschalldämmung und Dampfsperre einbauen',
+                  'Untergrund reinigen, grundieren und ausgleichen',
+                  'Trittschalldämmung und Dampfsperre – im m²-Preis enthalten',
                   'Sockelleisten zuschneiden und montieren',
                   'Acryl- und Silikonfugen neu ziehen',
-                  'Ausbesserungen und Teilflächen',
+                  'Ausbesserungen und Teilflächen, auch an fremd verlegten Böden',
+                  'Anfahrt im Einsatzgebiet',
                   'Besichtigung vor Ort und schriftliches Angebot',
                 ].map((item) => (
                   <li key={item}>
@@ -275,7 +281,7 @@ export default function HomePage() {
                 wir beide keine Zeit investieren.
               </p>
               <ul className={styles.chipList}>
-                {notOffered.map((item) => (
+                {[...notOffered, ...notOfferedExtra].map((item) => (
                   <li key={item} className={styles.chip}>
                     <Icon name="ban" size={14} />
                     {item}
@@ -289,7 +295,7 @@ export default function HomePage() {
               <ul className="list list--dense small">
                 <li>
                   <Icon name="info" size={17} />
-                  Material stellt und bezahlt der Kunde – kein Aufschlag auf Materialkosten.
+                  Material stellt der Kunde – auf Wunsch suchen wir es gemeinsam aus.
                 </li>
                 <li>
                   <Icon name="info" size={17} />

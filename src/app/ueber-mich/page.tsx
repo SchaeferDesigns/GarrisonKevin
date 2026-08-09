@@ -11,7 +11,7 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Über mich – Kevin Garrison, Bodenleger',
   description:
-    'Kevin Garrison, Bodenleger und Fugenarbeiten aus Hüttlingen. Ein fester Ansprechpartner, klare Preise und sauberes Arbeiten in Aalen und Umgebung.',
+    'Kevin Garrison, Bodenleger und Fugenarbeiten aus Hüttlingen. Maurergeselle und Vorarbeiter im Hochbau mit über 10 Jahren Erfahrung, heute spezialisiert auf Bodenbeläge und Fugen.',
   alternates: { canonical: '/ueber-mich' },
 };
 
@@ -51,7 +51,7 @@ const materialTips = [
   },
   {
     title: 'Unterlage nicht vergessen',
-    text: 'Trittschalldämmung gehört dazu, auf mineralischem Untergrund zusätzlich eine Dampfsperre. Bei Fußbodenheizung muss die Unterlage dafür freigegeben sein – das steht auf der Verpackung.',
+    text: 'Trittschalldämmung und Dampfsperre bringe ich mit und verlege sie im Quadratmeterpreis. Beim Belag selbst zählt vor allem, dass Dekor und Charge zusammenpassen – Restposten aus zwei Lieferungen sieht man später.',
     icon: 'plank' as const,
   },
 ];
@@ -62,7 +62,7 @@ export default function UeberMichPage() {
       <PageHero
         kicker="Über mich"
         title="Kevin Garrison"
-        lead="Bodenleger und Fugenarbeiten aus Hüttlingen. Ein Betrieb, eine Person, ein Wort – für Laminat, Vinyl, Sockelleisten und Silikonfugen in Aalen und Umgebung."
+        lead="Maurergeselle und Vorarbeiter im Hochbau, über zehn Jahre Altbau und Neubau – heute spezialisiert auf Bodenbeläge und Fugen. Ein Betrieb, eine Person, ein Wort."
         crumbs={[{ name: 'Über mich', path: '/ueber-mich' }]}
         image="/media/wood-detail.jpg"
       >
@@ -74,6 +74,10 @@ export default function UeberMichPage() {
           <Icon name="handshake" size={15} />
           Einzelbetrieb
         </span>
+        <span className="badge badge--dark">
+          <Icon name="shield" size={15} />
+          {business.experienceYears} Erfahrung am Bau
+        </span>
       </PageHero>
 
       <section className="section">
@@ -81,15 +85,28 @@ export default function UeberMichPage() {
         <div className="container">
           <div className="split split--wide-left">
             <div className="prose">
-              <span className="kicker">Wie ich arbeite</span>
-              <h2>Handwerk ohne Zwischenstellen</h2>
+              <span className="kicker">Mein Weg</span>
+              <h2>Vom Hochbau zum Boden</h2>
               <p className="lead">
-                Bei mir sprechen Sie mit der Person, die anschließend auf den Knien liegt und die Diele zuschneidet. Das
-                klingt selbstverständlich, ist es aber nicht: Bei vielen Aufträgen geht auf dem Weg zwischen Büro,
-                Kalkulation und Baustelle genau die Information verloren, auf die es später ankommt.
+                Gelernt habe ich Maurer. Über zehn Jahre war ich im Hochbau unterwegs, zuletzt als Vorarbeiter, in
+                Altbau und Neubau gleichermaßen. Zum Bodenlegen kam ich über die Ausbildung und über eine Firma für
+                Altbausanierung – dort gehören Böden und Fugen zum Alltag, und dort habe ich gemerkt, dass mir genau
+                diese Arbeit am meisten liegt.
               </p>
               <p>
-                Deshalb ist der Ablauf hier einfach gehalten. Sie beschreiben, was ansteht. Ich schaue es mir an. Sie
+                Böden verlege ich seit 2009 immer wieder, seit 2026 hauptberuflich im eigenen Betrieb. Was aus der Zeit
+                am Bau geblieben ist: ein Blick für den Untergrund. Ein Boden ist nur so gut wie das, worauf er liegt –
+                und schiefe Wände im Altbau sind für mich nichts Ungewöhnliches, sondern der Normalfall.
+              </p>
+
+              <h3>Wie ich arbeite</h3>
+              <p>
+                Sauber arbeiten, Termine halten, ehrlich kalkulieren. Mehr Grundsätze braucht es aus meiner Sicht nicht.
+                Sie sprechen mit der Person, die anschließend auf den Knien liegt und die Diele zuschneidet – ich schaue
+                mir jeden Auftrag selbst an und verlege auch selbst.
+              </p>
+              <p>
+                Der Ablauf ist deshalb einfach gehalten. Sie beschreiben, was ansteht. Ich schaue es mir an. Sie
                 bekommen ein schriftliches Angebot mit einem Preis, der hält. Und dann wird gearbeitet – an dem Tag, der
                 vereinbart wurde.
               </p>
@@ -106,6 +123,11 @@ export default function UeberMichPage() {
                 Materialbeschaffung ist Handel, nicht Handwerk. Wenn Sie den Boden selbst kaufen, sehen Sie den echten
                 Preis, wählen Dekor und Qualität frei und zahlen keinen Aufschlag über mich. Auf der Rechnung steht dann
                 genau das, was ich auch geleistet habe: die Arbeitszeit.
+              </p>
+              <p>
+                Alleine lassen muss ich Sie damit trotzdem nicht: Auf Wunsch suchen wir das Material gemeinsam aus, damit
+                Nutzungsklasse und Menge zum Raum passen. Und wenn Sie keinen Transporter haben, liefere ich es gegen
+                Transportkosten an.
               </p>
             </div>
 

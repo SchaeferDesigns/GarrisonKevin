@@ -1,6 +1,16 @@
-import { business, faqs, prices, services, serviceAreas } from './business';
+import { availability, business, faqs, prices, services, serviceAreas } from './business';
 
 const url = business.siteUrl;
+
+/** Erreichbarkeit: Montag bis Samstag, 08:00–18:00 Uhr. */
+const openingHoursSpecification = [
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    opens: '08:00',
+    closes: '18:00',
+  },
+];
 
 /** Zentrale Beschreibung des Betriebs – Basis für lokale Suche und KI-Antworten. */
 export const localBusinessSchema = {
@@ -15,6 +25,7 @@ export const localBusinessSchema = {
   email: business.email,
   image: `${url}/og-image.jpg`,
   currenciesAccepted: 'EUR',
+  paymentAccepted: 'Barzahlung, Überweisung',
   address: {
     '@type': 'PostalAddress',
     streetAddress: business.street,
@@ -27,6 +38,7 @@ export const localBusinessSchema = {
   founder: { '@type': 'Person', name: business.name },
   knowsLanguage: ['de'],
   availableLanguage: 'Deutsch',
+  openingHoursSpecification,
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Leistungen',
@@ -64,6 +76,11 @@ export const localBusinessSchema = {
     url: `${url}/leistungen/${service.slug}`,
   })),
   slogan: 'Sauber, termingerecht, fair kalkuliert.',
+  additionalProperty: availability.map((slot) => ({
+    '@type': 'PropertyValue',
+    name: slot.days,
+    value: slot.hours,
+  })),
 };
 
 export const websiteSchema = {

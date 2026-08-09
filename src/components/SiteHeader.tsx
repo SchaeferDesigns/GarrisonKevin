@@ -13,6 +13,7 @@ const navItems = [
   { href: '/ablauf', label: 'Ablauf' },
   { href: '/einsatzgebiet', label: 'Einsatzgebiet' },
   { href: '/ueber-mich', label: 'Über mich' },
+  { href: '/ratgeber', label: 'Ratgeber' },
   { href: '/faq', label: 'FAQ' },
 ];
 
