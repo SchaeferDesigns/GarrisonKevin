@@ -6,6 +6,7 @@ import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
 import { availability, business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
+import { hasFormEndpoint } from '@/lib/anfrage';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -45,10 +46,13 @@ export default function KontaktPage() {
             <div>
               <div className="section-head" style={{ marginBottom: '1.75rem' }}>
                 <span className="kicker">Anfrageformular</span>
-                <h2 style={{ fontSize: '1.85rem' }}>In drei Schritten zur Anfrage</h2>
+                <h2 style={{ fontSize: '1.85rem' }}>In fünf Schritten zur Anfrage</h2>
                 <p className="muted small">
-                  Das Formular erstellt aus Ihren Angaben eine fertige Nachricht. Absenden können Sie sie anschließend
-                  selbst per E-Mail oder WhatsApp – so bleiben Ihre Daten bei Ihnen.
+                  Leistung, Umfang, Ort, Kontakt – am Ende sehen Sie alle Angaben noch einmal und können jede davon
+                  ändern.{' '}
+                  {hasFormEndpoint
+                    ? 'Danach geht die Anfrage direkt raus.'
+                    : 'Abgesendet wird sie anschließend über Ihr E-Mail-Programm oder WhatsApp.'}
                 </p>
               </div>
 

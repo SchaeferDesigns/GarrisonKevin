@@ -49,6 +49,48 @@ Für Canonical-URLs, Sitemap und JSON-LD wird `NEXT_PUBLIC_SITE_URL` verwendet
 NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
 ```
 
+### Anfrageformular anbinden
+
+Das Kontaktformular (`src/components/AnfrageForm.tsx`) führt in fünf Schritten
+durch die Anfrage und sendet sie am Ende ab. Wohin, entscheidet eine einzige
+Variable:
+
+```bash
+NEXT_PUBLIC_FORM_ENDPOINT=https://…   # Ziel für den POST
+```
+
+- **gesetzt:** Der letzte Schritt sendet die Anfrage per `POST` als JSON an
+  diese Adresse (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich wird
+  dann eine Einwilligungs-Checkbox verlangt. Der Endpunkt muss mit einem
+  2xx-Status antworten und CORS für die Website-Domain erlauben.
+- **nicht gesetzt (aktueller Stand):** Das Formular bleibt vollständig
+  bedienbar und übergibt die fertige Nachricht am Ende an das E-Mail-Programm
+  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen.
+
+Der gesendete Datensatz stammt aus `buildPayload` und ist bewusst stabil
+aufgebaut:
+
+```json
+{
+  "form": "anfrage",
+  "submittedAt": "2026-08-09T12:00:00.000Z",
+  "contact": { "name": "", "phone": "", "email": "", "preferredChannel": "" },
+  "project": {
+    "services": [], "areaSqm": "", "skirtingMeters": "", "jointMeters": "",
+    "oldFloor": "", "material": "", "customerType": "", "place": "",
+    "timeframe": "", "notes": ""
+  },
+  "consent": true,
+  "summary": "fertig formatierte Fassung als Text"
+}
+```
+
+Als Endpunkt eignet sich jeder Dienst, der JSON annimmt und als E-Mail
+weiterreicht, ebenso eine eigene Funktion beim Hoster. Gegen Spam-Bots gibt es
+ein verstecktes Honeypot-Feld; wird es ausgefüllt, unterbleibt der Versand.
+Sobald ein Endpunkt aktiv ist, muss die Datenschutzerklärung die Verarbeitung
+der Formulardaten abdecken.
+
 ## Deployment
 
 ### GitHub Pages (Testumgebung)
@@ -88,8 +130,10 @@ Sobald die richtige Domain steht:
 - Keine Cookies, kein Local Storage, daher kein Cookie-Banner erforderlich
 - Keine Analyse-, Tracking- oder Kartendienste
 - Schriften werden beim Build heruntergeladen und vom eigenen Server ausgeliefert
-- Das Anfrageformular überträgt nichts an den Server: Es erzeugt aus den Eingaben
-  eine Nachricht, die der Nutzer selbst per E-Mail-Programm oder WhatsApp versendet
+- Das Anfrageformular überträgt derzeit nichts an einen Server: Es erzeugt aus den
+  Eingaben eine Nachricht, die der Nutzer selbst per E-Mail-Programm oder WhatsApp
+  versendet. Erst mit gesetztem `NEXT_PUBLIC_FORM_ENDPOINT` wird direkt gesendet –
+  dann mit Einwilligung und entsprechendem Abschnitt in der Datenschutzerklärung
 - Der Preisrechner rechnet ausschließlich im Browser
 
 ## Bildmedien

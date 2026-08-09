@@ -70,4 +70,4 @@ Zum Termin sollten der Raum und die Zuwege leer und begehbar sein. Boden und Lei
 
 ## Hinweise zum Datenschutz
 
-Die Website setzt keine Cookies, bindet keine externen Dienste ein, lädt Schriften vom eigenen Server und überträgt keine Formulardaten an einen Server. Anfragen werden vom Nutzer selbst per E-Mail-Programm oder WhatsApp versendet.
+Die Website setzt keine Cookies, bindet keine externen Dienste ein und lädt Schriften vom eigenen Server. Das Anfrageformular führt in fünf Schritten durch die Anfrage; derzeit werden dabei keine Formulardaten an einen Server übertragen, die fertige Nachricht wird vom Nutzer selbst per E-Mail-Programm oder WhatsApp versendet.
