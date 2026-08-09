@@ -17,24 +17,19 @@ export const metadata: Metadata = {
 
 const principles = [
   {
-    title: 'Ein Ansprechpartner',
-    text: 'Wer die Besichtigung macht, macht auch die Arbeit. Es gibt keine Übergabe an eine Kolonne und keine Information, die dabei verloren geht.',
-    icon: 'user' as const,
-  },
-  {
-    title: 'Preis vor Beginn',
-    text: 'Das Angebot steht schriftlich fest, bevor der erste Handgriff passiert. Nachträgliche Positionen gibt es nur, wenn Sie sie ausdrücklich beauftragen.',
-    icon: 'document' as const,
-  },
-  {
-    title: 'Kein Materialaufschlag',
-    text: 'Boden und Leisten kaufen Sie selbst, Dämmung und Dampfsperre bringe ich mit. Ich verdiene an meiner Arbeit, nicht an Ihrem Baumarkteinkauf.',
-    icon: 'euro' as const,
-  },
-  {
-    title: 'Sauber hinterlassen',
-    text: 'Abdecken, absaugen, Reste mitnehmen. Ein fertiger Raum ist erst fertig, wenn man ihn ohne Aufräumen benutzen kann.',
+    title: 'Sauber arbeiten',
+    text: 'Einer der drei Grundsätze, nach denen ich arbeite.',
     icon: 'sparkle' as const,
+  },
+  {
+    title: 'Termine halten',
+    text: 'Ein zugesagter Termin wird gehalten. Der Vorlauf beträgt derzeit zwei bis drei Wochen.',
+    icon: 'calendar' as const,
+  },
+  {
+    title: 'Ehrlich kalkulieren',
+    text: 'Berechnet wird die Arbeitsleistung, ohne versteckte Positionen. Das Material stellt der Kunde.',
+    icon: 'euro' as const,
   },
 ];
 
@@ -44,7 +39,7 @@ export default function UeberMichPage() {
       <PageHero
         kicker="Über mich"
         title="Kevin Garrison"
-        lead="Maurergeselle und Vorarbeiter im Hochbau, über zehn Jahre Altbau und Neubau – heute spezialisiert auf Bodenbeläge und Fugen. Ein Betrieb, eine Person, ein Wort."
+        lead="Maurergeselle und Vorarbeiter im Hochbau, über zehn Jahre Altbau und Neubau – heute Bodenbeläge und Fugen. Einzelbetrieb ohne Mitarbeiter."
         crumbs={[{ name: 'Über mich', path: '/ueber-mich' }]}
         image="/media/wood-detail.jpg"
       >
@@ -76,40 +71,34 @@ export default function UeberMichPage() {
                 diese Arbeit am meisten liegt.
               </p>
               <p>
-                Böden verlege ich seit 2009 immer wieder, seit 2026 hauptberuflich im eigenen Betrieb. Was aus der Zeit
-                am Bau geblieben ist: ein Blick für den Untergrund. Ein Boden ist nur so gut wie das, worauf er liegt –
-                und schiefe Wände im Altbau sind für mich nichts Ungewöhnliches, sondern der Normalfall.
+                Böden verlege ich seit 2009 immer wieder, seit 2026 hauptberuflich im eigenen Betrieb.
               </p>
 
               <h3>Wie ich arbeite</h3>
               <p>
-                Sauber arbeiten, Termine halten, ehrlich kalkulieren. Mehr Grundsätze braucht es aus meiner Sicht nicht.
-                Sie sprechen mit der Person, die anschließend auf den Knien liegt und die Diele zuschneidet – ich schaue
-                mir jeden Auftrag selbst an und verlege auch selbst.
+                Sauber arbeiten, Termine halten, ehrlich kalkulieren – das sind meine drei Grundsätze. Ich arbeite
+                allein: Ich sehe mir jeden Auftrag selbst vor Ort an und verlege auch selbst.
               </p>
               <p>
-                Der Ablauf ist deshalb einfach gehalten. Sie beschreiben, was ansteht. Ich schaue es mir an. Sie
-                bekommen ein schriftliches Angebot mit einem Preis, der hält. Und dann wird gearbeitet – an dem Tag, der
-                vereinbart wurde.
+                Der Ablauf ist einfach gehalten. Sie beschreiben, was ansteht. Ich sehe es mir an. Sie bekommen ein
+                schriftliches Angebot für die Arbeitsleistung. Erst danach entscheiden Sie.
               </p>
 
-              <h3>Warum nur Laminat, Vinyl und Klickböden</h3>
+              <h3>Was ich verlege – und was nicht</h3>
               <p>
-                Weil man das, was man täglich macht, besser macht als das, was man zweimal im Jahr macht. Fliesen,
-                Parkett, Estrich, PVC, Linoleum und Teppich biete ich bewusst nicht an. Diese Klarheit spart Ihnen und
-                mir Zeit – und Sie bekommen für Ihren Boden die Routine, die er braucht.
+                Verlegt werden Laminat, Vinyl und Klickböden. Nicht im Angebot sind Fliesen, Parkett, Estrich, PVC,
+                Linoleum und Teppich, ebenso keine Treppen, keine Sockelleisten mit Kabelkanal und kein vollflächig
+                verklebtes Vinyl. Aufträge übernehme ich für Privatkunden und für Gewerbe, kleine wie große.
               </p>
 
-              <h3>Warum das Material von Ihnen kommt</h3>
+              <h3>Material stellt der Kunde</h3>
               <p>
-                Materialbeschaffung ist Handel, nicht Handwerk. Wenn Sie den Boden selbst kaufen, sehen Sie den echten
-                Preis, wählen Dekor und Qualität frei und zahlen keinen Aufschlag über mich. Auf der Rechnung steht dann
-                genau das, was ich auch geleistet habe: die Arbeitszeit.
+                Boden und Leisten kaufen Sie selbst, berechnet wird ausschließlich die Arbeitsleistung. Trittschalldämmung
+                und Dampfsperre sind dagegen im Quadratmeterpreis enthalten.
               </p>
               <p>
-                Alleine lassen muss ich Sie damit trotzdem nicht: Auf Wunsch suchen wir das Material gemeinsam aus, damit
-                Nutzungsklasse und Menge zum Raum passen. Und wenn Sie keinen Transporter haben, liefere ich es gegen
-                Transportkosten an.
+                Aussuchen müssen Sie das Material nicht allein: Auf Wunsch suchen wir es gemeinsam aus, und gegen
+                Transportkosten liefere ich es an.
               </p>
             </div>
 
@@ -154,8 +143,7 @@ export default function UeberMichPage() {
               <hr className="rule" style={{ marginBlock: '0.4rem' }} />
 
               <p className="small muted">
-                Am schnellsten geht es per WhatsApp mit einem Foto des Raums. Damit kann ich meist schon einschätzen, ob
-                und wann es passt.
+                Am schnellsten geht es per WhatsApp. Ein Foto des Raums hilft bei der ersten Einschätzung.
               </p>
 
               <Link href="/kontakt" className="btn btn--accent btn--block">
@@ -172,10 +160,10 @@ export default function UeberMichPage() {
         <div className="container">
           <div className="section-head">
             <span className="kicker">Grundsätze</span>
-            <h2>Vier Dinge, auf die Sie sich verlassen können</h2>
+            <h2>Sauber arbeiten, Termine halten, ehrlich kalkulieren</h2>
           </div>
 
-          <div className="grid grid--4">
+          <div className="grid grid--3">
             {principles.map((item, i) => (
               <Reveal key={item.title} delay={i * 80}>
                 <article className="card" style={{ height: '100%' }}>
@@ -198,9 +186,8 @@ export default function UeberMichPage() {
                 Unsicher beim Einkauf?
               </h2>
               <p className="lead mt-4">
-                Nutzungsklasse, Verschnitt, gleiche Charge – bei diesen drei Punkten geht im Baumarkt am häufigsten
-                etwas schief. Im Ratgeber steht, worauf es ankommt. Und wenn Sie mögen, gehen wir das Material einfach
-                gemeinsam durch.
+                Nutzungsklasse, Verschnitt, gleiche Charge – im Ratgeber stehen allgemeine Hinweise dazu. Und wenn Sie
+                mögen, suchen wir das Material gemeinsam aus.
               </p>
               <div className="btn-row mt-6">
                 <Link href="/ratgeber" className="btn btn--glass">
@@ -228,10 +215,7 @@ export default function UeberMichPage() {
         </div>
       </section>
 
-      <CtaSection
-        title="Lernen wir uns bei der Besichtigung kennen"
-        text="Der einfachste Weg, einen Handwerker einzuschätzen, ist ein Termin vor Ort. Der kostet Sie nichts und verpflichtet Sie zu nichts."
-      />
+      <CtaSection />
 
       <JsonLd data={breadcrumbSchema([{ name: 'Über mich', path: '/ueber-mich' }])} />
     </>

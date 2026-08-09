@@ -23,7 +23,7 @@ export default function PreisePage() {
       <PageHero
         kicker="Preise"
         title="Was es kostet – vorher, nicht hinterher"
-        lead="Alle Preise gelten für die Arbeitsleistung. Sie kaufen das Material selbst und zahlen keinen Aufschlag darauf. Verbindlich wird der Preis im schriftlichen Angebot nach der Besichtigung."
+        lead="Alle Preise gelten für die Arbeitsleistung. Das Material stellt und bezahlt der Kunde. Verbindlich wird der Preis im schriftlichen Angebot nach der Besichtigung vor Ort."
         crumbs={[{ name: 'Preise', path: '/preise' }]}
       >
         <span className="badge badge--dark">
@@ -31,8 +31,8 @@ export default function PreisePage() {
           Ohne versteckte Positionen
         </span>
         <span className="badge badge--dark">
-          <Icon name="shield" size={15} />
-          Kostenlose Besichtigung
+          <Icon name="document" size={15} />
+          Festpreis nach Besichtigung
         </span>
         <span className="badge badge--dark">
           <Icon name="map-pin" size={15} />
@@ -71,18 +71,15 @@ export default function PreisePage() {
               <div>
                 <h2 style={{ fontSize: '1.4rem' }}>Kleine Aufträge</h2>
                 <p className="small muted mt-2">
-                  Nicht jeder Auftrag lohnt eine Quadratmeterkalkulation. Unter {hourlyRate.thresholdOrderValue} €
-                  Auftragswert rechne ich deshalb nach Stunden ab – ab {hourlyRate.amount} € pro Stunde bei mindestens{' '}
-                  {hourlyRate.minHours.toLocaleString('de-DE')} Stunden. Damit sind auch einzelne Ausbesserungen oder
-                  eine Fuge im Bad machbar.
+                  Unter {hourlyRate.thresholdOrderValue} € Auftragswert wird nach Stunden abgerechnet: ab{' '}
+                  {hourlyRate.amount} € pro Stunde bei mindestens {hourlyRate.minHours.toLocaleString('de-DE')} Stunden.
                 </p>
               </div>
               <div>
                 <h2 style={{ fontSize: '1.4rem' }}>Anfahrt inklusive</h2>
                 <p className="small muted mt-2">
                   Innerhalb des Einsatzgebiets – {business.serviceAreaLabel}, rund {business.serviceRadiusKm} km – ist
-                  die Anfahrt im Preis enthalten. Es kommt also nichts obendrauf, nur weil Sie zwei Orte weiter wohnen.
-                  Bezahlt wird per {business.paymentMethods}.
+                  die Anfahrt im Preis enthalten. Bezahlt wird per {business.paymentMethods}.
                 </p>
               </div>
             </div>
@@ -98,8 +95,8 @@ export default function PreisePage() {
             <span className="kicker">Richtwert-Rechner</span>
             <h2>Grobe Einschätzung in 30 Sekunden</h2>
             <p className="lead">
-              Tragen Sie Ihre Maße ein und Sie sehen sofort, in welchem Bereich sich die Arbeitsleistung bewegt. Der
-              Rechner läuft vollständig in Ihrem Browser – es wird nichts übertragen und nichts gespeichert.
+              Tragen Sie Ihre Maße ein und Sie sehen den Richtwert für die Arbeitsleistung. Der Rechner läuft
+              vollständig in Ihrem Browser – es wird nichts übertragen und nichts gespeichert.
             </p>
           </div>
 
@@ -117,14 +114,13 @@ export default function PreisePage() {
               <h2 className="mt-4">Das steckt im Preis</h2>
               <ul className="list mt-6">
                 {[
-                  'Aufmaß und Zuschnitt',
-                  'Verlegen des Belags nach Herstellervorgabe',
+                  'Verlegen von Laminat, Vinyl und Klickböden',
                   'Trittschalldämmung und Dampfsperre',
                   'Untergrund reinigen, grundieren, kleine Unebenheiten ausgleichen',
-                  'Montage der Sockelleisten inklusive Gehrung',
-                  'Ziehen der Acryl- und Silikonfugen',
+                  'Zuschnitt und Montage der Sockelleisten',
+                  'Alte Fugen entfernen und neu ziehen',
                   'Anfahrt innerhalb des Einsatzgebiets',
-                  'Abdecken der Baustelle und besenreine Übergabe',
+                  'Besichtigung vor Ort und schriftliches Angebot',
                 ].map((item) => (
                   <li key={item}>
                     <Icon name="check" size={18} />
@@ -165,15 +161,13 @@ export default function PreisePage() {
               </ul>
 
               <div className="panel mt-8">
-                <h3 style={{ fontSize: '1.1rem' }}>Warum das Material vom Kunden kommt</h3>
+                <h3 style={{ fontSize: '1.1rem' }}>Material stellt der Kunde</h3>
                 <p className="small">
-                  So zahlen Sie genau den Preis, den Ihr Baumarkt oder Händler aufruft – ohne Aufschlag über mich. Sie
-                  entscheiden frei über Dekor, Qualität und Budget, und die Rechnung bleibt für beide Seiten
-                  nachvollziehbar.
+                  Sie kaufen den Boden zum Preis Ihres Händlers, berechnet wird ausschließlich die Arbeitsleistung.
                 </p>
                 <p className="small">
-                  Aussuchen müssen Sie es trotzdem nicht allein: Auf Wunsch gehen wir gemeinsam durch, welche
-                  Nutzungsklasse und welche Menge Sie brauchen. Gegen Transportkosten liefere ich das Material auch an.
+                  Aussuchen müssen Sie es nicht allein: Auf Wunsch suchen wir das Material gemeinsam aus. Gegen
+                  Transportkosten liefere ich es auch an.
                 </p>
               </div>
             </div>
@@ -218,40 +212,28 @@ export default function PreisePage() {
             <span className="kicker">Ehrlich gerechnet</span>
             <h2>„Das ist mir zu teuer“ – der häufigste Satz</h2>
             <p className="lead">
-              Den höre ich regelmäßig, und meistens liegt es daran, dass Angebote sich schlecht vergleichen lassen. Vier
-              Punkte, die den Unterschied ausmachen.
+              Den Satz höre ich regelmäßig. Meistens liegt es daran, dass sich Angebote schlecht vergleichen lassen.
+              Drei Punkte, auf die es beim Vergleich ankommt.
             </p>
           </div>
 
           <ul className="list">
             <li>
               <Icon name="check" size={18} />
-              <strong>Es ist reine Arbeitsleistung.</strong> Wo andere Material mit Aufschlag weiterverkaufen, kaufen
-              Sie es selbst zum Ladenpreis. Vergleichen Sie also nicht Quadratmeterpreise, sondern Endsummen.
+              <strong>Es ist reine Arbeitsleistung.</strong> Das Material kaufen Sie selbst zum Preis Ihres Händlers.
+              Vergleichbar sind deshalb nicht Quadratmeterpreise, sondern Endsummen.
             </li>
             <li>
               <Icon name="check" size={18} />
-              <strong>Dämmung, Dampfsperre und Anfahrt sind drin.</strong> Genau die Positionen, die andernorts erst auf
-              der Schlussrechnung auftauchen.
+              <strong>Trittschalldämmung, Dampfsperre und Anfahrt sind enthalten.</strong> Diese drei Positionen kommen
+              nicht zusätzlich auf die Rechnung.
             </li>
             <li>
               <Icon name="check" size={18} />
-              <strong>Der Preis steht vor Beginn.</strong> Nach der Besichtigung bekommen Sie einen Festpreis für die
-              Arbeitsleistung. Nachträge gibt es nur, wenn Sie sie beauftragen.
-            </li>
-            <li>
-              <Icon name="check" size={18} />
-              <strong>Nachbessern kostet mehr als sauber verlegen.</strong> Eine schlecht geschnittene Leiste oder eine
-              gerissene Fuge sieht man jeden Tag – und der zweite Handwerker ist immer teurer als der erste.
+              <strong>Der Preis steht vor Beginn.</strong> Die Werte auf dieser Seite sind Richtwerte. Verbindlich wird
+              der Preis mit dem schriftlichen Angebot nach der Besichtigung.
             </li>
           </ul>
-
-          <div className="panel panel--muted mt-8">
-            <p className="small muted">
-              Wenn es am Budget hängt, sagen Sie es einfach. Oft lässt sich der Auftrag in Abschnitte teilen, oder wir
-              fangen mit dem Raum an, der es am nötigsten hat.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -292,8 +274,8 @@ export default function PreisePage() {
       </section>
 
       <CtaSection
-        title="Ein Angebot kostet Sie nichts"
-        text="Besichtigung, Aufmaß und schriftliches Angebot sind kostenlos und unverbindlich. Sie sehen den Festpreis, bevor Sie sich entscheiden."
+        title="Verbindlicher Preis nach der Besichtigung"
+        text="Die Werte auf dieser Seite sind Richtwerte für die Arbeitsleistung. Was Ihr Auftrag genau kostet, steht im schriftlichen Angebot nach der Besichtigung vor Ort."
       />
 
       <JsonLd data={breadcrumbSchema([{ name: 'Preise', path: '/preise' }])} />

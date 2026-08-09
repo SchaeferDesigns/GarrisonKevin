@@ -21,7 +21,7 @@ export default function LeistungenPage() {
       <PageHero
         kicker="Leistungen"
         title="Boden, Leisten und Fugen aus einer Hand"
-        lead="Drei Arbeiten, die zusammengehören und die ich deshalb auch zusammen anbiete. Sie brauchen keine zweite Firma für den letzten Meter."
+        lead="Bodenverlegung, Sockelleisten und Fugenarbeiten. Alle Preise gelten für die Arbeitsleistung, das Material stellt der Kunde."
         crumbs={[{ name: 'Leistungen', path: '/leistungen' }]}
       />
 
@@ -90,8 +90,7 @@ export default function LeistungenPage() {
               <span className="kicker">Zusatzarbeiten</span>
               <h2 className="mt-4">Was sich dazubuchen lässt</h2>
               <p className="lead mt-4">
-                Manches fällt beim Verlegen ohnehin an. Diese Arbeiten gehören nicht automatisch dazu – sagen Sie
-                einfach Bescheid, dann stehen sie als eigene Position im Angebot.
+                Diese Arbeiten gehören nicht automatisch dazu. Auf Wunsch stehen sie als eigene Position im Angebot.
               </p>
 
               <ul className="list mt-6">
@@ -107,9 +106,8 @@ export default function LeistungenPage() {
             <Reveal className="panel panel--muted">
               <h3>Das mache ich nicht</h3>
               <p className="small muted">
-                Der Schwerpunkt liegt bewusst auf Klicksystemen bei Laminat und Vinyl. Für die folgenden Arbeiten
-                braucht es anderes Werkzeug und andere Routine – da wären Sie bei einem spezialisierten Betrieb besser
-                aufgehoben.
+                Verlegt werden Klicksysteme bei Laminat und Vinyl. Die folgenden Beläge und Arbeiten sind nicht im
+                Angebot.
               </p>
               <ul className="badge-row">
                 {[...notOffered, ...notOfferedExtra].map((item) => (

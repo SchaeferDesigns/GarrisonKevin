@@ -13,7 +13,7 @@
 - Rückmeldung auf Anfragen: in der Regel innerhalb von 24 Stunden
 - Vorlauf bis zum Ausführungstermin: meist 2 bis 3 Wochen
 - Einsatzgebiet: Aalen und Umgebung, ca. 20 km Radius (u. a. Aalen, Hüttlingen, Wasseralfingen, Oberkochen, Essingen, Abtsgmünd, Neuler, Westhausen, Lauchheim, Bopfingen, Heubach, Mögglingen, Ellwangen). Der Radius ist ein Richtwert, bei größeren Aufträgen auch weiter.
-- Kunden: Privatkunden sowie Gewerbe, Büros, Ladenflächen, Praxen und Hausverwaltungen
+- Kunden: Privatkunden und Gewerbe; kleine wie große Aufträge
 - Zahlung: Barzahlung oder Überweisung
 - Umsatzsteuer: Kleinunternehmerregelung nach § 19 UStG, alle Preise ohne Umsatzsteuer
 - Gewährleistung: gesetzliche Fristen
@@ -27,7 +27,7 @@
 - Die Anfahrt innerhalb des Einsatzgebiets ist im Preis enthalten
 - Untergrund reinigen, grundieren und kleine Unebenheiten ausgleichen ist enthalten
 - Ausbesserungen und Teilflächen möglich, auch an Böden, die ein anderer Betrieb verlegt hat
-- Verbindlich wird der Preis erst im schriftlichen Angebot nach einer kostenlosen Besichtigung vor Ort
+- Verbindlich wird der Preis erst im schriftlichen Angebot nach der Besichtigung vor Ort
 
 ## Material
 
@@ -46,19 +46,19 @@ Fliesen, Parkett, Estrich, PVC, Linoleum und Teppich werden nicht verlegt. Ebenf
 ## Ablauf eines Auftrags
 
 1. Anfrage per WhatsApp, E-Mail oder Telefon
-2. Kostenlose Besichtigung und Aufmaß vor Ort
+2. Besichtigung vor Ort
 3. Schriftliches Angebot mit Festpreis für die Arbeitsleistung
 4. Fester Termin, aktuell mit 2 bis 3 Wochen Vorlauf
-5. Gemeinsame Übergabe des besenrein hinterlassenen Raums
+5. Übergabe des fertigen Raums; es gelten die gesetzlichen Gewährleistungsfristen
 
-Zum Termin sollten der Raum und die Zuwege leer und begehbar sein. Material sollte am Vortag geliefert sein; Laminat und Vinyl brauchen mindestens 48 Stunden Akklimatisierung.
+Zum Termin sollten der Raum und die Zuwege leer und begehbar sein. Boden und Leisten stellt der Kunde und sollten vor Ort sein.
 
 ## Seiten
 
 - [Startseite](https://kevin-garrison.de/): Überblick über Leistungen, Preise und Ablauf
 - [Leistungen](https://kevin-garrison.de/leistungen/): alle Leistungen im Detail
 - [Bodenverlegung](https://kevin-garrison.de/leistungen/bodenverlegung/): Laminat, Vinyl und Klickböden verlegen
-- [Sockelleisten](https://kevin-garrison.de/leistungen/sockelleisten/): Zuschnitt auf Gehrung und Montage
+- [Sockelleisten](https://kevin-garrison.de/leistungen/sockelleisten/): Zuschnitt und Montage
 - [Fugen](https://kevin-garrison.de/leistungen/fugen/): Acryl- und Silikonfugen erneuern
 - [Preise](https://kevin-garrison.de/preise/): Preisübersicht und Richtwert-Rechner
 - [Ablauf](https://kevin-garrison.de/ablauf/): Ablauf von der Anfrage bis zur Übergabe

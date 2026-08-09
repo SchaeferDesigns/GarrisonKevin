@@ -21,7 +21,7 @@ export default function EinsatzgebietPage() {
       <PageHero
         kicker="Einsatzgebiet"
         title={`${business.serviceAreaLabel} – rund ${business.serviceRadiusKm} km`}
-        lead="Ich arbeite bewusst regional. Kurze Wege bedeuten verlässliche Termine, schnelle Besichtigungen und die Möglichkeit, auch später noch einmal vorbeizuschauen."
+        lead="Gearbeitet wird in Aalen und Umgebung, in einem Radius von rund 20 Kilometern. Die Anfahrt innerhalb des Einsatzgebiets ist im Preis enthalten."
         crumbs={[{ name: 'Einsatzgebiet', path: '/einsatzgebiet' }]}
       >
         <span className="badge badge--dark">
@@ -62,10 +62,10 @@ export default function EinsatzgebietPage() {
               <span className="card__icon">
                 <Icon name="clock" size={22} />
               </span>
-              <h3>Kurze Wege, gehaltene Termine</h3>
+              <h3>Anfahrt im Preis enthalten</h3>
               <p className="small muted">
-                Kurze Wege im Einsatzgebiet machen die Terminplanung realistisch. Es hängt kein Arbeitstag an einer
-                langen Autobahnfahrt.
+                Innerhalb des Einsatzgebiets wird für die Anfahrt nichts zusätzlich berechnet. Es zählt allein die
+                Arbeitsleistung nach den genannten Richtwerten.
               </p>
             </Reveal>
 
@@ -73,10 +73,10 @@ export default function EinsatzgebietPage() {
               <span className="card__icon">
                 <Icon name="handshake" size={22} />
               </span>
-              <h3>Auch nach dem Auftrag erreichbar</h3>
+              <h3>Erreichbarkeit</h3>
               <p className="small muted">
-                Sollte an einer Leiste oder einer Fuge etwas nachzuarbeiten sein, bin ich schnell wieder da. Das ist der
-                praktische Vorteil eines regionalen Betriebs gegenüber einer überregionalen Firma.
+                Montag bis Samstag von 8 bis 18 Uhr, per Telefon, WhatsApp oder E-Mail. Auf Anfragen folgt in der Regel
+                innerhalb von 24 Stunden eine Rückmeldung.
               </p>
             </Reveal>
           </div>
@@ -91,9 +91,8 @@ export default function EinsatzgebietPage() {
               <span className="kicker">Außerhalb des Gebiets</span>
               <h2 className="mt-4">Weiter weg? Fragen Sie trotzdem</h2>
               <p className="lead mt-4">
-                Bei größeren Aufträgen lohnt sich auch eine längere Anfahrt. Sagen Sie mir einfach, wo das Objekt liegt
-                und um welchen Umfang es geht – dann sage ich Ihnen ehrlich, ob es sinnvoll ist oder ob Sie mit einem
-                Betrieb vor Ort besser fahren.
+                Die 20 Kilometer sind ein Richtwert. Bei größeren Aufträgen sind auch weitere Wege möglich – sagen Sie
+                einfach, wo das Objekt liegt und um welchen Umfang es geht.
               </p>
 
               <div className="btn-row mt-6">

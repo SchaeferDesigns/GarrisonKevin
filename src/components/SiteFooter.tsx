@@ -92,8 +92,8 @@ export default function SiteFooter() {
             </ul>
 
             <div className={`${styles.ctaBox} mt-6`}>
-              <span className={styles.ctaTitle}>Angebot in 24 Stunden</span>
-              <p className="small">Kurz beschreiben, was ansteht – Sie erhalten eine ehrliche Einschätzung.</p>
+              <span className={styles.ctaTitle}>Rückmeldung in 24 Stunden</span>
+              <p className="small">Kurz beschreiben, was ansteht. Der verbindliche Preis folgt nach der Besichtigung.</p>
               <Link href="/kontakt" className="btn btn--accent btn--block">
                 Anfrage starten
                 <Icon name="arrow-right" size={17} />

@@ -15,7 +15,7 @@ const waText =
 /** Abschließender Handlungsaufruf – auf jeder Seite am Ende. */
 export default function CtaSection({
   title = 'Besichtigung vereinbaren – danach entscheiden Sie',
-  text = 'Die Besichtigung vor Ort und das schriftliche Angebot sind für Sie kostenlos und unverbindlich. Sie wissen vorher, was es kostet, und gehen kein Risiko ein.',
+  text = 'Die Preise auf dieser Seite sind Richtwerte. Verbindlich wird der Preis erst mit dem schriftlichen Angebot nach der Besichtigung vor Ort – erst dann entscheiden Sie.',
 }: CtaSectionProps) {
   return (
     <section className={styles.wrap}>

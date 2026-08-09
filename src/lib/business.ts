@@ -1,7 +1,10 @@
 /**
  * Zentrale Stammdaten des Betriebs.
- * Alle Seiten, Strukturdaten (JSON-LD) und Kontaktpunkte lesen aus dieser Datei –
- * Änderungen hier wirken sich sofort auf die gesamte Website aus.
+ *
+ * WICHTIG: Hier steht ausschließlich, was vom Betrieb bestätigt wurde –
+ * die Angaben des Verkaufsschilds und die Antworten aus dem Fragebogen.
+ * Beschreibende Zusätze, Qualitätsversprechen oder Leistungsdetails, die
+ * nicht bestätigt sind, gehören nicht auf die Website.
  */
 
 export const business = {
@@ -25,13 +28,13 @@ export const business = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kevin-garrison.de',
   serviceRadiusKm: 20,
   serviceAreaLabel: 'Aalen und Umgebung',
-  /** Kleinunternehmerregelung – Preise ohne Umsatzsteuer. */
   vatNote: 'Preise ohne USt. gemäß Kleinunternehmerregelung § 19 UStG.',
-  /** Üblicher Vorlauf bis zum Ausführungstermin. */
   leadTime: 'meist 2 bis 3 Wochen',
   leadTimeShort: '2–3 Wochen Vorlauf',
   paymentMethods: 'Barzahlung oder Überweisung',
   experienceYears: 'über 10 Jahre',
+  /** Vom Verkaufsschild übernommen. */
+  slogan: 'Sauber, termingerecht, fair kalkuliert.',
 } as const;
 
 export const whatsappLink = (text?: string) =>
@@ -44,7 +47,6 @@ export const mailtoLink = (subject: string, body?: string) =>
 
 export const telLink = `tel:${business.phoneE164}`;
 
-/** Erreichbarkeit für Anrufe und Nachrichten. */
 export const availability = [
   { days: 'Montag – Samstag', hours: '08:00 – 18:00 Uhr' },
   { days: 'Sonntag', hours: 'geschlossen' },
@@ -66,7 +68,7 @@ export const prices: Price[] = [
     from: 18,
     unit: 'pro m²',
     unitLong: 'pro Quadratmeter',
-    note: 'Laminat, Vinyl und Klickböden inklusive Zuschnitt, Trittschalldämmung und Dampfsperre.',
+    note: 'Laminat, Vinyl und Klickböden. Trittschalldämmung und Dampfsperre sind enthalten.',
   },
   {
     id: 'sockelleisten',
@@ -74,7 +76,7 @@ export const prices: Price[] = [
     from: 7,
     unit: 'pro lfm',
     unitLong: 'pro laufendem Meter',
-    note: 'Zuschnitt, Gehrung und Montage der vom Kunden gestellten Leisten.',
+    note: 'Zuschnitt und Montage der vom Kunden gestellten Leisten.',
   },
   {
     id: 'fugen',
@@ -82,7 +84,7 @@ export const prices: Price[] = [
     from: 6,
     unit: 'pro lfm',
     unitLong: 'pro laufendem Meter',
-    note: 'Neuverfugung sowie Entfernen und Erneuern alter Fugen.',
+    note: 'Alte Fugen entfernen und neu ziehen.',
   },
 ];
 
@@ -90,7 +92,6 @@ export const hourlyRate = {
   amount: 40,
   minHours: 1.5,
   thresholdOrderValue: 250,
-  note: 'Kleine Aufträge unter 250 € werden nach Stunden abgerechnet: ab 40 €/Std., mindestens 1,5 Stunden.',
 };
 
 export type Service = {
@@ -109,99 +110,93 @@ export const services: Service[] = [
   {
     slug: 'bodenverlegung',
     title: 'Bodenverlegung',
-    short: 'Laminat, Vinyl und Klickböden – fachgerecht verlegt, sauber abgeschlossen.',
+    short: 'Laminat, Vinyl und Klickböden – verlegt inklusive Trittschalldämmung und Dampfsperre.',
     icon: 'plank',
     intro:
-      'Laminat, Vinyl und Klickböden werden millimetergenau eingemessen, zugeschnitten und verlegt. Trittschalldämmung und Dampfsperre gehören dazu und sind im Quadratmeterpreis enthalten. Vom Vorbereiten des Untergrunds bis zur letzten Abschlussleiste bleibt alles in einer Hand – Sie bekommen einen Raum, der fertig ist und nicht nachgearbeitet werden muss.',
+      'Verlegt werden Laminat, Vinyl und Klickböden. Der Untergrund wird vorher gereinigt, grundiert und von kleinen Unebenheiten befreit. Trittschalldämmung und Dampfsperre sind im Quadratmeterpreis enthalten, das Material für den Belag selbst stellt der Kunde.',
     bullets: [
-      'Laminat, Vinyl und Klickböden – Klicksysteme aller gängigen Hersteller',
+      'Laminat, Vinyl und Klickböden – Klicksysteme',
       'Untergrund reinigen, grundieren und kleine Unebenheiten ausgleichen',
-      'Trittschalldämmung und Dampfsperre – im Quadratmeterpreis enthalten',
-      'Millimetergenauer Zuschnitt an Türzargen, Heizrohren und Nischen',
-      'Ausbesserungen und Teilflächen – auch an Böden, die jemand anderes verlegt hat',
-      'Besenreine Übergabe des fertigen Raums',
+      'Trittschalldämmung und Dampfsperre im Quadratmeterpreis enthalten',
+      'Ausbesserungen und Teilflächen, auch an Böden anderer Betriebe',
+      'Besichtigung vor Ort und schriftliches Angebot',
     ],
     priceId: 'verlegung',
     metaTitle: 'Bodenverlegung Aalen – Laminat & Vinyl verlegen lassen',
     metaDescription:
-      'Laminat, Vinyl und Klickböden fachgerecht verlegen lassen in Aalen und Umgebung. Ab 18 €/m² inklusive Trittschalldämmung, kostenlose Besichtigung und schriftliches Angebot.',
+      'Laminat, Vinyl und Klickböden verlegen lassen in Aalen und Umgebung. Ab 18 €/m² inklusive Trittschalldämmung und Dampfsperre, Besichtigung und schriftliches Angebot.',
   },
   {
     slug: 'sockelleisten',
     title: 'Sockelleisten',
-    short: 'Sauber auf Gehrung geschnitten, spaltfrei montiert, passend zum Boden.',
+    short: 'Zuschnitt und Montage der Leisten, passend zum verlegten Boden.',
     icon: 'skirting',
     intro:
-      'Sockelleisten sind das, was man als Erstes sieht, wenn ein Boden nicht sauber gearbeitet wurde. Ich schneide auf Gehrung, arbeite Ecken und Übergänge spaltfrei aus und montiere so, dass die Leisten dicht an der Wand sitzen – auch dann, wenn der Altbau keine gerade Wand hergibt.',
+      'Die Sockelleisten werden zugeschnitten und montiert. Die Leisten selbst stellt der Kunde – auf Wunsch suchen wir sie gemeinsam aus. Übergangsprofile an Türen und Raumwechseln sind eine eigene Position.',
     bullets: [
-      'Zuschnitt auf Gehrung für Innen- und Außenecken',
-      'Montage mit Clips, Kleber oder Schrauben – je nach Wand und Leiste',
-      'Saubere Anschlüsse an Türzargen und Heizungsnischen',
-      'Abdichten der Anschlussfuge zur Wand',
-      'Demontage alter Leisten nach Absprache',
+      'Zuschnitt und Montage der vom Kunden gestellten Leisten',
       'Übergangsprofile an Türen und Raumwechseln als eigene Position',
+      'Sockelleisten mit Kabelkanal sind nicht im Angebot',
     ],
     priceId: 'sockelleisten',
     metaTitle: 'Sockelleisten montieren – Aalen und Umgebung',
     metaDescription:
-      'Sockelleisten fachgerecht zuschneiden und montieren lassen. Ab 7 € pro laufendem Meter Arbeitsleistung in Aalen und Umgebung.',
+      'Sockelleisten zuschneiden und montieren lassen. Ab 7 € pro laufendem Meter Arbeitsleistung in Aalen und Umgebung.',
   },
   {
     slug: 'fugen',
     title: 'Acryl- & Silikonfugen',
-    short: 'Alte Fugen raus, neue Fugen sauber gezogen – in Bad, Küche und Anschlussbereich.',
+    short: 'Alte Fugen entfernen und neu ziehen – als eigener Auftrag oder zum Boden dazu.',
     icon: 'joint',
     intro:
-      'Verfärbte oder rissige Fugen macht man nicht schön, die macht man neu. Alte Fugen werden vollständig entfernt, der Untergrund gereinigt und vorbereitet, dann wird sauber und in gleichmäßiger Stärke neu gezogen – im Bad, in der Küche und an allen Anschlussfugen rund um den Boden.',
+      'Alte Acryl- und Silikonfugen werden entfernt und neu gezogen. Das geht als eigener Auftrag genauso wie zusammen mit einer Bodenverlegung. Bei kleinem Umfang wird nach Stunden abgerechnet.',
     bullets: [
-      'Alte Silikon- und Acrylfugen vollständig entfernen',
-      'Untergrund reinigen, entfetten und trocknen lassen',
-      'Sanitärsilikon für Bad, Dusche und Küche',
-      'Acrylfugen für Anschlüsse an Wand und Decke',
-      'Dehnungs- und Anschlussfugen am Bodenbelag',
-      'Gleichmäßige Fugenstärke, saubere Kanten',
+      'Alte Acryl- und Silikonfugen entfernen',
+      'Fugen neu ziehen',
+      `Kleiner Umfang unter ${250} €: nach Stunden, ab 40 €/Std. (mind. 1,5 Std.)`,
     ],
     priceId: 'fugen',
     metaTitle: 'Silikonfugen erneuern – Aalen und Umgebung',
     metaDescription:
-      'Silikon- und Acrylfugen erneuern lassen in Bad, Küche und am Bodenanschluss. Ab 6 € pro laufendem Meter in Aalen und Umgebung.',
+      'Acryl- und Silikonfugen erneuern lassen in Aalen und Umgebung. Ab 6 € pro laufendem Meter Arbeitsleistung.',
   },
 ];
 
-/** Beläge, die bewusst nicht verlegt werden – schafft Klarheit und spart beiden Seiten Zeit. */
+/** Beläge, die laut Verkaufsschild nicht verlegt werden. */
 export const notOffered = ['Fliesen', 'Parkett', 'Estrich', 'PVC', 'Linoleum', 'Teppich'];
 
-/** Weitere Arbeiten, die nicht angeboten werden. */
+/** Weitere Arbeiten, die der Betrieb nicht anbietet. */
 export const notOfferedExtra = ['Treppen', 'Sockelleisten mit Kabelkanal', 'vollflächig verklebtes Vinyl'];
 
 /** Leistungen, die auf Wunsch dazukommen und separat berechnet werden. */
 export const extras = [
   {
     title: 'Material gemeinsam aussuchen',
-    text: 'Material stellt und bezahlt der Kunde. Auf Wunsch suchen wir es gemeinsam aus – dann passt die Nutzungsklasse zum Raum und die Menge zum Verschnitt. Gegen Transportkosten liefere ich es auch an.',
+    text: 'Material stellt und bezahlt der Kunde. Auf Wunsch wird es gemeinsam ausgesucht und gegen Transportkosten angeliefert.',
   },
   {
     title: 'Alten Belag entfernen',
-    text: 'Der alte Boden kommt raus und wird abtransportiert. Entfernung und Transport werden nach Aufwand berechnet und stehen als eigene Position im Angebot.',
+    text: 'Der alte Boden wird herausgenommen und abtransportiert. Entfernung und Transport werden als eigene Position berechnet.',
   },
   {
     title: 'Übergangsprofile',
-    text: 'Profile und Schienen an Türen und Raumwechseln setze ich auf Wunsch – als eigene Position, damit Sie sehen, was sie kosten.',
+    text: 'Profile und Schienen an Türen und Raumwechseln werden auf Wunsch gesetzt und separat berechnet.',
   },
   {
     title: 'Türblätter kürzen',
-    text: 'Baut der neue Boden höher auf, kürze ich das Türblatt auf Wunsch. Wird ebenfalls separat berechnet.',
+    text: 'Baut der neue Boden höher auf, wird das Türblatt auf Wunsch gekürzt. Wird ebenfalls separat berechnet.',
   },
 ];
 
 export const importantNotes = [
-  'Das Material stellt und bezahlt der Kunde – auf Wunsch suchen wir es gemeinsam aus.',
+  'Das Material stellt und bezahlt der Kunde – auf Wunsch wird es gemeinsam ausgesucht.',
   'Angeliefert wird das Material auf Wunsch gegen Transportkosten.',
   'Trittschalldämmung und Dampfsperre sind in der Verlegung enthalten.',
   'Die Anfahrt im Einsatzgebiet ist im Preis enthalten.',
-  `Kleine Aufträge unter ${hourlyRate.thresholdOrderValue} €: ab ${hourlyRate.amount} €/Std. (mindestens ${hourlyRate.minHours.toLocaleString('de-DE')} Std.).`,
-  `Bezahlung per ${business.paymentMethods}.`,
+  `Aufträge unter ${250} €: ab 40 €/Std., mindestens 1,5 Std.`,
+  'Bezahlung per Barzahlung oder Überweisung.',
   business.vatNote,
+  'Es gelten die gesetzlichen Gewährleistungsfristen.',
   'Alle Preise sind Richtwerte. Verbindlich wird das schriftliche Angebot nach der Besichtigung vor Ort.',
 ];
 
@@ -210,23 +205,23 @@ export type Step = { title: string; text: string };
 export const processSteps: Step[] = [
   {
     title: 'Anfrage',
-    text: 'Sie schreiben mir per WhatsApp oder E-Mail, um welche Räume es geht und wie viele Quadratmeter ungefähr anfallen. Ein Foto hilft mir bereits sehr.',
+    text: 'Sie melden sich per WhatsApp, E-Mail oder Telefon und beschreiben, um welche Räume es geht. Eine Rückmeldung kommt in der Regel innerhalb von 24 Stunden.',
   },
   {
     title: 'Besichtigung',
-    text: 'Ich schaue mir den Untergrund, die Raumsituation und die Anschlüsse vor Ort an. So gibt es später keine Überraschungen auf der Rechnung.',
+    text: 'Ich sehe mir den Raum vor Ort an. Die Preise auf dieser Seite sind Richtwerte – verbindlich wird es erst nach der Besichtigung.',
   },
   {
     title: 'Schriftliches Angebot',
-    text: 'Sie erhalten ein Angebot mit klaren Positionen und Festpreis für die Arbeitsleistung. Erst danach entscheiden Sie.',
+    text: 'Sie erhalten ein schriftliches Angebot für die Arbeitsleistung. Erst danach entscheiden Sie.',
   },
   {
     title: 'Termin & Ausführung',
-    text: `Wir legen einen festen Termin – aktuell mit ${business.leadTimeShort}. Ich arbeite die Fläche in einem Zug ab, decke ab und halte die Baustelle sauber.`,
+    text: `Wir legen einen Termin fest – der Vorlauf beträgt derzeit ${business.leadTime}. Zum Termin sollten Raum und Zuwege leer und begehbar sein.`,
   },
   {
     title: 'Übergabe',
-    text: 'Wir gehen den fertigen Raum gemeinsam durch. Erst wenn Sie zufrieden sind, ist der Auftrag abgeschlossen.',
+    text: 'Zum Abschluss übergebe ich Ihnen den fertigen Raum. Es gelten die gesetzlichen Gewährleistungsfristen.',
   },
 ];
 
@@ -241,17 +236,17 @@ export const faqs: Faq[] = [
   {
     question: 'Ist das Material im Preis enthalten?',
     answer:
-      'Nein. Material stellt und bezahlt der Kunde. Sie kaufen genau den Boden und die Leisten, die Sie möchten – ich berechne ausschließlich die Arbeitsleistung. Das macht die Rechnung transparent und Sie zahlen keinen Aufschlag auf Material. Wenn Sie möchten, suchen wir das Material gemeinsam aus, und ich liefere es gegen Transportkosten an.',
+      'Nein. Material stellt und bezahlt der Kunde, berechnet wird ausschließlich die Arbeitsleistung. Auf Wunsch suchen wir das Material gemeinsam aus, und gegen Transportkosten liefere ich es an. Trittschalldämmung und Dampfsperre sind dagegen im Quadratmeterpreis enthalten.',
   },
   {
     question: 'Wird der alte Boden mit entfernt?',
     answer:
-      'Ja, den alten Belag nehme ich auf Wunsch heraus und transportiere ihn ab. Entfernung und Transport werden nach Aufwand berechnet und stehen als eigene Position im Angebot, damit Sie sehen, was sie kosten.',
+      'Ja, auf Wunsch. Entfernung und Abtransport des alten Belags werden als eigene Position berechnet und stehen im Angebot.',
   },
   {
     question: 'Welche Böden werden nicht verlegt?',
     answer:
-      'Nicht im Angebot sind Fliesen, Parkett, Estrich, PVC, Linoleum und Teppich. Ebenso keine Treppen und kein vollflächig verklebtes Vinyl – der Schwerpunkt liegt auf Klicksystemen bei Laminat und Vinyl sowie auf Sockelleisten und Fugenarbeiten.',
+      'Nicht im Angebot sind Fliesen, Parkett, Estrich, PVC, Linoleum und Teppich. Ebenso keine Treppen, keine Sockelleisten mit Kabelkanal und kein vollflächig verklebtes Vinyl – verlegt werden Klicksysteme bei Laminat und Vinyl.',
   },
   {
     question: 'In welchem Gebiet sind Sie tätig?',
@@ -261,22 +256,21 @@ export const faqs: Faq[] = [
   {
     question: 'Wie schnell ist ein Termin möglich?',
     answer:
-      'Der Vorlauf bis zum Ausführungstermin beträgt derzeit meist zwei bis drei Wochen. Auf Ihre Anfrage melde ich mich in der Regel innerhalb von 24 Stunden mit einer realistischen Einschätzung zurück.',
+      'Der Vorlauf bis zum Ausführungstermin beträgt derzeit meist zwei bis drei Wochen. Auf Ihre Anfrage melde ich mich in der Regel innerhalb von 24 Stunden zurück. Erreichbar bin ich montags bis samstags von 8 bis 18 Uhr.',
   },
   {
     question: 'Übernehmen Sie auch kleine Aufträge und Ausbesserungen?',
     answer:
-      'Ja. Aufträge unter 250 € werden nach Stunden abgerechnet: ab 40 € pro Stunde bei mindestens 1,5 Stunden. Auch einzelne Räume, Teilflächen und Ausbesserungen sind kein Problem – ebenso an Böden, die jemand anderes verlegt hat.',
+      'Ja. Aufträge unter 250 € werden nach Stunden abgerechnet: ab 40 € pro Stunde bei mindestens 1,5 Stunden. Ausbesserungen und Teilflächen sind möglich, auch an Böden, die ein anderer Betrieb verlegt hat. Größere Aufträge sind ebenfalls kein Problem.',
   },
   {
-    question: 'Arbeiten Sie auch für Gewerbe und Hausverwaltungen?',
-    answer:
-      'Ja. Neben Privatkunden übernehme ich auch Aufträge für Büros, Ladenflächen, Praxen und Hausverwaltungen. Auch größere zusammenhängende Flächen sind möglich.',
+    question: 'Arbeiten Sie auch für Gewerbe?',
+    answer: 'Ja. Neben Privatkunden übernehme ich auch Aufträge für Gewerbe.',
   },
   {
     question: 'Muss der Raum leer geräumt sein?',
     answer:
-      'Ja. Der Raum und die Zuwege dorthin sollten zum Termin leer und begehbar sein, damit ich sofort anfangen kann. Wenn das nicht möglich ist oder der Altbelag noch liegt, sprechen wir bei der Besichtigung ab, wie wir damit umgehen.',
+      'Ja. Der Raum und die Zuwege dorthin sollten zum Termin leer und begehbar sein. Ob der alte Belag noch liegt und wer ihn entfernt, klären wir bei der Besichtigung.',
   },
   {
     question: 'Wie kann ich bezahlen?',
@@ -285,7 +279,7 @@ export const faqs: Faq[] = [
   },
 ];
 
-/** Orte im Einsatzgebiet – relevant für lokale Suchanfragen. */
+/** Vom Betrieb bestätigte Ortsliste. */
 export const serviceAreas = [
   'Aalen',
   'Hüttlingen',
@@ -305,21 +299,22 @@ export const serviceAreas = [
   'Adelmannsfelden',
 ];
 
+/** Grundsätze in den Worten des Betriebs: sauber arbeiten, Termine halten, ehrlich kalkulieren. */
 export const trustPoints = [
   {
-    title: 'Immer persönlich vor Ort',
-    text: 'Ich schaue mir jeden Auftrag selbst an und verlege auch selbst. Keine wechselnden Kolonnen, keine Übergabefehler.',
+    title: 'Persönlich vor Ort',
+    text: 'Ich sehe mir jeden Auftrag selbst an und verlege auch selbst.',
   },
   {
     title: 'Nur die Arbeitsleistung',
-    text: 'Material kaufen Sie selbst. Dadurch entfällt jeder versteckte Materialaufschlag auf der Rechnung.',
+    text: 'Material stellt der Kunde. Berechnet wird die Arbeitsleistung, ohne versteckte Positionen.',
   },
   {
-    title: 'Termin steht',
-    text: 'Ein zugesagter Termin wird gehalten. Wenn etwas dazwischenkommt, erfahren Sie es sofort und nicht am Tag danach.',
+    title: 'Termine halten',
+    text: 'Ein zugesagter Termin wird gehalten. Der Vorlauf beträgt derzeit zwei bis drei Wochen.',
   },
   {
-    title: 'Sauberes Arbeiten',
-    text: 'Abdecken, absaugen, aufräumen. Der Raum wird besenrein übergeben, nicht als Baustelle hinterlassen.',
+    title: 'Sauber arbeiten',
+    text: 'Sauber arbeiten, Termine halten, ehrlich kalkulieren – die drei Grundsätze des Betriebs.',
   },
 ];

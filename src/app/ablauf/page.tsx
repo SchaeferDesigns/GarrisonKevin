@@ -11,7 +11,7 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Ablauf – von der Anfrage bis zur Übergabe',
   description:
-    'So läuft ein Auftrag ab: Anfrage, Besichtigung, schriftliches Angebot, fester Termin, Ausführung und gemeinsame Übergabe. Keine Rechnung ohne vorher vereinbarten Preis.',
+    'So läuft ein Auftrag ab: Anfrage, Besichtigung vor Ort, schriftliches Angebot, Termin und Ausführung. Der Vorlauf beträgt derzeit zwei bis drei Wochen.',
   alternates: { canonical: '/ablauf' },
 };
 
@@ -22,13 +22,13 @@ const preparation = [
     icon: 'sparkle' as const,
   },
   {
-    title: 'Belag rechtzeitig da',
-    text: 'Boden und Leisten sollten am Vortag geliefert sein. Dämmung und Dampfsperre bringe ich mit.',
+    title: 'Material vorhanden',
+    text: 'Boden und Leisten stellt der Kunde und sollten zum Termin vor Ort sein. Trittschalldämmung und Dampfsperre sind im Preis enthalten.',
     icon: 'plank' as const,
   },
   {
-    title: 'Untergrund trocken',
-    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Im Zweifel schauen wir bei der Besichtigung gemeinsam.',
+    title: 'Altbelag geklärt',
+    text: 'Ob der alte Boden noch liegt und wer ihn entfernt, wird bei der Besichtigung besprochen. Entfernung und Abtransport sind eine eigene Position.',
     icon: 'ruler' as const,
   },
 ];
@@ -39,7 +39,7 @@ export default function AblaufPage() {
       <PageHero
         kicker="Ablauf"
         title="Sie wissen vorher, was passiert"
-        lead="Kein Angebot ohne Besichtigung, keine Rechnung ohne vorher vereinbarten Preis. Fünf Schritte, die für jeden Auftrag gleich sind."
+        lead="Fünf Schritte von der Anfrage bis zur Übergabe. Die Preise auf dieser Seite sind Richtwerte – verbindlich wird der Preis erst nach der Besichtigung vor Ort."
         crumbs={[{ name: 'Ablauf', path: '/ablauf' }]}
       />
 
@@ -66,7 +66,7 @@ export default function AblaufPage() {
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
-                  <strong>Besichtigungstermin:</strong> wird direkt bei der Rückmeldung abgestimmt.
+                  <strong>Erreichbarkeit:</strong> Montag bis Samstag, 8 bis 18 Uhr.
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
@@ -78,15 +78,14 @@ export default function AblaufPage() {
                 </li>
                 <li>
                   <Icon name="clock" size={17} />
-                  <strong>Ausführungsdauer:</strong> hängt von Fläche und Zuschnitt ab und steht im Angebot.
+                  <strong>Zahlung:</strong> per Barzahlung oder Überweisung.
                 </li>
               </ul>
 
               <hr className="rule" style={{ marginBlock: '0.5rem' }} />
 
               <p className="small muted">
-                Verzögert sich etwas – Krankheit, Materiallieferung, ein Auftrag davor – erfahren Sie das sofort und
-                nicht erst am vereinbarten Tag.
+                Alle Preise sind Richtwerte für die Arbeitsleistung. {business.vatNote}
               </p>
 
               <Link href="/kontakt" className="btn btn--accent btn--block">
@@ -105,8 +104,8 @@ export default function AblaufPage() {
             <span className="kicker">Vorbereitung</span>
             <h2>Was Sie vorbereiten – und was ich mitbringe</h2>
             <p className="lead">
-              Drei Dinge von Ihrer Seite, damit der Termin sitzt. Werkzeug, Maschinen, Abdeckmaterial sowie
-              Trittschalldämmung und Dampfsperre bringe ich mit. Die vollständige Checkliste steht im Ratgeber.
+              Drei Punkte, die vor dem Termin geklärt sein sollten. Trittschalldämmung und Dampfsperre sind im
+              Quadratmeterpreis enthalten und werden mitgebracht.
             </p>
           </div>
 
@@ -143,13 +142,12 @@ export default function AblaufPage() {
 
           <div className="prose">
             <p>
-              Zum Abschluss gehen wir den Raum gemeinsam durch. Wir schauen uns Kanten, Übergänge, Leistenanschlüsse und
-              Fugen an. Was nicht passt, wird nachgearbeitet – nicht beim nächsten Termin, sondern direkt.
+              Zum Abschluss übergebe ich Ihnen den fertigen Raum. Abgerechnet wird die Arbeitsleistung wie im Angebot
+              ausgewiesen, zahlbar per Barzahlung oder Überweisung.
             </p>
             <p>
-              Danach erhalten Sie die Rechnung über den Betrag, der im Angebot stand. Es gelten die gesetzlichen
-              Gewährleistungsfristen. Sollte später etwas auffallen, melden Sie sich – der Weg innerhalb des
-              Einsatzgebiets ist kurz.
+              Es gelten die gesetzlichen Gewährleistungsfristen. Die Preise verstehen sich ohne Umsatzsteuer, da die
+              Kleinunternehmerregelung nach § 19 UStG gilt.
             </p>
           </div>
 

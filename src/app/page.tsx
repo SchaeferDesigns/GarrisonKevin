@@ -22,7 +22,7 @@ import styles from './home.module.css';
 export const metadata: Metadata = {
   title: 'Bodenverlegung, Sockelleisten & Fugen in Aalen',
   description:
-    'Laminat, Vinyl und Klickböden verlegen, Sockelleisten montieren, Silikonfugen erneuern – in Aalen und Umgebung. Ab 18 €/m², kostenlose Besichtigung und schriftliches Angebot.',
+    'Laminat, Vinyl und Klickböden verlegen, Sockelleisten montieren, Silikonfugen erneuern – in Aalen und Umgebung. Ab 18 €/m² inklusive Trittschalldämmung, Besichtigung und schriftliches Angebot.',
   alternates: { canonical: '/' },
 };
 
@@ -76,7 +76,7 @@ export default function HomePage() {
 
               <div className={styles.heroActions}>
                 <Link href="/kontakt" className="btn btn--accent btn--lg">
-                  Kostenlose Besichtigung anfragen
+                  Besichtigung anfragen
                   <Icon name="arrow-right" size={18} />
                 </Link>
                 <a href={whatsappLink(waText)} className="btn btn--glass btn--lg" target="_blank" rel="noreferrer">
@@ -151,10 +151,10 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <span className="kicker">Leistungen</span>
-            <h2>Drei Arbeiten, die aufeinander aufbauen</h2>
+            <h2>Drei Leistungen aus einer Hand</h2>
             <p className="lead">
-              Boden, Leisten und Fugen kommen aus einer Hand. Das spart Ihnen die Abstimmung zwischen mehreren Betrieben
-              – und der Übergang zwischen den Gewerken wird nicht zum Problem.
+              Boden, Leisten und Fugen kommen aus einer Hand. Alle Preise gelten für die Arbeitsleistung, das Material
+              stellt der Kunde.
             </p>
           </div>
 
@@ -208,8 +208,8 @@ export default function HomePage() {
             <span className="kicker">Ablauf</span>
             <h2>In fünf Schritten zum fertigen Boden</h2>
             <p className="lead">
-              Sie wissen von Anfang an, was wann passiert. Kein Angebot ohne Besichtigung, keine Rechnung ohne vorher
-              vereinbarten Preis.
+              Die Preise auf dieser Seite sind Richtwerte. Verbindlich wird der Preis erst mit dem schriftlichen
+              Angebot nach der Besichtigung.
             </p>
           </div>
 
@@ -258,11 +258,11 @@ export default function HomePage() {
               <ul className="list">
                 {[
                   'Verlegen von Laminat, Vinyl und Klickböden',
-                  'Untergrund reinigen, grundieren und ausgleichen',
+                  'Untergrund reinigen, grundieren und kleine Unebenheiten ausgleichen',
                   'Trittschalldämmung und Dampfsperre – im m²-Preis enthalten',
                   'Sockelleisten zuschneiden und montieren',
-                  'Acryl- und Silikonfugen neu ziehen',
-                  'Ausbesserungen und Teilflächen, auch an fremd verlegten Böden',
+                  'Acryl- und Silikonfugen entfernen und neu ziehen',
+                  'Ausbesserungen und Teilflächen, auch an Böden anderer Betriebe',
                   'Anfahrt im Einsatzgebiet',
                   'Besichtigung vor Ort und schriftliches Angebot',
                 ].map((item) => (
@@ -332,10 +332,11 @@ export default function HomePage() {
 
             <div>
               <span className="kicker">Einsatzgebiet</span>
-              <h2 className="mt-4">Kurze Wege, verlässliche Termine</h2>
+              <h2 className="mt-4">Aalen und Umgebung</h2>
               <p className="lead mt-4">
-                Ich arbeite bewusst regional. Das hält die Anfahrt kurz, macht kurzfristige Nachbesserungen möglich und
-                sorgt dafür, dass zugesagte Termine auch gehalten werden.
+                Gearbeitet wird in einem Radius von rund {business.serviceRadiusKm} Kilometern um Aalen. Die Anfahrt
+                innerhalb des Einsatzgebiets ist im Preis enthalten. Bei größeren Aufträgen sind auch weitere Wege
+                möglich.
               </p>
 
               <ul className={`${styles.chipList} mt-6`}>
@@ -363,7 +364,7 @@ export default function HomePage() {
         <div className="container container--narrow">
           <div className="section-head section-head--center">
             <span className="kicker kicker--plain">Häufige Fragen</span>
-            <h2>Was Kunden vor der Beauftragung wissen wollen</h2>
+            <h2>Fragen und Antworten</h2>
           </div>
 
           <FaqList items={faqs.slice(0, 5)} openFirst />

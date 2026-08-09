@@ -11,7 +11,7 @@ import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Häufige Fragen zu Bodenverlegung, Preisen und Ablauf',
   description:
-    'Antworten auf die häufigsten Fragen: Kosten pro Quadratmeter, Material, Einsatzgebiet, Terminvergabe, kleine Aufträge und Umsatzsteuer.',
+    'Antworten zu Preisen, Material, Einsatzgebiet, Terminen, kleinen Aufträgen und Zahlung – Bodenverlegung in Aalen und Umgebung.',
   alternates: { canonical: '/faq' },
 };
 
@@ -20,8 +20,8 @@ export default function FaqPage() {
     <>
       <PageHero
         kicker="Häufige Fragen"
-        title="Antworten, bevor Sie fragen müssen"
-        lead="Die Fragen, die vor einer Beauftragung am häufigsten kommen – ehrlich beantwortet. Ist Ihre Frage nicht dabei, schreiben Sie mir einfach."
+        title="Fragen und Antworten"
+        lead="Antworten zu Preisen, Material, Terminen und Einsatzgebiet. Ist Ihre Frage nicht dabei, schreiben Sie mir einfach."
         crumbs={[{ name: 'FAQ', path: '/faq' }]}
       />
 
@@ -33,8 +33,8 @@ export default function FaqPage() {
           <div className="panel panel--muted mt-8">
             <h2 style={{ fontSize: '1.3rem' }}>Ihre Frage war nicht dabei?</h2>
             <p className="small muted">
-              Schreiben Sie mir kurz, worum es geht. Eine ehrliche Einschätzung bekommen Sie auch dann, wenn am Ende
-              kein Auftrag daraus wird.
+              Schreiben Sie mir kurz, worum es geht – per WhatsApp, E-Mail oder Telefon, Montag bis Samstag von 8 bis
+              18 Uhr.
             </p>
             <div className="btn-row">
               <Link href="/kontakt" className="btn btn--accent">

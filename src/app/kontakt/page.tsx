@@ -11,7 +11,7 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Kontakt & Anfrage',
   description:
-    'Anfrage für Bodenverlegung, Sockelleisten oder Fugenarbeiten in Aalen und Umgebung. Per WhatsApp, E-Mail oder Telefon – Antwort in der Regel innerhalb von 24 Stunden.',
+    'Anfrage für Bodenverlegung, Sockelleisten oder Fugenarbeiten in Aalen und Umgebung. Per WhatsApp, E-Mail oder Telefon, Montag bis Samstag von 8 bis 18 Uhr.',
   alternates: { canonical: '/kontakt' },
 };
 
@@ -24,7 +24,7 @@ export default function KontaktPage() {
       <PageHero
         kicker="Kontakt"
         title="Anfrage stellen"
-        lead="Beschreiben Sie kurz, was ansteht. Sie erhalten eine ehrliche Einschätzung – in der Regel innerhalb von 24 Stunden."
+        lead="Beschreiben Sie kurz, was ansteht. Eine Rückmeldung kommt in der Regel innerhalb von 24 Stunden."
         crumbs={[{ name: 'Kontakt', path: '/kontakt' }]}
       >
         <span className="badge badge--dark">
@@ -32,8 +32,8 @@ export default function KontaktPage() {
           Antwort in der Regel binnen 24 Stunden
         </span>
         <span className="badge badge--dark">
-          <Icon name="shield" size={15} />
-          Kostenlos und unverbindlich
+          <Icon name="document" size={15} />
+          Angebot nach Besichtigung
         </span>
       </PageHero>
 
@@ -63,8 +63,7 @@ export default function KontaktPage() {
                 <span className="kicker">Direkt</span>
                 <h2 style={{ fontSize: '1.4rem' }}>Lieber sofort sprechen?</h2>
                 <p className="small muted">
-                  Am schnellsten geht es per WhatsApp mit einem Foto des Raums. Damit lässt sich meist schon vorab
-                  einschätzen, was auf Sie zukommt.
+                  Erreichbar Montag bis Samstag von 8 bis 18 Uhr. Ein Foto des Raums hilft bei der ersten Einschätzung.
                 </p>
 
                 <a href={whatsappLink(waText)} className="btn btn--accent btn--block" target="_blank" rel="noreferrer">
@@ -110,7 +109,7 @@ export default function KontaktPage() {
                   </li>
                   <li>
                     <Icon name="check" size={16} />
-                    Besichtigung und schriftliches Angebot sind kostenlos
+                    Verbindlicher Preis erst mit dem schriftlichen Angebot
                   </li>
                   <li>
                     <Icon name="check" size={16} />

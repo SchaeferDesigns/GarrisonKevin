@@ -9,57 +9,49 @@ import { business } from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: 'Ratgeber – Raum vorbereiten für den Bodenleger',
+  title: 'Ratgeber – Raum vorbereiten für den Verlegetermin',
   description:
-    'Was Sie vor dem Verlegetermin vorbereiten sollten: Raum und Zuwege frei räumen, Material rechtzeitig liefern lassen, Untergrund trocknen lassen. Praxistipps vom Bodenleger aus Aalen.',
+    'Was vor dem Verlegetermin geklärt sein sollte: Raum und Zuwege leer und begehbar, Material vorhanden, Altbelag abgestimmt. Dazu allgemeine Hinweise zum Materialkauf.',
   alternates: { canonical: '/ratgeber' },
 };
 
+/* Vom Betrieb genannte Voraussetzungen für den Termin. */
 const checklist = [
   {
     title: 'Raum leer räumen',
-    text: 'Möbel, Teppiche, Vorhänge und lose Gegenstände raus. Was stehen bleibt, muss ich beim Verlegen umstellen – das kostet Zeit, die auf der Rechnung landet.',
+    text: 'Möbel, Teppiche und lose Gegenstände sollten zum Termin aus dem Raum sein.',
     icon: 'sparkle' as const,
   },
   {
     title: 'Zuwege frei halten',
-    text: 'Eingang, Flur und Treppenhaus sollten begehbar sein. Dielen sind lang und sperrig; wenn der Weg zugestellt ist, geht der halbe Vormittag fürs Tragen drauf.',
+    text: 'Auch der Weg zum Raum sollte begehbar sein – Eingang, Flur und Treppenhaus.',
     icon: 'ruler' as const,
   },
   {
-    title: 'Material rechtzeitig da',
-    text: 'Boden und Leisten sollten spätestens am Vortag geliefert sein. Laminat und Vinyl brauchen mindestens 48 Stunden im Raum, bevor sie verlegt werden – sonst arbeitet der Belag später nach.',
+    title: 'Material vorhanden',
+    text: 'Boden und Leisten stellt der Kunde und sollten zum Termin vor Ort sein. Trittschalldämmung und Dampfsperre sind im Quadratmeterpreis enthalten.',
     icon: 'plank' as const,
   },
   {
-    title: 'Untergrund trocken',
-    text: 'Frischer Estrich muss vollständig durchgetrocknet sein. Wenn Sie unsicher sind, schauen wir uns das bei der Besichtigung gemeinsam an.',
-    icon: 'shield' as const,
-  },
-  {
-    title: 'Strom und Zugang',
-    text: 'Eine erreichbare Steckdose genügt, dazu jemand, der aufschließt. Bei Mietwohnungen vorher die Erlaubnis für den Belagswechsel einholen.',
-    icon: 'handshake' as const,
-  },
-  {
-    title: 'Altbelag klären',
-    text: 'Soll der alte Boden raus? Sagen Sie das vor dem Termin, nicht am Tag selbst – Entfernung und Abtransport brauchen Zeit und werden als eigene Position kalkuliert.',
+    title: 'Altbelag abgestimmt',
+    text: 'Ob der alte Boden herausgenommen und abtransportiert werden soll, wird bei der Besichtigung geklärt. Beides ist eine eigene Position im Angebot.',
     icon: 'info' as const,
   },
 ];
 
+/* Allgemeine Hinweise zum Bodenkauf, unabhängig vom Betrieb. */
 const materialTips = [
   {
     title: 'Nutzungsklasse passend wählen',
-    text: 'Für normale Wohnräume genügt in der Regel NK 23/31. Für Flure, Küchen und stark genutzte Bereiche sollte es NK 23/32 oder höher sein. An der falschen Stelle gespart, ärgert man sich nach zwei Jahren über abgelaufene Kanten.',
+    text: 'Bodenbeläge tragen eine Nutzungsklasse nach DIN EN ISO 10874. Für normale Wohnräume ist NK 23/31 üblich, für Flure, Küchen und stark genutzte Bereiche NK 23/32 oder höher. Die Angabe steht auf der Verpackung.',
   },
   {
     title: 'Verschnitt einplanen',
-    text: 'Rechnen Sie rund 10 Prozent auf die reine Fläche auf, bei verwinkelten Räumen eher 15 Prozent. Nachkaufen bedeutet fast immer eine andere Charge – und die sieht man im Licht.',
+    text: 'Auf die reine Raumfläche werden üblicherweise rund 10 Prozent Verschnitt aufgeschlagen, bei verwinkelten Räumen entsprechend mehr.',
   },
   {
-    title: 'Alles aus einer Lieferung',
-    text: 'Kaufen Sie den Belag für zusammenhängende Flächen in einem Rutsch. Zwei Restposten mit gleichem Dekornamen können sich im Farbton deutlich unterscheiden.',
+    title: 'Alles aus einer Charge',
+    text: 'Beläge derselben Dekorbezeichnung können sich je nach Produktionscharge im Farbton unterscheiden. Für zusammenhängende Flächen deshalb alles auf einmal kaufen.',
   },
 ];
 
@@ -69,7 +61,7 @@ export default function RatgeberPage() {
       <PageHero
         kicker="Ratgeber"
         title="So bereiten Sie den Raum vor"
-        lead="Ein Verlegetermin läuft dann rund, wenn ich sofort anfangen kann. Diese sechs Punkte entscheiden darüber, ob das klappt – und sie kosten Sie nichts außer etwas Vorbereitung."
+        lead="Damit am Termin sofort begonnen werden kann, sollten Raum und Zuwege leer und begehbar sein. Diese vier Punkte gehören vorher geklärt."
         crumbs={[{ name: 'Ratgeber', path: '/ratgeber' }]}
         image="/media/wood-detail.jpg"
       />
@@ -81,12 +73,11 @@ export default function RatgeberPage() {
             <span className="kicker">Checkliste</span>
             <h2>Vor dem Termin</h2>
             <p className="lead">
-              Am wichtigsten sind die ersten beiden Punkte: Raum und Zuwege sollten zum Start leer und begehbar sein.
-              Alles andere ergibt sich daraus.
+              Die ersten beiden Punkte sind die wichtigsten: Raum und Zuwege sollten zum Start leer und begehbar sein.
             </p>
           </div>
 
-          <div className="grid grid--3">
+          <div className="grid grid--4">
             {checklist.map((item, i) => (
               <Reveal key={item.title} delay={i * 70}>
                 <article className="card" style={{ height: '100%' }}>
@@ -108,10 +99,10 @@ export default function RatgeberPage() {
           <div className="split split--wide-left">
             <div className="prose">
               <span className="kicker">Materialkauf</span>
-              <h2>Worauf Sie beim Einkauf achten sollten</h2>
+              <h2>Allgemeine Hinweise zum Bodenkauf</h2>
               <p className="lead">
-                Weil Sie das Material selbst besorgen, hier die drei Punkte, bei denen im Baumarkt am häufigsten etwas
-                schiefgeht. Wenn Sie unsicher sind: Foto vom Produktdatenblatt schicken, dann schaue ich drüber.
+                Da das Material vom Kunden gestellt wird, hier drei allgemeine Punkte, die beim Kauf eines Bodenbelags
+                eine Rolle spielen. Sie gelten unabhängig davon, wo Sie kaufen.
               </p>
 
               <ul className="list mt-4">
@@ -128,14 +119,10 @@ export default function RatgeberPage() {
               <span className="card__icon">
                 <Icon name="handshake" size={22} />
               </span>
-              <h3>Lieber gemeinsam aussuchen?</h3>
+              <h3>Material gemeinsam aussuchen</h3>
               <p className="small">
-                Auf Wunsch gehen wir das Material zusammen durch – dann passen Nutzungsklasse und Menge zum Raum. Wenn
-                Sie keinen Transporter haben, liefere ich es gegen Transportkosten an.
-              </p>
-              <p className="small">
-                Bezahlt wird es weiterhin von Ihnen zum Ladenpreis. Ich schlage nichts darauf – ich verdiene an meiner
-                Arbeit, nicht an Ihrem Einkauf.
+                Auf Wunsch suchen wir das Material zusammen aus. Gegen Transportkosten liefere ich es auch an. Bezahlt
+                wird es weiterhin vom Kunden – berechnet wird ausschließlich die Arbeitsleistung.
               </p>
               <Link href="/kontakt" className="btn btn--accent btn--block">
                 Materialberatung anfragen
@@ -150,26 +137,36 @@ export default function RatgeberPage() {
         <div className="ambient" aria-hidden="true" />
         <div className="container container--narrow">
           <div className="section-head">
-            <span className="kicker">Am Tag selbst</span>
-            <h2>Was Sie nicht vorbereiten müssen</h2>
+            <span className="kicker">Gut zu wissen</span>
+            <h2>Was im Preis enthalten ist</h2>
           </div>
 
-          <div className="prose">
-            <p>
-              Werkzeug, Maschinen, Verbrauchsmaterial und Abdeckmaterial bringe ich mit. Sie müssen weder Strom noch
-              Wasser bereitstellen, außer der Steckdose. Anwesend sein müssen Sie nur zu Beginn und zur Übergabe –
-              dazwischen können Sie ruhig arbeiten gehen.
-            </p>
-            <p>
-              Nach der Arbeit wird abgesaugt und aufgeräumt, Verschnitt und Verpackung nehme ich mit. Der Raum wird
-              besenrein übergeben, sodass Sie die Möbel direkt zurückstellen können.
-            </p>
-          </div>
+          <ul className="list">
+            <li>
+              <Icon name="check" size={18} />
+              Trittschalldämmung und Dampfsperre sind im Quadratmeterpreis enthalten.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              Untergrund reinigen, grundieren und kleine Unebenheiten ausgleichen gehört zur Verlegung.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              Die Anfahrt innerhalb des Einsatzgebiets ist im Preis enthalten.
+            </li>
+            <li>
+              <Icon name="ban" size={18} />
+              Alten Belag entfernen, Übergangsprofile und das Kürzen von Türblättern werden separat berechnet.
+            </li>
+          </ul>
 
           <div className="btn-row mt-8">
-            <Link href="/ablauf" className="btn btn--ghost">
-              Kompletter Ablauf
+            <Link href="/preise" className="btn btn--ghost">
+              Alle Preise
               <Icon name="arrow-right" size={17} />
+            </Link>
+            <Link href="/ablauf" className="btn btn--ghost">
+              Ablauf
             </Link>
             <Link href="/faq" className="btn btn--ghost">
               Häufige Fragen
@@ -179,8 +176,8 @@ export default function RatgeberPage() {
       </section>
 
       <CtaSection
-        title={`Termin sichern – aktuell ${business.leadTimeShort}`}
-        text="Besichtigung und schriftliches Angebot sind kostenlos und unverbindlich. Je früher der Termin steht, desto besser lässt er sich in Ihre Planung einpassen."
+        title={`Termin anfragen – aktuell ${business.leadTimeShort}`}
+        text="Die Preise auf dieser Seite sind Richtwerte. Verbindlich wird der Preis mit dem schriftlichen Angebot nach der Besichtigung vor Ort."
       />
 
       <JsonLd data={breadcrumbSchema([{ name: 'Ratgeber', path: '/ratgeber' }])} />
