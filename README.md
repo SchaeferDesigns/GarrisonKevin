@@ -59,16 +59,16 @@ Variable:
 NEXT_PUBLIC_FORM_ENDPOINT=https://…   # Ziel für den POST
 ```
 
-- **gesetzt:** Der letzte Schritt sendet die Anfrage per `POST` an diese Adresse
-  (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich erscheinen dann der
-  Datei-Upload in Schritt 3 und die Einwilligungs-Checkbox in Schritt 5. Der
-  Endpunkt muss mit einem 2xx-Status antworten und CORS für die Website-Domain
-  erlauben.
+- **gesetzt:** Der letzte Schritt sendet die Anfrage samt Anhängen per `POST` an
+  diese Adresse (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich
+  erscheint die Einwilligungs-Checkbox in Schritt 5. Der Endpunkt muss mit einem
+  2xx-Status antworten und CORS für die Website-Domain erlauben.
 - **nicht gesetzt (aktueller Stand):** Das Formular bleibt vollständig
   bedienbar und übergibt die fertige Nachricht am Ende an das E-Mail-Programm
-  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen, und
-  statt des Uploads steht dort der Hinweis, Fotos per WhatsApp zu schicken –
-  über `mailto:` lassen sich keine Dateien mitgeben.
+  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen. Der
+  Upload in Schritt 3 funktioniert trotzdem – ausgewählte Dateien stehen aber
+  nur namentlich in der Nachricht, weil `mailto:` keine Anhänge mitnimmt. Ein
+  Hinweis unter der Liste sagt das den Besuchern.
 
 #### Aufbau des Requests
 

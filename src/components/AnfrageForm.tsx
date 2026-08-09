@@ -676,84 +676,87 @@ export default function AnfrageForm() {
                 />
               </div>
 
-              {hasFormEndpoint ? (
-                <div className={styles.field}>
-                  <span className={styles.pseudoLabel}>
-                    Fotos oder Unterlagen <span className={styles.labelHint}>(optional)</span>
-                  </span>
+              <div className={styles.field}>
+                <span className={styles.pseudoLabel}>
+                  Fotos oder Unterlagen <span className={styles.labelHint}>(optional)</span>
+                </span>
 
-                  <label
-                    className={styles.dropzone}
-                    data-dragging={dragging || undefined}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setDragging(true);
+                <label
+                  className={styles.dropzone}
+                  data-dragging={dragging || undefined}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragging(true);
+                  }}
+                  onDragLeave={() => setDragging(false)}
+                  onDrop={onDrop}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept={acceptedFileTypes}
+                    className="visually-hidden"
+                    onChange={(e) => {
+                      addFiles(e.target.files);
+                      e.target.value = '';
                     }}
-                    onDragLeave={() => setDragging(false)}
-                    onDrop={onDrop}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      multiple
-                      accept={acceptedFileTypes}
-                      className="visually-hidden"
-                      onChange={(e) => {
-                        addFiles(e.target.files);
-                        e.target.value = '';
-                      }}
-                    />
-                    <Icon name="paperclip" size={20} />
-                    <span>
-                      <strong>Dateien auswählen</strong> oder hierher ziehen
-                      <span className={styles.choiceHint}>
-                        Fotos des Raums helfen bei der Einschätzung. JPG, PNG, HEIC oder PDF, bis{' '}
-                        {formatBytes(maxFileBytes)} je Datei, höchstens {maxFiles} Stück.
-                      </span>
-                    </span>
-                  </label>
-
-                  {fileError && <FieldError text={fileError} />}
-
-                  {files.length > 0 && (
-                    <ul className={styles.fileList}>
-                      {files.map((file, index) => (
-                        <li key={`${file.name}-${file.size}`} className={styles.fileItem}>
-                          {previews[index] ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={previews[index]} alt="" className={styles.fileThumb} />
-                          ) : (
-                            <span className={styles.fileThumb} data-placeholder="">
-                              <Icon name="document" size={18} />
-                            </span>
-                          )}
-                          <span className={styles.fileMeta}>
-                            <span className={styles.fileName}>{file.name}</span>
-                            <span className={styles.choiceHint}>{formatBytes(file.size)}</span>
-                          </span>
-                          <button
-                            type="button"
-                            className={styles.fileRemove}
-                            onClick={() => removeFile(index)}
-                            title="Datei entfernen"
-                          >
-                            <Icon name="trash" size={16} />
-                            <span className="visually-hidden">{file.name} entfernen</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ) : (
-                <p className={styles.note}>
-                  <Icon name="image" size={16} />
+                  />
+                  <Icon name="paperclip" size={20} />
                   <span>
-                    Ein Foto des Raums hilft bei der ersten Einschätzung – schicken Sie es am einfachsten per WhatsApp
-                    an {business.phone}.
+                    <strong>Fotos auswählen</strong> oder hierher ziehen
+                    <span className={styles.choiceHint}>
+                      Ein Bild des Raums hilft bei der ersten Einschätzung. JPG, PNG, HEIC oder PDF, bis{' '}
+                      {formatBytes(maxFileBytes)} je Datei, höchstens {maxFiles} Stück.
+                    </span>
                   </span>
-                </p>
-              )}
+                </label>
+
+                {fileError && <FieldError text={fileError} />}
+
+                {files.length > 0 && (
+                  <ul className={styles.fileList}>
+                    {files.map((file, index) => (
+                      <li key={`${file.name}-${file.size}`} className={styles.fileItem}>
+                        {previews[index] ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={previews[index]} alt="" className={styles.fileThumb} />
+                        ) : (
+                          <span className={styles.fileThumb} data-placeholder="">
+                            <Icon name="document" size={18} />
+                          </span>
+                        )}
+                        <span className={styles.fileMeta}>
+                          <span className={styles.fileName}>{file.name}</span>
+                          <span className={styles.choiceHint}>{formatBytes(file.size)}</span>
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.fileRemove}
+                          onClick={() => removeFile(index)}
+                          title="Datei entfernen"
+                        >
+                          <Icon name="trash" size={16} />
+                          <span className="visually-hidden">{file.name} entfernen</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Ohne Endpunkt läuft der Versand über mailto beziehungsweise
+                    WhatsApp – dort lassen sich Dateien nicht mitgeben. */}
+                {!hasFormEndpoint && files.length > 0 && (
+                  <p className={styles.note}>
+                    <Icon name="image" size={16} />
+                    <span>
+                      Die Bilder stehen namentlich in der Nachricht. Hängen Sie sie in WhatsApp oder in Ihrem
+                      E-Mail-Programm bitte noch selbst an – oder schicken Sie sie einfach per WhatsApp an{' '}
+                      {business.phone}.
+                    </span>
+                  </p>
+                )}
+              </div>
 
               <p className={styles.note}>
                 <Icon name="map-pin" size={16} />
