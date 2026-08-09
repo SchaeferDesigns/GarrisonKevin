@@ -186,12 +186,12 @@ export default function UeberMichPage() {
                 Unsicher beim Einkauf?
               </h2>
               <p className="lead mt-4">
-                Nutzungsklasse, Verschnitt, gleiche Charge – im Ratgeber stehen allgemeine Hinweise dazu. Und wenn Sie
-                mögen, suchen wir das Material gemeinsam aus.
+                Nutzungsklasse, Verschnitt, gleiche Charge – zu diesen Punkten stehen allgemeine Hinweise bei den
+                häufigen Fragen. Und wenn Sie mögen, suchen wir das Material gemeinsam aus.
               </p>
               <div className="btn-row mt-6">
-                <Link href="/ratgeber" className="btn btn--glass">
-                  Zum Ratgeber
+                <Link href="/faq#material" className="btn btn--glass">
+                  Fragen zum Material
                   <Icon name="arrow-right" size={17} />
                 </Link>
               </div>

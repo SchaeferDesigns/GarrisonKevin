@@ -225,57 +225,109 @@ export const processSteps: Step[] = [
   },
 ];
 
-export type Faq = { question: string; answer: string };
+/**
+ * Rubriken der Fragenliste. Die Reihenfolge hier bestimmt die Reihenfolge
+ * der Abschnitte auf der FAQ-Seite.
+ */
+export const faqGroups = ['Preis & Leistung', 'Material', 'Termin & Vorbereitung', 'Leistungen & Gebiet'] as const;
 
+export type FaqGroup = (typeof faqGroups)[number];
+
+export type Faq = { question: string; answer: string; group: FaqGroup };
+
+/**
+ * Die Reihenfolge zählt: Startseite, Preise und Leistungsseiten zeigen
+ * jeweils die ersten Einträge als Auszug.
+ */
 export const faqs: Faq[] = [
   {
     question: 'Was kostet das Verlegen von Laminat oder Vinyl?',
     answer:
       'Die Arbeitsleistung beginnt bei 18 € pro Quadratmeter, inklusive Trittschalldämmung und Dampfsperre. Sockelleisten kosten ab 7 € pro laufendem Meter, Acryl- und Silikonfugen ab 6 € pro laufendem Meter. Das sind Richtwerte – der verbindliche Preis steht nach der Besichtigung im schriftlichen Angebot.',
+    group: 'Preis & Leistung',
   },
   {
     question: 'Ist das Material im Preis enthalten?',
     answer:
       'Nein. Material stellt und bezahlt der Kunde, berechnet wird ausschließlich die Arbeitsleistung. Auf Wunsch suchen wir das Material gemeinsam aus, und gegen Transportkosten liefere ich es an. Trittschalldämmung und Dampfsperre sind dagegen im Quadratmeterpreis enthalten.',
+    group: 'Material',
   },
   {
     question: 'Wird der alte Boden mit entfernt?',
     answer:
-      'Ja, auf Wunsch. Entfernung und Abtransport des alten Belags werden als eigene Position berechnet und stehen im Angebot.',
+      'Ja, auf Wunsch. Entfernung und Abtransport des alten Belags werden als eigene Position berechnet und stehen im Angebot. Ob der alte Belag liegen bleibt oder herauskommt, klären wir bei der Besichtigung.',
+    group: 'Termin & Vorbereitung',
   },
   {
     question: 'Welche Böden werden nicht verlegt?',
     answer:
       'Nicht im Angebot sind Fliesen, Parkett, Estrich, PVC, Linoleum und Teppich. Ebenso keine Treppen, keine Sockelleisten mit Kabelkanal und kein vollflächig verklebtes Vinyl – verlegt werden Klicksysteme bei Laminat und Vinyl.',
+    group: 'Leistungen & Gebiet',
   },
   {
     question: 'In welchem Gebiet sind Sie tätig?',
     answer:
       'In Aalen und Umgebung, in einem Radius von rund 20 Kilometern. Dazu gehören unter anderem Hüttlingen, Wasseralfingen, Oberkochen, Essingen, Abtsgmünd, Neuler, Westhausen, Lauchheim, Bopfingen, Heubach und Mögglingen. Die 20 Kilometer sind ein Richtwert – bei größeren Aufträgen fahre ich auch weiter. Die Anfahrt im Einsatzgebiet ist im Preis enthalten.',
+    group: 'Leistungen & Gebiet',
   },
   {
     question: 'Wie schnell ist ein Termin möglich?',
     answer:
       'Der Vorlauf bis zum Ausführungstermin beträgt derzeit meist zwei bis drei Wochen. Auf Ihre Anfrage melde ich mich in der Regel innerhalb von 24 Stunden zurück. Erreichbar bin ich montags bis samstags von 8 bis 18 Uhr.',
+    group: 'Termin & Vorbereitung',
+  },
+  {
+    question: 'Was muss vor dem Termin vorbereitet sein?',
+    answer:
+      'Der Raum sollte leer geräumt sein – Möbel, Teppiche und lose Gegenstände raus. Auch die Zuwege sollten begehbar sein, also Eingang, Flur und Treppenhaus. Boden und Leisten stellt der Kunde und sollten zum Termin vor Ort liegen. Trittschalldämmung und Dampfsperre bringe ich mit, sie sind im Quadratmeterpreis enthalten.',
+    group: 'Termin & Vorbereitung',
+  },
+  {
+    question: 'Was ist im Quadratmeterpreis enthalten – und was kostet extra?',
+    answer:
+      'Enthalten sind Trittschalldämmung und Dampfsperre, das Reinigen und Grundieren des Untergrunds, das Ausgleichen kleiner Unebenheiten sowie die Anfahrt innerhalb des Einsatzgebiets. Separat berechnet werden das Entfernen und Abtransportieren des alten Belags, Übergangsprofile an Türen und Raumwechseln sowie das Kürzen von Türblättern, wenn der neue Aufbau höher ist.',
+    group: 'Preis & Leistung',
   },
   {
     question: 'Übernehmen Sie auch kleine Aufträge und Ausbesserungen?',
     answer:
       'Ja. Aufträge unter 250 € werden nach Stunden abgerechnet: ab 40 € pro Stunde bei mindestens 1,5 Stunden. Ausbesserungen und Teilflächen sind möglich, auch an Böden, die ein anderer Betrieb verlegt hat. Größere Aufträge sind ebenfalls kein Problem.',
+    group: 'Preis & Leistung',
   },
   {
     question: 'Arbeiten Sie auch für Gewerbe?',
     answer: 'Ja. Neben Privatkunden übernehme ich auch Aufträge für Gewerbe.',
-  },
-  {
-    question: 'Muss der Raum leer geräumt sein?',
-    answer:
-      'Ja. Der Raum und die Zuwege dorthin sollten zum Termin leer und begehbar sein. Ob der alte Belag noch liegt und wer ihn entfernt, klären wir bei der Besichtigung.',
+    group: 'Leistungen & Gebiet',
   },
   {
     question: 'Wie kann ich bezahlen?',
     answer:
       'Per Barzahlung oder Überweisung. Es gilt die Kleinunternehmerregelung nach § 19 UStG, daher werden alle Preise ohne Umsatzsteuer ausgewiesen. Es gelten die gesetzlichen Gewährleistungsfristen.',
+    group: 'Preis & Leistung',
+  },
+  {
+    question: 'Können wir das Material gemeinsam aussuchen?',
+    answer:
+      'Ja. Auf Wunsch suchen wir Boden und Leisten zusammen aus, und gegen Transportkosten liefere ich das Material an. Gekauft und bezahlt wird es weiterhin vom Kunden – berechnet wird ausschließlich die Arbeitsleistung.',
+    group: 'Material',
+  },
+  {
+    question: 'Welche Nutzungsklasse sollte der Boden haben?',
+    answer:
+      'Bodenbeläge tragen eine Nutzungsklasse nach DIN EN ISO 10874, die auf der Verpackung steht. Für normale Wohnräume ist NK 23/31 üblich, für Flure, Küchen und stark genutzte Bereiche NK 23/32 oder höher. Das ist eine allgemeine Angabe aus der Branche und gilt unabhängig davon, wo Sie kaufen.',
+    group: 'Material',
+  },
+  {
+    question: 'Wie viel Verschnitt sollte ich einplanen?',
+    answer:
+      'Auf die reine Raumfläche werden üblicherweise rund 10 Prozent Verschnitt aufgeschlagen, bei verwinkelten Räumen entsprechend mehr. Auch das ist ein allgemeiner Richtwert aus der Branche.',
+    group: 'Material',
+  },
+  {
+    question: 'Muss ich den Boden auf einmal kaufen?',
+    answer:
+      'Für zusammenhängende Flächen ist das zu empfehlen. Beläge derselben Dekorbezeichnung können sich je nach Produktionscharge im Farbton unterscheiden – wer nachkauft, riskiert einen sichtbaren Unterschied.',
+    group: 'Material',
   },
 ];
 

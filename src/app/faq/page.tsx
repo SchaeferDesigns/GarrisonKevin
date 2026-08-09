@@ -5,15 +5,27 @@ import CtaSection from '@/components/CtaSection';
 import FaqList from '@/components/FaqList';
 import Icon from '@/components/Icon';
 import JsonLd from '@/components/JsonLd';
-import { faqs } from '@/lib/business';
+import { faqGroups, faqs } from '@/lib/business';
 import { breadcrumbSchema, faqSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Häufige Fragen zu Bodenverlegung, Preisen und Ablauf',
   description:
-    'Antworten zu Preisen, Material, Einsatzgebiet, Terminen, kleinen Aufträgen und Zahlung – Bodenverlegung in Aalen und Umgebung.',
+    'Antworten zu Preisen, Material, Nutzungsklasse und Verschnitt, Vorbereitung des Raums, Terminen und Einsatzgebiet – Bodenverlegung in Aalen und Umgebung.',
   alternates: { canonical: '/faq' },
 };
+
+/** Rubrikname zu Sprungmarke: „Preis & Leistung“ wird zu „preis-leistung“. */
+const slug = (group: string) =>
+  group
+    .toLowerCase()
+    .replace(/&/g, ' ')
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 
 export default function FaqPage() {
   return (
@@ -21,14 +33,31 @@ export default function FaqPage() {
       <PageHero
         kicker="Häufige Fragen"
         title="Fragen und Antworten"
-        lead="Antworten zu Preisen, Material, Terminen und Einsatzgebiet. Ist Ihre Frage nicht dabei, schreiben Sie mir einfach."
+        lead="Antworten zu Preisen, Material, Vorbereitung und Terminen. Ist Ihre Frage nicht dabei, schreiben Sie mir einfach."
         crumbs={[{ name: 'FAQ', path: '/faq' }]}
       />
 
       <section className="section">
         <div className="ambient" aria-hidden="true" />
         <div className="container container--narrow">
-          <FaqList items={faqs} openFirst />
+          <nav className="chip-row" aria-label="Rubriken">
+            {faqGroups.map((group) => (
+              <a key={group} href={`#${slug(group)}`} className="chip">
+                {group}
+              </a>
+            ))}
+          </nav>
+
+          {faqGroups.map((group, index) => {
+            const items = faqs.filter((faq) => faq.group === group);
+            if (!items.length) return null;
+            return (
+              <section key={group} id={slug(group)} className="faq-section mt-8">
+                <h2 className="faq-group">{group}</h2>
+                <FaqList items={items} openFirst={index === 0} />
+              </section>
+            );
+          })}
 
           <div className="panel panel--muted mt-8">
             <h2 style={{ fontSize: '1.3rem' }}>Ihre Frage war nicht dabei?</h2>

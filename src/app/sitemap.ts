@@ -16,8 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ablauf', priority: 0.7, changeFrequency: 'yearly' },
     { path: '/einsatzgebiet', priority: 0.7, changeFrequency: 'yearly' },
     { path: '/ueber-mich', priority: 0.65, changeFrequency: 'yearly' },
-    { path: '/faq', priority: 0.65, changeFrequency: 'monthly' },
-    { path: '/ratgeber', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
   ];
 
   return [

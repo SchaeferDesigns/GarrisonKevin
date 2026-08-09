@@ -124,8 +124,8 @@ export default function AblaufPage() {
           </div>
 
           <div className="btn-row mt-8">
-            <Link href="/ratgeber" className="btn btn--glass">
-              Vollständige Checkliste im Ratgeber
+            <Link href="/faq#termin-vorbereitung" className="btn btn--glass">
+              Alle Fragen zur Vorbereitung
               <Icon name="arrow-right" size={17} />
             </Link>
           </div>

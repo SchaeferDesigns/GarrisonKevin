@@ -7,7 +7,6 @@ const pages = [
   { href: '/preise', label: 'Preise' },
   { href: '/ablauf', label: 'Ablauf' },
   { href: '/einsatzgebiet', label: 'Einsatzgebiet' },
-  { href: '/ratgeber', label: 'Ratgeber' },
   { href: '/ueber-mich', label: 'Über mich' },
   { href: '/faq', label: 'Häufige Fragen' },
   { href: '/kontakt', label: 'Kontakt & Anfrage' },

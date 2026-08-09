@@ -33,6 +33,12 @@
 
 Material (Boden, Leisten, Profile, Silikon) stellt und bezahlt der Kunde; es wird kein Materialaufschlag berechnet. Auf Wunsch wird das Material gemeinsam ausgesucht und gegen Transportkosten angeliefert.
 
+Allgemeine Hinweise zum Materialkauf, wie sie auf der Website unter den häufigen Fragen stehen (Branchenangaben, nicht betriebsspezifisch):
+
+- Nutzungsklasse nach DIN EN ISO 10874: NK 23/31 für normale Wohnräume, NK 23/32 oder höher für Flure, Küchen und stark genutzte Bereiche
+- Verschnitt: üblicherweise rund 10 Prozent auf die Raumfläche, bei verwinkelten Räumen mehr
+- Farbton: Beläge derselben Dekorbezeichnung können je nach Produktionscharge abweichen, zusammenhängende Flächen deshalb auf einmal kaufen
+
 ## Zusatzleistungen gegen Aufpreis
 
 - Alten Belag entfernen und abtransportieren, Abrechnung nach Aufwand
@@ -63,9 +69,8 @@ Zum Termin sollten der Raum und die Zuwege leer und begehbar sein. Boden und Lei
 - [Preise](https://kevin-garrison.de/preise/): Preisübersicht und Richtwert-Rechner
 - [Ablauf](https://kevin-garrison.de/ablauf/): Ablauf von der Anfrage bis zur Übergabe
 - [Einsatzgebiet](https://kevin-garrison.de/einsatzgebiet/): Orte im Umkreis von Aalen
-- [Ratgeber](https://kevin-garrison.de/ratgeber/): Raum vorbereiten und Material richtig kaufen
 - [Über mich](https://kevin-garrison.de/ueber-mich/): Werdegang, Arbeitsweise und Grundsätze
-- [Häufige Fragen](https://kevin-garrison.de/faq/): Antworten zu Kosten, Material, Terminen
+- [Häufige Fragen](https://kevin-garrison.de/faq/): Antworten zu Preis und Leistung, Material, Termin und Vorbereitung sowie Gebietn
 - [Kontakt](https://kevin-garrison.de/kontakt/): Anfrageformular und Direktkontakt
 
 ## Hinweise zum Datenschutz
