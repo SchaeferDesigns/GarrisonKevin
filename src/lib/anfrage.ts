@@ -224,6 +224,7 @@ export type AnfragePayload = ReturnType<typeof buildPayload>;
  * - `payload`  – die Struktur aus `buildPayload` als JSON-Text
  * - `summary`  – dieselbe Anfrage als Fließtext, direkt als E-Mail-Body nutzbar
  * - `name`, `phone`, `email`, `place` – flach, für einfache Weiterleitungen
+ * - `website`  – Spamfalle, muss leer sein
  * - `file0` … `fileN` – die Anhänge, dazu `fileCount`
  */
 export function buildFormData(data: AnfrageData, files: File[] = []): FormData {
@@ -236,6 +237,7 @@ export function buildFormData(data: AnfrageData, files: File[] = []): FormData {
   body.append('phone', payload.contact.phone);
   body.append('email', payload.contact.email);
   body.append('place', payload.project.place);
+  body.append('website', data.website);
   body.append('fileCount', String(files.length));
 
   files.forEach((file, index) => body.append(`file${index}`, file, file.name));
@@ -260,7 +262,17 @@ export async function sendAnfrage(data: AnfrageData, files: File[] = []): Promis
     signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(60000) : undefined,
   });
 
-  if (!response.ok) {
-    throw new Error(`Der Versand wurde mit Status ${response.status} abgelehnt.`);
+  if (response.ok) return;
+
+  /* Der Endpunkt begründet Ablehnungen im Klartext – die Begründung ist für
+     den Absender nützlicher als die Statusnummer. */
+  let detail = '';
+  try {
+    const body = await response.json();
+    if (body && typeof body.error === 'string') detail = body.error;
+  } catch {
+    /* Keine verwertbare Antwort – dann bleibt es bei der Statusnummer. */
   }
+
+  throw new Error(detail || `Der Versand wurde mit Status ${response.status} abgelehnt.`);
 }

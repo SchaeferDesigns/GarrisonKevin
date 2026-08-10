@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "supabase:sync": "node -e \"require('fs').copyFileSync('src/lib/anfrageRules.ts','supabase/functions/anfrage/rules.ts')\""
   },
   "dependencies": {
     "next": "^16.3.0",

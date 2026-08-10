@@ -22,6 +22,7 @@ import {
   timeframes,
   type AnfrageData,
 } from '@/lib/anfrage';
+import { checkAmount, checkEmail, checkMessage, checkName, checkPhone, checkPlace, limits } from '@/lib/anfrageRules';
 import styles from './AnfrageForm.module.css';
 
 /** Felder aus Schritt 2, die je nach gewählter Leistung überhaupt Sinn ergeben. */
@@ -143,35 +144,39 @@ function validateStep(step: number, data: AnfrageData): FieldErrors {
 
   if (step === 1) {
     const scope = scopeOf(data.services);
-    const numeric: ScopeField[] = ['area', 'skirting', 'joints'];
+    const numeric = ['area', 'skirting', 'joints'] as const;
     for (const key of numeric) {
       if (!scope.has(key)) continue;
-      const value = data[key].trim();
-      if (value && !(Number(value.replace(',', '.')) > 0)) {
-        errors[key] = 'Bitte eine Zahl größer als 0 eintragen oder das Feld leer lassen.';
-      }
+      const problem = checkAmount(data[key], key);
+      if (problem) errors[key] = problem;
     }
   }
 
-  if (step === 2 && !data.place.trim()) {
-    errors.place = 'Bitte geben Sie Ort oder Postleitzahl der Baustelle an.';
+  if (step === 2) {
+    const place = checkPlace(data.place);
+    if (place) errors.place = place;
+    const message = checkMessage(data.message);
+    if (message) errors.message = message;
   }
 
   if (step === 3) {
-    if (!data.name.trim()) {
-      errors.name = 'Bitte tragen Sie Ihren Namen ein.';
+    const name = checkName(data.name);
+    if (name) errors.name = name;
+
+    /* Ein Rückmeldeweg muss erreichbar sein: der gewählte in jedem Fall. */
+    const needsPhone = data.contactPreference !== 'E-Mail';
+    const phone = checkPhone(data.phone, needsPhone);
+    const email = checkEmail(data.email, !needsPhone);
+
+    if (phone) {
+      errors.phone = needsPhone && !data.phone.trim()
+        ? `Für eine Rückmeldung per ${data.contactPreference} wird die Telefonnummer benötigt.`
+        : phone;
     }
-    if (!data.phone.trim() && !data.email.trim()) {
-      errors.phone = 'Bitte hinterlassen Sie Telefonnummer oder E-Mail-Adresse für die Rückmeldung.';
-    }
-    if (data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) {
-      errors.email = 'Diese E-Mail-Adresse sieht nicht vollständig aus.';
-    }
-    if (data.contactPreference === 'E-Mail' && !data.email.trim()) {
-      errors.email = 'Für eine Rückmeldung per E-Mail wird die Adresse benötigt.';
-    }
-    if (data.contactPreference !== 'E-Mail' && !data.phone.trim()) {
-      errors.phone = `Für eine Rückmeldung per ${data.contactPreference} wird die Telefonnummer benötigt.`;
+    if (email) {
+      errors.email = !needsPhone && !data.email.trim()
+        ? 'Für eine Rückmeldung per E-Mail wird die Adresse benötigt.'
+        : email;
     }
   }
 
@@ -538,7 +543,8 @@ export default function AnfrageForm() {
                         className={styles.control}
                         type="number"
                         inputMode="decimal"
-                        min="0"
+                        min={limits.area.min}
+                        max={limits.area.max}
                         step="0.5"
                         placeholder="z. B. 32"
                         value={data.area}
@@ -558,7 +564,8 @@ export default function AnfrageForm() {
                         className={styles.control}
                         type="number"
                         inputMode="decimal"
-                        min="0"
+                        min={limits.skirting.min}
+                        max={limits.skirting.max}
                         step="0.5"
                         placeholder="z. B. 24"
                         value={data.skirting}
@@ -578,7 +585,8 @@ export default function AnfrageForm() {
                         className={styles.control}
                         type="number"
                         inputMode="decimal"
-                        min="0"
+                        min={limits.joints.min}
+                        max={limits.joints.max}
                         step="0.5"
                         placeholder="z. B. 8"
                         value={data.joints}
@@ -641,6 +649,7 @@ export default function AnfrageForm() {
                     type="text"
                     autoComplete="address-level2"
                     placeholder="z. B. 73430 Aalen"
+                    maxLength={limits.place.max}
                     value={data.place}
                     onChange={text('place')}
                     aria-invalid={Boolean(errors.place)}
@@ -673,7 +682,10 @@ export default function AnfrageForm() {
                   placeholder="z. B. Wohnzimmer und Flur, alter Teppich muss raus, Vinyl liegt bereit."
                   value={data.message}
                   onChange={text('message')}
+                  maxLength={limits.message.max}
+                  aria-invalid={Boolean(errors.message)}
                 />
+                {errors.message && <FieldError text={errors.message} />}
               </div>
 
               <div className={styles.field}>
@@ -781,6 +793,7 @@ export default function AnfrageForm() {
                     type="text"
                     autoComplete="name"
                     placeholder="Vor- und Nachname"
+                    maxLength={limits.name.max}
                     value={data.name}
                     onChange={text('name')}
                     aria-invalid={Boolean(errors.name)}
@@ -798,6 +811,7 @@ export default function AnfrageForm() {
                     type="tel"
                     autoComplete="tel"
                     placeholder="0170 1234567"
+                    maxLength={25}
                     value={data.phone}
                     onChange={text('phone')}
                     aria-invalid={Boolean(errors.phone)}
@@ -814,6 +828,7 @@ export default function AnfrageForm() {
                     type="email"
                     autoComplete="email"
                     placeholder="name@beispiel.de"
+                    maxLength={120}
                     value={data.email}
                     onChange={text('email')}
                     aria-invalid={Boolean(errors.email)}
