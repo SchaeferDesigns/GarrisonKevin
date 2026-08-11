@@ -15,7 +15,6 @@ import {
   formatBytes,
   hasBackend,
   materialOptions,
-  maxFileBytes,
   maxFiles,
   oldFloorOptions,
   sendAnfrage,
@@ -192,7 +191,7 @@ type Status = 'idle' | 'sending' | 'success' | 'handoff' | 'error';
 /**
  * Mehrstufiges Anfrageformular.
  *
- * Der Versand läuft über `sendAnfrage` direkt nach Supabase. Fehlt die
+ * Der Versand läuft über `sendAnfrage` an die Lambda-Funktion. Fehlt die
  * Anbindung, übergibt der letzte Schritt die fertige Nachricht an das
  * E-Mail-Programm oder an WhatsApp, damit jeder Button auch ohne Datenbank
  * eine echte Funktion hat. Der Upload bleibt dabei sichtbar; die Dateien
@@ -718,8 +717,8 @@ export default function AnfrageForm() {
                   <span>
                     <strong>Fotos auswählen</strong> oder hierher ziehen
                     <span className={styles.choiceHint}>
-                      Ein Bild des Raums hilft bei der ersten Einschätzung. JPG, PNG, HEIC oder PDF, bis{' '}
-                      {formatBytes(maxFileBytes)} je Datei, höchstens {maxFiles} Stück.
+                      Ein Bild des Raums hilft bei der ersten Einschätzung. JPG, PNG, HEIC oder PDF, höchstens{' '}
+                      {maxFiles} Stück. Fotos werden vor dem Senden automatisch verkleinert.
                     </span>
                   </span>
                 </label>

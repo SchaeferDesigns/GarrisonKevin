@@ -51,60 +51,73 @@ NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
 
 ### Anfrageformular anbinden
 
-Das Kontaktformular (`src/components/AnfrageForm.tsx`) führt in fünf Schritten
-durch die Anfrage und schreibt sie am Ende direkt nach Supabase. Dafür genügen
-zwei Variablen:
+Das Kontaktformular schickt die Anfrage an eine **AWS-Lambda-Funktion**, die sie
+prüft und per **SES** an Kevin weiterleitet. Keine Datenbank, kein Speicher: die
+Fotos hängen an der E-Mail, damit ist die E-Mail zugleich das Archiv.
+
+Alles Nötige liegt in `aws/`:
+
+| Datei | Inhalt |
+| --- | --- |
+| `aws/template.yaml` | SAM-Vorlage: Lambda, Function URL, SES-Rechte, Logs |
+| `aws/lambda/index.mjs` | die Funktion selbst |
+| `aws/lambda/rules.mjs` | Prüfregeln, erzeugt aus `src/lib/anfrageRules.ts` mit `npm run aws:sync` – nie von Hand bearbeiten |
+
+#### Einrichten
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ…
+# 1. In SES zwei Adressen verifizieren (Konsole -> Verified identities):
+#    - Absender, z. B. website@kevin-garrison.de
+#    - Empfänger, z. B. kevingarrison@outlook.de
+
+# 2. Prüfregeln erzeugen und ausrollen
+npm run aws:sync
+cd aws
+sam deploy --guided \
+  --stack-name garrison-anfrage \
+  --region eu-central-1 \
+  --capabilities CAPABILITY_IAM
 ```
 
-- **beide gesetzt:** Die Fotos gehen in den Bucket `anfragen`, die Anfrage als
-  Zeile in die Tabelle `anfragen` (`src/lib/anfrage.ts`, Funktion
-  `sendAnfrage`). In Schritt 5 erscheint zusätzlich die
-  Einwilligungs-Checkbox.
-- **eine fehlt:** Das Formular bleibt vollständig bedienbar und übergibt die
-  fertige Nachricht am Ende an das E-Mail-Programm oder an WhatsApp. Es wird
-  dann nichts übertragen; ausgewählte Dateien stehen nur namentlich in der
-  Nachricht, weil `mailto:` keine Anhänge mitnimmt.
+`sam deploy --guided` fragt die drei Parameter ab: `Absender`, `Empfaenger` und
+`ErlaubteHerkunft` (Komma-Liste der Domains, von denen gesendet werden darf).
 
-Der anon key ist **öffentlich**. Er wird beim Build in das ausgelieferte
-JavaScript eingebacken und ist im Browser jedes Besuchers lesbar. In die
-Repository-Variablen gehört er trotzdem – wegen Rotation und damit kein Key im
-Quelltext steht –, aber die Sicherheit darf nicht von ihm abhängen. Sie liegt
-vollständig in der Datenbank.
+Am Ende gibt der Stack `FormularEndpunkt` aus. Diese Adresse gehört in die
+Repository-Variablen unter **Settings → Secrets and variables → Actions →
+Variables**:
 
-#### Einrichtung in Supabase
+```
+NEXT_PUBLIC_FORM_ENDPOINT = https://<id>.lambda-url.eu-central-1.on.aws/
+```
 
-`supabase/migrations/20260810_anfragen.sql` im SQL-Editor ausführen. Mehrfaches
-Ausführen ist unschädlich. Angelegt werden:
+Fehlt die Variable, baut der Deploy trotzdem durch – das Formular bleibt voll
+bedienbar und übergibt die Nachricht an das E-Mail-Programm oder an WhatsApp.
 
-| | |
-| --- | --- |
-| Tabelle `public.anfragen` | RLS an, Policy **nur für INSERT**. Über die API kann niemand lesen, ändern oder löschen – die Anfragen sieht Kevin im Dashboard. |
-| CHECK-Constraints | erzwingen echte Werte: Name ohne Ziffern, Telefonnummer im Format `0…`/`+…`, vollständige E-Mail-Adresse, mindestens ein Kontaktweg, Mengen in plausiblen Grenzen, Einwilligung zwingend. |
-| Trigger `anfragen_bremse` | höchstens 30 Anfragen je Stunde. |
-| Bucket `anfragen` | privat, 10 MB je Datei, nur Bilder und PDF. Policy erlaubt Hochladen, **nicht** Herunterladen. |
-| `anfragen_aufraeumen(monate)` | löscht alte Anfragen, für einen späteren Cron-Job. |
+#### SES-Sandbox
 
-Die Prüfung im Browser (`src/lib/anfrageRules.ts`) ist Komfort und liefert die
-Meldungen; verbindlich sind die Constraints. Wer die Browserprüfung umgeht,
-scheitert an der Datenbank – das Formular übersetzt die Ablehnung dann in einen
-lesbaren Satz.
+Ein neues SES-Konto steckt in der Sandbox und darf nur an **verifizierte**
+Adressen senden. Das genügt hier: Es geht ohnehin immer nur an Kevins Postfach.
+Produktionszugang muss nur beantragt werden, wenn später auch eine
+Eingangsbestätigung an die Kunden gehen soll.
 
-Die Sendebremse kann ohne IP nur global begrenzen. Bei einem Ansturm werden
-also auch echte Anfragen abgewiesen; das Formular bietet in dem Fall WhatsApp
-und E-Mail als Ausweg an, sodass keine Anfrage verloren geht.
+#### Fotos
 
-#### Weiterleitung per E-Mail
+Bilder werden **im Browser verkleinert**, bevor sie losgehen: längste Kante 1600
+Pixel, JPEG mit Qualität 0,82. Ein 12-MB-Handyfoto wird so zu rund 900 KB. Das
+hält die Anfrage unter dem 6-MB-Limit einer Lambda Function URL und die E-Mail
+klein genug für jedes Postfach. Erlaubt sind sechs Dateien, zusammen 4,5 MB nach
+dem Verkleinern.
 
-Noch nicht eingerichtet. Der saubere Weg ohne Schlüssel im Frontend ist ein
-**Database Webhook** in Supabase: bei jedem `INSERT` auf `public.anfragen` eine
-Edge Function aufrufen, die `summary` per Resend an Kevin schickt. Der
-Resend-Schlüssel liegt dann als Secret in Supabase und wird nie ausgeliefert.
-Für Fotos in der E-Mail eignen sich signierte Links auf den Bucket besser als
-Anhänge – die Mail bleibt klein, auch bei 30 MB.
+#### Schutz vor Missbrauch
+
+- **Herkunftsprüfung:** nur die Domains aus `ErlaubteHerkunft`
+- **Spamfalle:** ein verstecktes Feld; ist es ausgefüllt, passiert nichts
+- **Sendebremse:** höchstens fünf Anfragen je IP und Stunde
+- **Wertprüfung:** dieselben Regeln wie im Browser, hier verbindlich
+
+Die Prüfung im Browser (`src/lib/anfrageRules.ts`) liefert die freundlichen
+Meldungen; verbindlich ist die in der Lambda-Funktion. Wer die Browserprüfung
+umgeht, bekommt einen 422 mit Begründung.
 
 ## Deployment
 
@@ -129,8 +142,7 @@ Der Workflow setzt diese Umgebungsvariablen:
 | `NEXT_OUTPUT=export` | statischer Export statt Server-Build |
 | `NEXT_PUBLIC_BASE_PATH` | Unterpfad, unter dem Pages ausliefert |
 | `NEXT_PUBLIC_NOINDEX=true` | Testadresse wird nicht indexiert |
-| `NEXT_PUBLIC_SUPABASE_URL` | Projekt der Anfragen-Datenbank |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | aus **Settings → Secrets and variables → Actions → Variables** (nicht Secrets: GitHub maskiert Secrets im Build, und der Wert muss ohnehin öffentlich sein) |
+| `NEXT_PUBLIC_FORM_ENDPOINT` | Adresse der Lambda-Funktion, aus den Repository-Variablen |
 
 Fehlt die Variable, baut der Workflow trotzdem durch – das Formular läuft dann
 im Übergabe-Modus über E-Mail und WhatsApp.
@@ -150,12 +162,11 @@ Sobald die richtige Domain steht:
 - Keine Cookies, kein Local Storage, daher kein Cookie-Banner erforderlich
 - Keine Analyse-, Tracking- oder Kartendienste
 - Schriften werden beim Build heruntergeladen und vom eigenen Server ausgeliefert
-- Das Anfrageformular sendet erst mit gesetzten Supabase-Variablen an einen Server,
-  und dann ausschließlich beim Absenden, mit ausdrücklicher Einwilligung. Ohne die
-  Variablen erzeugt es nur eine Nachricht, die der Nutzer selbst per
-  E-Mail-Programm oder WhatsApp versendet. Sobald die Anbindung steht, braucht die
-  Datenschutzerklärung einen Abschnitt zu Speicherort (Supabase, EU) und
-  Aufbewahrungsdauer
+- Das Anfrageformular sendet erst mit gesetztem `NEXT_PUBLIC_FORM_ENDPOINT`, und
+  dann ausschließlich beim Absenden, mit ausdrücklicher Einwilligung. Die Angaben
+  gehen an eine Lambda-Funktion in der gewählten AWS-Region und von dort als
+  E-Mail weiter; gespeichert wird nichts. Sobald die Anbindung steht, braucht die
+  Datenschutzerklärung einen Abschnitt dazu
 - Der Preisrechner rechnet ausschließlich im Browser
 
 ## Bildmedien

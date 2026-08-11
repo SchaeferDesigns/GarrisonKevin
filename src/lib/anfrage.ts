@@ -1,35 +1,31 @@
 /**
  * Datenmodell und Versand des mehrstufigen Anfrageformulars.
  *
- * Die Website wird als statische Seite ausgeliefert und hat keinen eigenen
- * Server. Die Anfrage geht direkt an Supabase – zwei Variablen genügen:
+ * Die Website ist statisch und hat keinen eigenen Server. Die Anfrage geht an
+ * eine AWS-Lambda-Funktion, die sie prüft und per SES an Kevin weiterleitet:
  *
- *   NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
- *   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ…
+ *   NEXT_PUBLIC_FORM_ENDPOINT=https://<id>.lambda-url.<region>.on.aws/
  *
- * Sind beide gesetzt, legt `sendAnfrage` die Fotos im Bucket `anfragen` ab und
- * schreibt eine Zeile in die Tabelle `anfragen`. Fehlt eine, bleibt das
- * Formular voll bedienbar und übergibt die fertige Nachricht am Ende an das
- * E-Mail-Programm oder an WhatsApp – dann wird nichts übertragen.
+ * Ist die Variable gesetzt, sendet `sendAnfrage` alle Angaben als JSON dorthin,
+ * Fotos inklusive. Fehlt sie, bleibt das Formular voll bedienbar und übergibt
+ * die fertige Nachricht am Ende an das E-Mail-Programm oder an WhatsApp – dann
+ * wird nichts übertragen.
  *
- * Der anon key ist öffentlich, er steht nach dem Build im ausgelieferten
- * JavaScript. Die Absicherung liegt deshalb vollständig in der Datenbank:
- * RLS erlaubt nur INSERT und kein Lesen, CHECK-Constraints erzwingen echte
- * Werte, ein Trigger deckelt die Zahl der Anfragen pro Stunde. Siehe
- * supabase/migrations.
+ * Fotos werden vorher im Browser verkleinert (siehe `prepareFiles`). Ein
+ * Handyfoto hat schnell acht Megabyte; für die Einschätzung eines Raums
+ * genügen 1600 Pixel. Das hält die Anfrage klein genug für Lambda und die
+ * E-Mail klein genug für jedes Postfach.
+ *
+ * Geprüft wird zweimal: im Browser für die Meldungen, in der Lambda-Funktion
+ * verbindlich. Siehe aws/lambda und src/lib/anfrageRules.ts.
  */
 
 import { normalizePhone, tidy } from './anfrageRules';
 
-export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
-
-/** Tabelle und Bucket in Supabase. */
-export const anfrageTable = 'anfragen';
-export const anfrageBucket = 'anfragen';
+export const formEndpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? '';
 
 /** true, sobald die Anbindung steht – steuert Texte und Absendeweg. */
-export const hasBackend = supabaseUrl.length > 0 && supabaseAnonKey.length > 0;
+export const hasBackend = formEndpoint.length > 0;
 
 export type AnfrageData = {
   /** Gewählte Leistungen, Klartext wie im Formular angezeigt. */
@@ -104,8 +100,9 @@ export const emptyAnfrage: AnfrageData = {
 /* ------------------------------------------------------------- Anhänge */
 
 export const maxFiles = 6;
-export const maxFileBytes = 10 * 1024 * 1024;
-export const maxTotalBytes = 30 * 1024 * 1024;
+/* Großzügig, weil Fotos vor dem Senden ohnehin verkleinert werden. */
+export const maxFileBytes = 25 * 1024 * 1024;
+export const maxTotalBytes = 120 * 1024 * 1024;
 export const acceptedFileTypes = 'image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf';
 
 const acceptedList = acceptedFileTypes.split(',');
@@ -195,114 +192,163 @@ export function buildMessage(data: AnfrageData, files: { name: string; size: num
   return lines.join('\n');
 }
 
-/** Zeile, wie sie in der Tabelle `anfragen` landet. */
-export function buildRow(id: string, data: AnfrageData, attachments: Attachment[]) {
+/** Angaben, wie sie an die Lambda-Funktion gehen. Feldnamen stabil halten. */
+export function buildPayload(data: AnfrageData, files: PreparedFile[]) {
   const zahl = (value: string) => {
     const cleaned = tidy(value).replace(',', '.');
     return cleaned ? Number(cleaned) : null;
   };
 
   return {
-    id,
-    name: tidy(data.name),
-    phone: data.phone.trim() ? normalizePhone(tidy(data.phone)) : null,
-    email: tidy(data.email).toLowerCase() || null,
-    contact_preference: data.contactPreference,
-    services: data.services,
-    area_sqm: zahl(data.area),
-    skirting_meters: zahl(data.skirting),
-    joint_meters: zahl(data.joints),
-    old_floor: data.oldFloor || null,
-    material: data.material || null,
-    customer_type: data.customerType || null,
-    place: tidy(data.place),
-    timeframe: data.timeframe || null,
-    notes: data.message.trim() || null,
-    attachments,
-    summary: buildMessage(data, attachments),
-    consent: data.consent,
+    gesendetAm: new Date().toISOString(),
+    kontakt: {
+      name: tidy(data.name),
+      telefon: data.phone.trim() ? normalizePhone(tidy(data.phone)) : '',
+      email: tidy(data.email).toLowerCase(),
+      rueckmeldung: data.contactPreference,
+    },
+    vorhaben: {
+      leistungen: data.services,
+      flaecheQm: zahl(data.area),
+      leistenMeter: zahl(data.skirting),
+      fugenMeter: zahl(data.joints),
+      alterBelag: data.oldFloor,
+      material: data.material,
+      auftragsart: data.customerType,
+      ort: tidy(data.place),
+      zeitraum: data.timeframe,
+      beschreibung: data.message.trim(),
+    },
+    einwilligung: data.consent,
+    /* Spamfalle: Menschen sehen das Feld nicht, Bots füllen es aus. */
+    website: data.website,
+    zusammenfassung: buildMessage(data, files),
+    dateien: files.map((file) => ({
+      name: file.name,
+      typ: file.type,
+      groesse: file.size,
+      inhalt: file.base64,
+    })),
   };
 }
 
-export type AnfrageRow = ReturnType<typeof buildRow>;
+export type AnfragePayload = ReturnType<typeof buildPayload>;
 
-export type Attachment = { name: string; size: number; type: string; path: string };
+/* ----------------------------------------------------- Fotos vorbereiten */
 
-/** Dateinamen entschärfen: keine Pfade, keine Sonderzeichen, begrenzte Länge. */
-function safeFileName(name: string, index: number): string {
-  const plain = name.split(/[\\/]/).pop() ?? `datei-${index}`;
-  const cleaned = plain
-    .normalize('NFKD')
-    .replace(/[^\w.\- ]+/g, '_')
-    .replace(/\s+/g, '_')
-    .slice(-80);
-  return `${String(index + 1).padStart(2, '0')}-${cleaned || `datei-${index}`}`;
-}
+export type PreparedFile = { name: string; type: string; size: number; base64: string };
 
-/** Der Client wird erst beim Absenden geladen, damit er die Seite nicht belastet. */
-async function connect() {
-  const { createClient } = await import('@supabase/supabase-js');
-  return createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: { headers: { 'x-anfrage-quelle': 'website' } },
-  });
+/** Längste Kante nach dem Verkleinern. Reicht, um einen Raum zu beurteilen. */
+const maxKante = 1600;
+
+/** Was nach dem Verkleinern insgesamt übrig bleiben darf. */
+export const maxPayloadBytes = 4_500_000;
+
+function toBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  /* In Blöcken, sonst sprengt ein großes Bild den Aufrufstapel. */
+  for (let index = 0; index < bytes.length; index += 8192) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + 8192));
+  }
+  return btoa(binary);
 }
 
 /**
- * Legt die Fotos im Bucket ab und schreibt die Anfrage in die Tabelle.
- *
- * Die Kennung wird hier erzeugt, damit die Dateien schon vor dem Schreiben
- * einen Ordner haben: Die Tabelle erlaubt nur INSERT und kein Lesen, ein
- * `select()` nach dem Einfügen würde also scheitern.
+ * Verkleinert ein Bild auf `maxKante` und gibt JPEG zurück.
+ * Klappt das nicht – etwa bei HEIC ohne Browserunterstützung –, wird die
+ * Datei unverändert übernommen.
+ */
+async function shrink(file: File): Promise<Blob> {
+  if (!file.type.startsWith('image/')) return file;
+
+  try {
+    const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const faktor = Math.min(1, maxKante / Math.max(bitmap.width, bitmap.height));
+
+    /* Schon klein genug und ohnehin JPEG: nichts zu tun. */
+    if (faktor === 1 && file.type === 'image/jpeg') {
+      bitmap.close();
+      return file;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * faktor);
+    canvas.height = Math.round(bitmap.height * faktor);
+
+    const context = canvas.getContext('2d');
+    if (!context) return file;
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.82),
+    );
+    return blob && blob.size < file.size ? blob : file;
+  } catch {
+    return file;
+  }
+}
+
+/** Alle Anhänge verkleinern und in Base64 umwandeln. */
+export async function prepareFiles(files: File[]): Promise<PreparedFile[]> {
+  const fertig: PreparedFile[] = [];
+  let gesamt = 0;
+
+  for (const file of files) {
+    const blob = await shrink(file);
+    const base64 = toBase64(await blob.arrayBuffer());
+
+    gesamt += base64.length;
+    if (gesamt > maxPayloadBytes) {
+      throw new Error(
+        'Die Anhänge sind zusammen zu groß. Bitte einen weniger anhängen oder die Fotos per WhatsApp nachreichen.',
+      );
+    }
+
+    fertig.push({
+      name: file.name.replace(/\.(png|webp|heic|heif)$/i, blob.type === 'image/jpeg' ? '.jpg' : '$&'),
+      type: blob.type || file.type,
+      size: blob.size,
+      base64,
+    });
+  }
+
+  return fertig;
+}
+
+/* -------------------------------------------------------------- Versand */
+
+/**
+ * Schickt die Anfrage an die Lambda-Funktion.
+ * Wirft mit einer Meldung, die dem Absender angezeigt werden kann.
  */
 export async function sendAnfrage(data: AnfrageData, files: File[] = []): Promise<void> {
   if (!hasBackend) {
-    throw new Error('Die Anbindung an die Datenbank ist noch nicht eingerichtet.');
+    throw new Error('Die Anbindung ist noch nicht eingerichtet.');
   }
 
-  const supabase = await connect();
-  const id = crypto.randomUUID();
-  const attachments: Attachment[] = [];
+  const vorbereitet = await prepareFiles(files);
 
-  for (const [index, file] of files.entries()) {
-    const path = `${id}/${safeFileName(file.name, index)}`;
-    const { error } = await supabase.storage
-      .from(anfrageBucket)
-      .upload(path, file, { contentType: file.type || 'application/octet-stream', upsert: false });
+  const response = await fetch(formEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(buildPayload(data, vorbereitet)),
+    signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(60000) : undefined,
+  });
 
-    if (error) {
-      await supabase.storage.from(anfrageBucket).remove(attachments.map((entry) => entry.path));
-      throw new Error(`${file.name} konnte nicht hochgeladen werden.`);
-    }
-    attachments.push({ name: file.name, size: file.size, type: file.type, path });
+  if (response.ok) return;
+
+  let grund = '';
+  try {
+    const body = await response.json();
+    if (body && typeof body.fehler === 'string') grund = body.fehler;
+  } catch {
+    /* Keine verwertbare Antwort – dann bleibt es bei der allgemeinen Meldung. */
   }
 
-  const { error } = await supabase.from(anfrageTable).insert(buildRow(id, data, attachments));
-
-  if (error) {
-    /* Nichts verwaisen lassen, wenn die Zeile nicht zustande kommt. */
-    if (attachments.length) {
-      await supabase.storage.from(anfrageBucket).remove(attachments.map((entry) => entry.path));
-    }
-    throw new Error(erklaerung(error.message));
+  if (response.status === 429) {
+    throw new Error(grund || 'Es sind gerade ungewöhnlich viele Anfragen eingegangen.');
   }
-}
-
-/**
- * Datenbankmeldungen in etwas übersetzen, das ein Kunde lesen kann.
- * Die Prüfungen laufen vorher schon im Browser – hier landet nur, wer sie
- * umgeht oder wem die Sendebremse dazwischenkommt.
- */
-function erklaerung(message: string): string {
-  const text = message.toLowerCase();
-  if (text.includes('zu viele anfragen')) {
-    return 'Es sind gerade ungewöhnlich viele Anfragen eingegangen.';
-  }
-  if (text.includes('row-level security') || text.includes('permission')) {
-    return 'Die Anfrage wurde abgelehnt.';
-  }
-  if (text.includes('check constraint') || text.includes('violates')) {
-    return 'Eine Angabe wurde nicht akzeptiert – bitte Name, Telefonnummer und E-Mail-Adresse prüfen.';
-  }
-  return 'Die Anfrage konnte nicht gespeichert werden.';
+  throw new Error(grund || 'Die Anfrage konnte nicht übermittelt werden.');
 }

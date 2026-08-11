@@ -2,9 +2,9 @@
  * Prüfregeln für das Anfrageformular.
  *
  * Diese Datei ist bewusst frei von Imports und Framework-Bezügen: Sie läuft
- * unverändert im Browser (Next.js) und in der Supabase Edge Function (Deno).
- * Die Kopie unter supabase/functions/anfrage/rules.ts wird mit
- * `npm run supabase:sync` erzeugt – nie von Hand bearbeiten.
+ * unverändert im Browser (Next.js) und in der Lambda-Funktion (Node).
+ * Die Kopie unter aws/lambda/rules.mjs wird mit `npm run aws:sync` erzeugt –
+ * nie von Hand bearbeiten.
  *
  * Rückgabewert überall: null heißt in Ordnung, sonst der Meldungstext.
  */
