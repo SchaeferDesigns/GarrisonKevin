@@ -95,8 +95,7 @@ export default function PreisePage() {
             <span className="kicker">Richtwert-Rechner</span>
             <h2>Grobe Einschätzung in 30 Sekunden</h2>
             <p className="lead">
-              Tragen Sie Ihre Maße ein und Sie sehen den Richtwert für die Arbeitsleistung. Der Rechner läuft
-              vollständig in Ihrem Browser – es wird nichts übertragen und nichts gespeichert.
+              Tragen Sie Ihre Maße ein und Sie sehen den Richtwert für die Arbeitsleistung.
             </p>
           </div>
 

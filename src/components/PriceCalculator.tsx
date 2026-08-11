@@ -258,8 +258,7 @@ export default function PriceCalculator() {
 
         <p className={styles.disclaimer}>
           Unverbindlicher Richtwert für die Arbeitsleistung. Material stellt der Kunde. Der verbindliche Preis steht im
-          schriftlichen Angebot nach der Besichtigung. Die Berechnung findet nur in Ihrem Browser statt – es werden
-          keine Daten übertragen.
+          schriftlichen Angebot nach der Besichtigung.
         </p>
       </aside>
     </div>
