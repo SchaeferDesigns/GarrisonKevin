@@ -52,136 +52,59 @@ NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
 ### Anfrageformular anbinden
 
 Das Kontaktformular (`src/components/AnfrageForm.tsx`) führt in fünf Schritten
-durch die Anfrage und sendet sie am Ende ab. Wohin, entscheidet eine einzige
-Variable:
+durch die Anfrage und schreibt sie am Ende direkt nach Supabase. Dafür genügen
+zwei Variablen:
 
 ```bash
-NEXT_PUBLIC_FORM_ENDPOINT=https://…   # Ziel für den POST
+NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ…
 ```
 
-- **gesetzt:** Der letzte Schritt sendet die Anfrage samt Anhängen per `POST` an
-  diese Adresse (`src/lib/anfrage.ts`, Funktion `sendAnfrage`). Zusätzlich
-  erscheint die Einwilligungs-Checkbox in Schritt 5. Der Endpunkt muss mit einem
-  2xx-Status antworten und CORS für die Website-Domain erlauben.
-- **nicht gesetzt (aktueller Stand):** Das Formular bleibt vollständig
-  bedienbar und übergibt die fertige Nachricht am Ende an das E-Mail-Programm
-  oder an WhatsApp. Es werden dann keine Daten an einen Server übertragen. Der
-  Upload in Schritt 3 funktioniert trotzdem – ausgewählte Dateien stehen aber
-  nur namentlich in der Nachricht, weil `mailto:` keine Anhänge mitnimmt. Ein
-  Hinweis unter der Liste sagt das den Besuchern.
+- **beide gesetzt:** Die Fotos gehen in den Bucket `anfragen`, die Anfrage als
+  Zeile in die Tabelle `anfragen` (`src/lib/anfrage.ts`, Funktion
+  `sendAnfrage`). In Schritt 5 erscheint zusätzlich die
+  Einwilligungs-Checkbox.
+- **eine fehlt:** Das Formular bleibt vollständig bedienbar und übergibt die
+  fertige Nachricht am Ende an das E-Mail-Programm oder an WhatsApp. Es wird
+  dann nichts übertragen; ausgewählte Dateien stehen nur namentlich in der
+  Nachricht, weil `mailto:` keine Anhänge mitnimmt.
 
-#### Aufbau des Requests
-
-Gesendet wird immer `multipart/form-data`, damit Fotos und PDF ohne Umweg
-mitgehen (`buildFormData`):
-
-| Feld | Inhalt |
-| --- | --- |
-| `payload` | kompletter Datensatz als JSON-Text (siehe unten) |
-| `summary` | dieselbe Anfrage als Fließtext, direkt als E-Mail-Body nutzbar |
-| `name`, `phone`, `email`, `place` | flach, für einfache Weiterleitungen |
-| `fileCount` | Anzahl der Anhänge |
-| `file0` … `fileN` | die Anhänge selbst |
-
-`payload` stammt aus `buildPayload` und ist bewusst stabil aufgebaut:
-
-```json
-{
-  "form": "anfrage",
-  "submittedAt": "2026-08-09T12:00:00.000Z",
-  "contact": { "name": "", "phone": "", "email": "", "preferredChannel": "" },
-  "project": {
-    "services": [], "areaSqm": "", "skirtingMeters": "", "jointMeters": "",
-    "oldFloor": "", "material": "", "customerType": "", "place": "",
-    "timeframe": "", "notes": ""
-  },
-  "attachments": [{ "name": "", "size": 0, "type": "" }],
-  "consent": true,
-  "summary": "fertig formatierte Fassung als Text"
-}
-```
-
-Nicht gefragte Felder bleiben leer: Schritt 2 zeigt nur die Maße, die zur
-Auswahl aus Schritt 1 passen, der Rest wird beim Weitergehen verworfen.
-
-#### Anhänge
-
-Erlaubt sind JPG, PNG, WebP, HEIC und PDF, bis 10 MB je Datei, höchstens 6
-Dateien und zusammen 30 MB (Konstanten am Anfang von `src/lib/anfrage.ts`).
-Geprüft wird im Browser; der Endpunkt sollte dieselben Grenzen noch einmal
-durchsetzen. HEIC-Fotos von iPhones melden je nach Browser gar keinen MIME-Typ
-und werden deshalb durchgelassen.
+Der anon key ist **öffentlich**. Er wird beim Build in das ausgelieferte
+JavaScript eingebacken und ist im Browser jedes Besuchers lesbar. In die
+Repository-Variablen gehört er trotzdem – wegen Rotation und damit kein Key im
+Quelltext steht –, aber die Sicherheit darf nicht von ihm abhängen. Sie liegt
+vollständig in der Datenbank.
 
 #### Einrichtung in Supabase
 
-Projekt: `ipbtvvnqrqxpgcoycqbj`. Alles Nötige liegt im Ordner `supabase/`.
+`supabase/migrations/20260810_anfragen.sql` im SQL-Editor ausführen. Mehrfaches
+Ausführen ist unschädlich. Angelegt werden:
 
-1. **Tabelle und Bucket anlegen** – `supabase/migrations/20260810_garrison_anfragen.sql`
-   im SQL-Editor ausführen. Mehrfaches Ausführen ist unschädlich. Angelegt
-   werden `public.garrison_anfragen` (RLS an, bewusst ohne Policy – nur der
-   Service-Role-Key der Function kommt heran), der private Bucket
-   `garrison-anfragen` und die Aufräumfunktion
-   `garrison_anfragen_aufraeumen(monate)`.
+| | |
+| --- | --- |
+| Tabelle `public.anfragen` | RLS an, Policy **nur für INSERT**. Über die API kann niemand lesen, ändern oder löschen – die Anfragen sieht Kevin im Dashboard. |
+| CHECK-Constraints | erzwingen echte Werte: Name ohne Ziffern, Telefonnummer im Format `0…`/`+…`, vollständige E-Mail-Adresse, mindestens ein Kontaktweg, Mengen in plausiblen Grenzen, Einwilligung zwingend. |
+| Trigger `anfragen_bremse` | höchstens 30 Anfragen je Stunde. |
+| Bucket `anfragen` | privat, 10 MB je Datei, nur Bilder und PDF. Policy erlaubt Hochladen, **nicht** Herunterladen. |
+| `anfragen_aufraeumen(monate)` | löscht alte Anfragen, für einen späteren Cron-Job. |
 
-2. **Function deployen:**
-   ```bash
-   npm run supabase:sync   # Prüfregeln in die Function kopieren
-   supabase functions deploy anfrage --project-ref ipbtvvnqrqxpgcoycqbj --no-verify-jwt
-   ```
-   `--no-verify-jwt`, weil ein Kontaktformular keinen angemeldeten Nutzer hat.
-   Der Schutz liegt in der Function: Herkunftsprüfung, Spamfalle, höchstens
-   fünf Anfragen je Absender und Stunde, vollständige Wertprüfung.
+Die Prüfung im Browser (`src/lib/anfrageRules.ts`) ist Komfort und liefert die
+Meldungen; verbindlich sind die Constraints. Wer die Browserprüfung umgeht,
+scheitert an der Datenbank – das Formular übersetzt die Ablehnung dann in einen
+lesbaren Satz.
 
-3. **Secrets setzen:**
-   ```bash
-   supabase secrets set ALLOWED_ORIGINS="https://schaeferdesigns.github.io,http://localhost:3000"
-   supabase secrets set IP_SALT="$(openssl rand -hex 32)"
-   ```
-   `SUPABASE_URL` und `SUPABASE_SERVICE_ROLE_KEY` setzt Supabase selbst.
-   Ohne `IP_SALT` unterbleibt die Sendebegrenzung, die IP wird nie im Klartext
-   gespeichert. `ALLOWED_ORIGINS` muss die echte Domain enthalten, sobald sie
-   steht – bei leerer Liste nimmt die Function jede Herkunft an.
+Die Sendebremse kann ohne IP nur global begrenzen. Bei einem Ansturm werden
+also auch echte Anfragen abgewiesen; das Formular bietet in dem Fall WhatsApp
+und E-Mail als Ausweg an, sodass keine Anfrage verloren geht.
 
-4. **Später für Resend:** `RESEND_API_KEY`, `MAIL_FROM` (verifizierte Domain)
-   und `MAIL_TO`. Solange kein Schlüssel gesetzt ist, wird die Anfrage
-   gespeichert und `mail_status` auf `deaktiviert` gesetzt – es geht nichts
-   verloren, die Weiterleitung lässt sich jederzeit nachrüsten.
+#### Weiterleitung per E-Mail
 
-Der Stand jeder Weiterleitung steht in der Zeile: `offen`, `gesendet`,
-`fehler` (mit `mail_error`) oder `deaktiviert`.
-
-#### Beispiel Supabase Edge Function
-
-```ts
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
-
-  const form = await req.formData();
-  const payload = JSON.parse(String(form.get('payload')));
-
-  const { data: row } = await supabase.from('anfragen')
-    .insert({ payload, summary: form.get('summary') }).select('id').single();
-
-  for (let i = 0; i < Number(form.get('fileCount')); i++) {
-    const file = form.get(`file${i}`) as File;
-    await supabase.storage.from('anfragen')
-      .upload(`${row.id}/${file.name}`, file, { contentType: file.type });
-  }
-
-  await resend.emails.send({
-    from: 'website@…', to: 'kevingarrison@outlook.de',
-    subject: `Anfrage von ${form.get('name')}`,
-    text: String(form.get('summary')),
-  });
-
-  return new Response('{"ok":true}', { headers: cors });
-});
-```
-
-Gegen Spam-Bots gibt es ein verstecktes Honeypot-Feld; wird es ausgefüllt,
-unterbleibt der Versand schon im Browser. Sobald ein Endpunkt aktiv ist, muss
-die Datenschutzerklärung die Verarbeitung der Formulardaten und der Anhänge
-abdecken – inklusive Speicherort und Aufbewahrungsdauer.
+Noch nicht eingerichtet. Der saubere Weg ohne Schlüssel im Frontend ist ein
+**Database Webhook** in Supabase: bei jedem `INSERT` auf `public.anfragen` eine
+Edge Function aufrufen, die `summary` per Resend an Kevin schickt. Der
+Resend-Schlüssel liegt dann als Secret in Supabase und wird nie ausgeliefert.
+Für Fotos in der E-Mail eignen sich signierte Links auf den Bucket besser als
+Anhänge – die Mail bleibt klein, auch bei 30 MB.
 
 ## Deployment
 
@@ -199,13 +122,18 @@ Deploy-Schritt bricht mit 404 ab. Danach genügt ein erneuter Lauf
 
 Die Adresse lautet dann `https://<owner>.github.io/<repo>/`.
 
-Der Workflow setzt drei Umgebungsvariablen:
+Der Workflow setzt diese Umgebungsvariablen:
 
 | Variable | Zweck |
 | --- | --- |
 | `NEXT_OUTPUT=export` | statischer Export statt Server-Build |
 | `NEXT_PUBLIC_BASE_PATH` | Unterpfad, unter dem Pages ausliefert |
 | `NEXT_PUBLIC_NOINDEX=true` | Testadresse wird nicht indexiert |
+| `NEXT_PUBLIC_SUPABASE_URL` | Projekt der Anfragen-Datenbank |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | aus **Settings → Secrets and variables → Actions → Variables** (nicht Secrets: GitHub maskiert Secrets im Build, und der Wert muss ohnehin öffentlich sein) |
+
+Fehlt die Variable, baut der Workflow trotzdem durch – das Formular läuft dann
+im Übergabe-Modus über E-Mail und WhatsApp.
 
 ### Echte Domain
 
@@ -222,10 +150,12 @@ Sobald die richtige Domain steht:
 - Keine Cookies, kein Local Storage, daher kein Cookie-Banner erforderlich
 - Keine Analyse-, Tracking- oder Kartendienste
 - Schriften werden beim Build heruntergeladen und vom eigenen Server ausgeliefert
-- Das Anfrageformular überträgt derzeit nichts an einen Server: Es erzeugt aus den
-  Eingaben eine Nachricht, die der Nutzer selbst per E-Mail-Programm oder WhatsApp
-  versendet. Erst mit gesetztem `NEXT_PUBLIC_FORM_ENDPOINT` wird direkt gesendet –
-  dann mit Einwilligung und entsprechendem Abschnitt in der Datenschutzerklärung
+- Das Anfrageformular sendet erst mit gesetzten Supabase-Variablen an einen Server,
+  und dann ausschließlich beim Absenden, mit ausdrücklicher Einwilligung. Ohne die
+  Variablen erzeugt es nur eine Nachricht, die der Nutzer selbst per
+  E-Mail-Programm oder WhatsApp versendet. Sobald die Anbindung steht, braucht die
+  Datenschutzerklärung einen Abschnitt zu Speicherort (Supabase, EU) und
+  Aufbewahrungsdauer
 - Der Preisrechner rechnet ausschließlich im Browser
 
 ## Bildmedien

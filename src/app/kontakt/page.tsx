@@ -6,7 +6,7 @@ import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
 import { availability, business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
-import { hasFormEndpoint } from '@/lib/anfrage';
+import { hasBackend } from '@/lib/anfrage';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default function KontaktPage() {
                 <p className="muted small">
                   Leistung, Umfang, Ort, Kontakt – am Ende sehen Sie alle Angaben noch einmal und können jede davon
                   ändern.{' '}
-                  {hasFormEndpoint
+                  {hasBackend
                     ? 'Danach geht die Anfrage direkt raus.'
                     : 'Abgesendet wird sie anschließend über Ihr E-Mail-Programm oder WhatsApp.'}
                 </p>

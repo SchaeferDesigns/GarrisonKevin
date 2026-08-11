@@ -1,25 +1,35 @@
 /**
  * Datenmodell und Versand des mehrstufigen Anfrageformulars.
  *
- * Die Website wird als statische Seite ausgeliefert und hat deshalb keinen
- * eigenen Server. Der Versand geht an einen konfigurierbaren Endpunkt:
+ * Die Website wird als statische Seite ausgeliefert und hat keinen eigenen
+ * Server. Die Anfrage geht direkt an Supabase – zwei Variablen genügen:
  *
- *   NEXT_PUBLIC_FORM_ENDPOINT=https://…
+ *   NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+ *   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ…
  *
- * Ist die Variable gesetzt, sendet das Formular die Anfrage samt angehängten
- * Fotos per POST dorthin (siehe `sendAnfrage`). Ist sie nicht gesetzt, bleibt
- * das Formular voll bedienbar und übergibt die fertige Nachricht am Ende an
- * das E-Mail-Programm oder an WhatsApp – es werden dann keine Daten
- * übertragen und keine Dateien angeboten.
+ * Sind beide gesetzt, legt `sendAnfrage` die Fotos im Bucket `anfragen` ab und
+ * schreibt eine Zeile in die Tabelle `anfragen`. Fehlt eine, bleibt das
+ * Formular voll bedienbar und übergibt die fertige Nachricht am Ende an das
+ * E-Mail-Programm oder an WhatsApp – dann wird nichts übertragen.
  *
- * Zum Anbinden muss nur die Variable gesetzt werden. Aufbau des Requests
- * siehe `buildFormData`; der Endpunkt muss mit einem 2xx-Status antworten.
+ * Der anon key ist öffentlich, er steht nach dem Build im ausgelieferten
+ * JavaScript. Die Absicherung liegt deshalb vollständig in der Datenbank:
+ * RLS erlaubt nur INSERT und kein Lesen, CHECK-Constraints erzwingen echte
+ * Werte, ein Trigger deckelt die Zahl der Anfragen pro Stunde. Siehe
+ * supabase/migrations.
  */
 
-export const formEndpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? '';
+import { normalizePhone, tidy } from './anfrageRules';
 
-/** true, sobald ein Endpunkt hinterlegt ist – steuert Texte und Absendeweg. */
-export const hasFormEndpoint = formEndpoint.length > 0;
+export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+
+/** Tabelle und Bucket in Supabase. */
+export const anfrageTable = 'anfragen';
+export const anfrageBucket = 'anfragen';
+
+/** true, sobald die Anbindung steht – steuert Texte und Absendeweg. */
+export const hasBackend = supabaseUrl.length > 0 && supabaseAnonKey.length > 0;
 
 export type AnfrageData = {
   /** Gewählte Leistungen, Klartext wie im Formular angezeigt. */
@@ -149,7 +159,7 @@ export function acceptFiles(existing: File[], incoming: File[]): { files: File[]
 /* -------------------------------------------------------------- Inhalte */
 
 /** Für Menschen lesbare Zusammenfassung – Vorschau, E-Mail und WhatsApp. */
-export function buildMessage(data: AnfrageData, files: File[] = []): string {
+export function buildMessage(data: AnfrageData, files: { name: string; size: number }[] = []): string {
   const lines = [
     'Anfrage über die Website',
     '',
@@ -185,94 +195,114 @@ export function buildMessage(data: AnfrageData, files: File[] = []): string {
   return lines.join('\n');
 }
 
-/** Struktur, die als JSON mitgeschickt wird. Feldnamen bewusst stabil halten. */
-export function buildPayload(data: AnfrageData, files: File[] = []) {
+/** Zeile, wie sie in der Tabelle `anfragen` landet. */
+export function buildRow(id: string, data: AnfrageData, attachments: Attachment[]) {
+  const zahl = (value: string) => {
+    const cleaned = tidy(value).replace(',', '.');
+    return cleaned ? Number(cleaned) : null;
+  };
+
   return {
-    form: 'anfrage',
-    submittedAt: new Date().toISOString(),
-    contact: {
-      name: data.name.trim(),
-      phone: data.phone.trim(),
-      email: data.email.trim(),
-      preferredChannel: data.contactPreference,
-    },
-    project: {
-      services: data.services,
-      areaSqm: data.area.trim(),
-      skirtingMeters: data.skirting.trim(),
-      jointMeters: data.joints.trim(),
-      oldFloor: data.oldFloor,
-      material: data.material,
-      customerType: data.customerType,
-      place: data.place.trim(),
-      timeframe: data.timeframe,
-      notes: data.message.trim(),
-    },
-    attachments: files.map((file) => ({ name: file.name, size: file.size, type: file.type })),
+    id,
+    name: tidy(data.name),
+    phone: data.phone.trim() ? normalizePhone(tidy(data.phone)) : null,
+    email: tidy(data.email).toLowerCase() || null,
+    contact_preference: data.contactPreference,
+    services: data.services,
+    area_sqm: zahl(data.area),
+    skirting_meters: zahl(data.skirting),
+    joint_meters: zahl(data.joints),
+    old_floor: data.oldFloor || null,
+    material: data.material || null,
+    customer_type: data.customerType || null,
+    place: tidy(data.place),
+    timeframe: data.timeframe || null,
+    notes: data.message.trim() || null,
+    attachments,
+    summary: buildMessage(data, attachments),
     consent: data.consent,
-    /** Fertig formatierte Fassung, damit die Weiterleitung nichts bauen muss. */
-    summary: buildMessage(data, files),
   };
 }
 
-export type AnfragePayload = ReturnType<typeof buildPayload>;
+export type AnfrageRow = ReturnType<typeof buildRow>;
 
-/**
- * Baut den Request-Body. Immer `multipart/form-data`, damit Fotos und PDF
- * ohne Umweg mitgehen:
- *
- * - `payload`  – die Struktur aus `buildPayload` als JSON-Text
- * - `summary`  – dieselbe Anfrage als Fließtext, direkt als E-Mail-Body nutzbar
- * - `name`, `phone`, `email`, `place` – flach, für einfache Weiterleitungen
- * - `website`  – Spamfalle, muss leer sein
- * - `file0` … `fileN` – die Anhänge, dazu `fileCount`
- */
-export function buildFormData(data: AnfrageData, files: File[] = []): FormData {
-  const payload = buildPayload(data, files);
-  const body = new FormData();
+export type Attachment = { name: string; size: number; type: string; path: string };
 
-  body.append('payload', JSON.stringify(payload));
-  body.append('summary', payload.summary);
-  body.append('name', payload.contact.name);
-  body.append('phone', payload.contact.phone);
-  body.append('email', payload.contact.email);
-  body.append('place', payload.project.place);
-  body.append('website', data.website);
-  body.append('fileCount', String(files.length));
+/** Dateinamen entschärfen: keine Pfade, keine Sonderzeichen, begrenzte Länge. */
+function safeFileName(name: string, index: number): string {
+  const plain = name.split(/[\\/]/).pop() ?? `datei-${index}`;
+  const cleaned = plain
+    .normalize('NFKD')
+    .replace(/[^\w.\- ]+/g, '_')
+    .replace(/\s+/g, '_')
+    .slice(-80);
+  return `${String(index + 1).padStart(2, '0')}-${cleaned || `datei-${index}`}`;
+}
 
-  files.forEach((file, index) => body.append(`file${index}`, file, file.name));
-
-  return body;
+/** Der Client wird erst beim Absenden geladen, damit er die Seite nicht belastet. */
+async function connect() {
+  const { createClient } = await import('@supabase/supabase-js');
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { 'x-anfrage-quelle': 'website' } },
+  });
 }
 
 /**
- * Sendet die Anfrage an den konfigurierten Endpunkt.
- * Wirft bei fehlender Konfiguration oder bei einer Fehlerantwort.
+ * Legt die Fotos im Bucket ab und schreibt die Anfrage in die Tabelle.
+ *
+ * Die Kennung wird hier erzeugt, damit die Dateien schon vor dem Schreiben
+ * einen Ordner haben: Die Tabelle erlaubt nur INSERT und kein Lesen, ein
+ * `select()` nach dem Einfügen würde also scheitern.
  */
 export async function sendAnfrage(data: AnfrageData, files: File[] = []): Promise<void> {
-  if (!hasFormEndpoint) {
-    throw new Error('Es ist kein Endpunkt für den Versand hinterlegt.');
+  if (!hasBackend) {
+    throw new Error('Die Anbindung an die Datenbank ist noch nicht eingerichtet.');
   }
 
-  /* Content-Type bewusst nicht setzen – der Browser ergänzt die Multipart-Grenze. */
-  const response = await fetch(formEndpoint, {
-    method: 'POST',
-    headers: { Accept: 'application/json' },
-    body: buildFormData(data, files),
-    signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(60000) : undefined,
-  });
+  const supabase = await connect();
+  const id = crypto.randomUUID();
+  const attachments: Attachment[] = [];
 
-  if (response.ok) return;
+  for (const [index, file] of files.entries()) {
+    const path = `${id}/${safeFileName(file.name, index)}`;
+    const { error } = await supabase.storage
+      .from(anfrageBucket)
+      .upload(path, file, { contentType: file.type || 'application/octet-stream', upsert: false });
 
-  /* Der Endpunkt begründet Ablehnungen im Klartext – die Begründung ist für
-     den Absender nützlicher als die Statusnummer. */
-  let detail = '';
-  try {
-    const body = await response.json();
-    if (body && typeof body.error === 'string') detail = body.error;
-  } catch {
-    /* Keine verwertbare Antwort – dann bleibt es bei der Statusnummer. */
+    if (error) {
+      await supabase.storage.from(anfrageBucket).remove(attachments.map((entry) => entry.path));
+      throw new Error(`${file.name} konnte nicht hochgeladen werden.`);
+    }
+    attachments.push({ name: file.name, size: file.size, type: file.type, path });
   }
 
-  throw new Error(detail || `Der Versand wurde mit Status ${response.status} abgelehnt.`);
+  const { error } = await supabase.from(anfrageTable).insert(buildRow(id, data, attachments));
+
+  if (error) {
+    /* Nichts verwaisen lassen, wenn die Zeile nicht zustande kommt. */
+    if (attachments.length) {
+      await supabase.storage.from(anfrageBucket).remove(attachments.map((entry) => entry.path));
+    }
+    throw new Error(erklaerung(error.message));
+  }
+}
+
+/**
+ * Datenbankmeldungen in etwas übersetzen, das ein Kunde lesen kann.
+ * Die Prüfungen laufen vorher schon im Browser – hier landet nur, wer sie
+ * umgeht oder wem die Sendebremse dazwischenkommt.
+ */
+function erklaerung(message: string): string {
+  const text = message.toLowerCase();
+  if (text.includes('zu viele anfragen')) {
+    return 'Es sind gerade ungewöhnlich viele Anfragen eingegangen.';
+  }
+  if (text.includes('row-level security') || text.includes('permission')) {
+    return 'Die Anfrage wurde abgelehnt.';
+  }
+  if (text.includes('check constraint') || text.includes('violates')) {
+    return 'Eine Angabe wurde nicht akzeptiert – bitte Name, Telefonnummer und E-Mail-Adresse prüfen.';
+  }
+  return 'Die Anfrage konnte nicht gespeichert werden.';
 }

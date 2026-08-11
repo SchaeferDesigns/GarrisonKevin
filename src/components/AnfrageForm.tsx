@@ -13,7 +13,7 @@ import {
   customerTypes,
   emptyAnfrage,
   formatBytes,
-  hasFormEndpoint,
+  hasBackend,
   materialOptions,
   maxFileBytes,
   maxFiles,
@@ -180,7 +180,7 @@ function validateStep(step: number, data: AnfrageData): FieldErrors {
     }
   }
 
-  if (step === lastStep && hasFormEndpoint && !data.consent) {
+  if (step === lastStep && hasBackend && !data.consent) {
     errors.consent = 'Ohne Ihre Einwilligung kann die Anfrage nicht übermittelt werden.';
   }
 
@@ -192,11 +192,11 @@ type Status = 'idle' | 'sending' | 'success' | 'handoff' | 'error';
 /**
  * Mehrstufiges Anfrageformular.
  *
- * Der Versand läuft über `sendAnfrage` an den in NEXT_PUBLIC_FORM_ENDPOINT
- * hinterlegten Endpunkt. Solange kein Endpunkt konfiguriert ist, übergibt der
- * letzte Schritt die fertige Nachricht an das E-Mail-Programm oder an WhatsApp,
- * damit jeder Button auch ohne Anbindung eine echte Funktion hat. Anhänge
- * gibt es nur mit Endpunkt – über mailto lassen sich keine Dateien mitgeben.
+ * Der Versand läuft über `sendAnfrage` direkt nach Supabase. Fehlt die
+ * Anbindung, übergibt der letzte Schritt die fertige Nachricht an das
+ * E-Mail-Programm oder an WhatsApp, damit jeder Button auch ohne Datenbank
+ * eine echte Funktion hat. Der Upload bleibt dabei sichtbar; die Dateien
+ * stehen dann namentlich in der Nachricht, weil mailto keine Anhänge kennt.
  */
 export default function AnfrageForm() {
   const params = useSearchParams();
@@ -378,7 +378,7 @@ export default function AnfrageForm() {
       next();
       return;
     }
-    if (hasFormEndpoint) {
+    if (hasBackend) {
       void submit();
     } else {
       handoff('mail');
@@ -758,7 +758,7 @@ export default function AnfrageForm() {
 
                 {/* Ohne Endpunkt läuft der Versand über mailto beziehungsweise
                     WhatsApp – dort lassen sich Dateien nicht mitgeben. */}
-                {!hasFormEndpoint && files.length > 0 && (
+                {!hasBackend && files.length > 0 && (
                   <p className={styles.note}>
                     <Icon name="image" size={16} />
                     <span>
@@ -917,7 +917,7 @@ export default function AnfrageForm() {
                 <SummaryRow label="Rückmeldung per" value={data.contactPreference} onEdit={() => goTo(3)} />
               </dl>
 
-              {hasFormEndpoint ? (
+              {hasBackend ? (
                 <>
                   <label className={styles.consent}>
                     <input
@@ -954,8 +954,8 @@ export default function AnfrageForm() {
                 <div className={styles.error} role="alert">
                   <Icon name="info" size={16} />
                   <span>
-                    Die Anfrage konnte nicht übermittelt werden ({sendError}). Bitte noch einmal versuchen – oder die
-                    Nachricht direkt per WhatsApp oder E-Mail senden, damit nichts verloren geht.
+                    {sendError} Bitte noch einmal versuchen – oder die Nachricht direkt per WhatsApp oder E-Mail
+                    senden, damit nichts verloren geht.
                     {files.length > 0 && ' Angehängte Dateien müssten Sie dann noch einmal auswählen.'}
                   </span>
                 </div>
@@ -981,7 +981,7 @@ export default function AnfrageForm() {
               Weiter
               <Icon name="arrow-right" size={17} />
             </button>
-          ) : hasFormEndpoint ? (
+          ) : hasBackend ? (
             <button type="submit" className="btn btn--accent btn--lg" disabled={status === 'sending'}>
               {status === 'sending' ? (
                 <>
@@ -1009,7 +1009,7 @@ export default function AnfrageForm() {
           )}
         </div>
 
-        {status === 'error' && hasFormEndpoint && (
+        {status === 'error' && hasBackend && (
           <div className={styles.sendRow}>
             <button type="button" className="btn btn--ghost" onClick={() => handoff('whatsapp')}>
               <Icon name="whatsapp" size={18} />
@@ -1025,9 +1025,9 @@ export default function AnfrageForm() {
         <p className={styles.privacy}>
           <Icon name="shield" size={17} />
           <span>
-            Diese Website setzt keine Cookies und bindet keine externen Dienste ein.{' '}
-            {hasFormEndpoint
-              ? 'Übermittelt werden ausschließlich die Angaben und Dateien aus diesem Formular, und nur zur Bearbeitung Ihrer Anfrage.'
+            Diese Website setzt keine Cookies und lädt keine fremden Inhalte nach.{' '}
+            {hasBackend
+              ? 'Beim Absenden gehen ausschließlich die Angaben und Dateien aus diesem Formular an einen Server in der Europäischen Union, und nur zur Bearbeitung Ihrer Anfrage.'
               : 'Es werden derzeit keine Formulardaten an einen Server übertragen.'}{' '}
             Mehr dazu in der <Link href="/datenschutz">Datenschutzerklärung</Link>. Sie erreichen mich auch direkt unter{' '}
             {business.phone}.
