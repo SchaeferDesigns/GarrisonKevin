@@ -51,7 +51,7 @@ export default function SiteHeader() {
   return (
     <>
       <header className={styles.wrap}>
-        <div className={styles.inner} data-scrolled={scrolled}>
+        <div className={`${styles.inner} on-dark`} data-scrolled={scrolled}>
           <Link href="/" className={styles.brand} aria-label={`${business.name} – zur Startseite`}>
             <span className={styles.mark} aria-hidden="true">
               KG

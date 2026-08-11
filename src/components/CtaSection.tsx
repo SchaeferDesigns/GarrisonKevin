@@ -18,7 +18,7 @@ export default function CtaSection({
   text = 'Die Preise auf dieser Seite sind Richtwerte. Verbindlich wird der Preis erst mit dem schriftlichen Angebot nach der Besichtigung vor Ort – erst dann entscheiden Sie.',
 }: CtaSectionProps) {
   return (
-    <section className={styles.wrap}>
+    <section className={`${styles.wrap} on-dark`}>
       <div className="container">
         <Reveal>
           <div className={styles.panel}>

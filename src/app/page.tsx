@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import Icon from '@/components/Icon';
+import HeroFloor from '@/components/HeroFloor';
 import Reveal from '@/components/Reveal';
 import FaqList from '@/components/FaqList';
 import CtaSection from '@/components/CtaSection';
@@ -39,16 +40,18 @@ export default function HomePage() {
   return (
     <>
       {/* ------------------------------------------------------------- Hero */}
-      <section className={styles.hero}>
-        <div className={styles.heroImage} aria-hidden="true" />
-        <div className={styles.heroVeil} aria-hidden="true" />
+      <section className={`${styles.hero} on-dark`}>
+        <HeroFloor />
 
         <div className="container">
           <div className={styles.heroGrid}>
             <div className={styles.heroCopy}>
               <span className="kicker">Handwerk · Aalen &amp; Umgebung</span>
               <h1 className={styles.heroTitle}>
-                Böden, die <em>sauber</em> abgeschlossen sind.
+                Bodenverlegung
+                <span className={styles.heroTitleLine}>
+                  Laminat, Vinyl &amp; <em>Silikonfugen</em>
+                </span>
               </h1>
               <p className={`lead ${styles.heroLead}`}>
                 Laminat, Vinyl und Klickböden verlegen, Sockelleisten montieren, Acryl- und Silikonfugen erneuern.

@@ -12,35 +12,6 @@
   background: var(--forest-900);
 }
 
-.heroImage {
-  position: absolute;
-  inset: 0;
-  background-image: var(--img-wood-hero);
-  background-size: cover;
-  background-position: center 35%;
-  transform: scale(1.04);
-  animation: heroDrift 24s var(--ease-soft) infinite alternate;
-  z-index: -3;
-}
-
-@keyframes heroDrift {
-  from {
-    transform: scale(1.04) translate3d(0, 0, 0);
-  }
-  to {
-    transform: scale(1.12) translate3d(0, -1.5%, 0);
-  }
-}
-
-.heroVeil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(11, 22, 16, 0.4) 0%, rgba(11, 22, 16, 0.26) 26%, rgba(11, 22, 16, 0.84) 94%),
-    linear-gradient(95deg, rgba(11, 22, 16, 0.78) 0%, rgba(11, 22, 16, 0.5) 38%, rgba(11, 22, 16, 0.12) 72%),
-    radial-gradient(95% 75% at 8% 94%, rgba(20, 45, 34, 0.8), transparent 64%);
-  z-index: -2;
-}
-
 .heroGrid {
   position: relative;
   display: grid;
@@ -62,7 +33,16 @@
 
 .heroTitle {
   color: #fbfaf6;
-  max-width: 15ch;
+  max-width: 19ch;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Zweite Zeile etwas kleiner: „Bodenverlegung" trägt, der Rest erklärt. */
+.heroTitleLine {
+  font-size: 0.62em;
+  line-height: 1.14;
+  color: rgba(246, 248, 242, 0.9);
 }
 
 .heroTitle em {
@@ -327,8 +307,8 @@
   font-family: var(--font-display), serif;
   font-size: 0.9rem;
   color: var(--oak-400);
-  border: 1px solid rgba(196, 165, 116, 0.42);
-  background: rgba(196, 165, 116, 0.12);
+  border: 1px solid rgba(171, 151, 129, 0.42);
+  background: rgba(171, 151, 129, 0.12);
 }
 
 .step h3 {
@@ -366,7 +346,7 @@
 
 .clarityPanel--muted {
   background-color: rgba(226, 217, 200, 0.42);
-  border-color: rgba(196, 165, 116, 0.3);
+  border-color: rgba(171, 151, 129, 0.3);
 }
 
 .chipList {
@@ -421,8 +401,8 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px solid rgba(196, 165, 116, 0.35);
-  background: radial-gradient(circle, rgba(196, 165, 116, 0.16), transparent 68%);
+  border: 1px solid rgba(171, 151, 129, 0.35);
+  background: radial-gradient(circle, rgba(171, 151, 129, 0.16), transparent 68%);
   animation: pulse 5s var(--ease-soft) infinite;
 }
 

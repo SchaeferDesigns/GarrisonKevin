@@ -40,7 +40,7 @@
 .itemPrimary {
   color: var(--forest-900);
   background: linear-gradient(140deg, var(--oak-500), var(--oak-600));
-  border-color: rgba(196, 165, 116, 0.6);
+  border-color: rgba(171, 151, 129, 0.6);
 }
 
 /* Platz schaffen, damit die Leiste nichts überdeckt */

@@ -47,8 +47,8 @@
   width: 36px;
   height: 36px;
   border-radius: 11px;
-  background: linear-gradient(145deg, rgba(196, 165, 116, 0.3), rgba(196, 165, 116, 0.08));
-  border: 1px solid rgba(196, 165, 116, 0.42);
+  background: linear-gradient(145deg, rgba(171, 151, 129, 0.3), rgba(171, 151, 129, 0.08));
+  border: 1px solid rgba(171, 151, 129, 0.42);
   color: var(--oak-400);
   font-family: var(--font-display), serif;
   font-size: 0.9rem;

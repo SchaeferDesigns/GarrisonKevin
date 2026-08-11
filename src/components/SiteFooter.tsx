@@ -14,7 +14,7 @@ const pages = [
 
 export default function SiteFooter() {
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} on-dark`}>
       <div className="ambient" aria-hidden="true" />
       <div className="container">
         <div className={styles.grid}>

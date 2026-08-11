@@ -11,11 +11,13 @@
   --forest-600: #27503f;
   --forest-500: #356a53;
 
-  --oak-700: #8a6a44;
-  --oak-600: #a8874f;
-  --oak-500: #c4a574;
-  --oak-400: #d8c19a;
-  --oak-300: #e8dcc4;
+  /* Warmes Holz statt Gold: deutlich entsättigt, damit die Seite ruhiger
+     wirkt und das Grün die Hauptfarbe bleibt. */
+  --oak-700: #7b6752;
+  --oak-600: #948069;
+  --oak-500: #ab9781;
+  --oak-400: #c6b8a5;
+  --oak-300: #e0d8cb;
 
   --cream: #f8f5ef;
   --sand: #efe9dd;
@@ -324,7 +326,7 @@ strong {
   min-height: 320px;
   top: -14%;
   right: -8%;
-  background: radial-gradient(circle at 40% 40%, rgba(196, 165, 116, 0.55), transparent 68%);
+  background: radial-gradient(circle at 40% 40%, rgba(171, 151, 129, 0.55), transparent 68%);
 }
 
 .ambient::after {
@@ -339,7 +341,7 @@ strong {
 }
 
 .section--dark .ambient::before {
-  background: radial-gradient(circle at 40% 40%, rgba(196, 165, 116, 0.32), transparent 68%);
+  background: radial-gradient(circle at 40% 40%, rgba(171, 151, 129, 0.32), transparent 68%);
 }
 
 .section--dark .ambient::after {
@@ -418,7 +420,7 @@ strong {
 .card--link:focus-within {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(196, 165, 116, 0.65);
+  border-color: rgba(171, 151, 129, 0.65);
 }
 
 /* Abschließende Zeile einer verlinkten Karte */
@@ -463,14 +465,14 @@ strong {
   height: 46px;
   border-radius: 14px;
   color: var(--forest-700);
-  background: linear-gradient(150deg, rgba(196, 165, 116, 0.32), rgba(196, 165, 116, 0.1));
-  border: 1px solid rgba(196, 165, 116, 0.36);
+  background: linear-gradient(150deg, rgba(171, 151, 129, 0.32), rgba(171, 151, 129, 0.1));
+  border: 1px solid rgba(171, 151, 129, 0.36);
   flex: none;
 }
 
 .section--dark .card__icon {
   color: var(--oak-400);
-  background: linear-gradient(150deg, rgba(196, 165, 116, 0.22), rgba(196, 165, 116, 0.05));
+  background: linear-gradient(150deg, rgba(171, 151, 129, 0.22), rgba(171, 151, 129, 0.05));
 }
 
 /* -------------------------------------------------------------------- Button */
@@ -530,9 +532,18 @@ strong {
 }
 
 .btn--accent {
-  --btn-bg: linear-gradient(140deg, var(--oak-500), var(--oak-600));
+  --btn-bg: linear-gradient(140deg, var(--forest-600), var(--forest-800));
+  --btn-fg: #f6f4ee;
+  box-shadow: 0 10px 26px -12px rgba(22, 40, 31, 0.9);
+}
+
+/* Auf dunklem Grund kehrt sich der Hauptbutton um – Grün auf Grün wäre
+   sonst kaum zu sehen. Helles Creme statt Gold. */
+.section--dark .btn--accent,
+.on-dark .btn--accent {
+  --btn-bg: linear-gradient(140deg, #f7f5ef, #e4ddd0);
   --btn-fg: var(--forest-900);
-  box-shadow: 0 10px 26px -12px rgba(168, 135, 79, 0.85);
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.75);
 }
 
 .btn--ghost {
@@ -601,7 +612,7 @@ strong {
 
 .section--dark .link {
   color: var(--oak-400);
-  border-color: rgba(216, 193, 154, 0.4);
+  border-color: rgba(198, 184, 165, 0.4);
 }
 
 .section--dark .link:hover {
@@ -634,8 +645,8 @@ strong {
 
 .badge--accent {
   color: var(--oak-700);
-  background-color: rgba(196, 165, 116, 0.16);
-  border-color: rgba(196, 165, 116, 0.4);
+  background-color: rgba(171, 151, 129, 0.16);
+  border-color: rgba(171, 151, 129, 0.4);
 }
 
 .badge-row {
@@ -668,7 +679,7 @@ strong {
 
 .chip:hover {
   color: var(--oak-700);
-  border-color: rgba(196, 165, 116, 0.55);
+  border-color: rgba(171, 151, 129, 0.55);
   background-color: rgba(255, 255, 255, 0.72);
 }
 
@@ -845,12 +856,12 @@ strong {
 
 .panel--muted {
   background-color: rgba(226, 217, 200, 0.42);
-  border-color: rgba(196, 165, 116, 0.32);
+  border-color: rgba(171, 151, 129, 0.32);
 }
 
 .panel--accent {
-  background-color: rgba(196, 165, 116, 0.14);
-  border-color: rgba(196, 165, 116, 0.4);
+  background-color: rgba(171, 151, 129, 0.14);
+  border-color: rgba(171, 151, 129, 0.4);
 }
 
 .section--dark .panel {
@@ -930,8 +941,8 @@ strong {
   font-family: var(--font-display), serif;
   font-size: 1rem;
   color: var(--forest-800);
-  background: linear-gradient(150deg, rgba(196, 165, 116, 0.34), rgba(196, 165, 116, 0.12));
-  border: 1px solid rgba(196, 165, 116, 0.45);
+  background: linear-gradient(150deg, rgba(171, 151, 129, 0.34), rgba(171, 151, 129, 0.12));
+  border: 1px solid rgba(171, 151, 129, 0.45);
   grid-row: span 2;
   z-index: 1;
 }
@@ -943,7 +954,7 @@ strong {
   top: 46px;
   bottom: 6px;
   width: 1px;
-  background: linear-gradient(180deg, rgba(196, 165, 116, 0.5), rgba(196, 165, 116, 0.08));
+  background: linear-gradient(180deg, rgba(171, 151, 129, 0.5), rgba(171, 151, 129, 0.08));
 }
 
 .timeline h3 {
@@ -963,7 +974,7 @@ strong {
 
 .section--dark .timeline > li::before {
   color: var(--oak-400);
-  background: rgba(196, 165, 116, 0.12);
+  background: rgba(171, 151, 129, 0.12);
 }
 
 .section--dark .timeline h3 {
