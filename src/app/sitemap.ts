@@ -11,10 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: { path: string; priority: number; changeFrequency: 'monthly' | 'yearly' }[] = [
     { path: '/', priority: 1, changeFrequency: 'monthly' },
     { path: '/leistungen', priority: 0.9, changeFrequency: 'monthly' },
-    { path: '/preise', priority: 0.9, changeFrequency: 'monthly' },
     { path: '/kontakt', priority: 0.85, changeFrequency: 'yearly' },
     { path: '/ablauf', priority: 0.7, changeFrequency: 'yearly' },
-    { path: '/einsatzgebiet', priority: 0.7, changeFrequency: 'yearly' },
     { path: '/ueber-mich', priority: 0.65, changeFrequency: 'yearly' },
     { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
   ];

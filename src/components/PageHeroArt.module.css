@@ -1,0 +1,75 @@
+.art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -2;
+}
+
+.canvas {
+  position: absolute;
+  inset: -6% -4%;
+  width: 108%;
+  height: 112%;
+}
+
+/* Verlegte Fläche: warm, aber sehr zurückhaltend – der Text steht davor. */
+.laid {
+  opacity: 0.62;
+}
+
+.underlay {
+  opacity: 0.24;
+}
+
+.seam {
+  stroke: rgba(6, 14, 10, 0.55);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+.joint {
+  stroke: rgba(6, 14, 10, 0.45);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+.grain {
+  stroke: rgba(224, 216, 203, 0.07);
+  stroke-width: 1;
+  fill: none;
+}
+
+.hatch {
+  stroke: rgba(224, 216, 203, 0.13);
+  stroke-width: 1;
+  fill: none;
+}
+
+/* Licht auf der frisch verlegten Fläche. */
+.glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 110% at 12% 0%, rgba(171, 151, 129, 0.28), transparent 58%),
+    radial-gradient(80% 90% at 96% 100%, rgba(53, 106, 83, 0.42), transparent 64%);
+}
+
+/* Jede Seite verschiebt Muster und Kante ein Stück, damit die Köpfe sich
+   unterscheiden, ohne dass es ein zweites Motiv braucht. Nicht gespiegelt:
+   die verlegte Fläche bleibt immer auf der Textseite, die Schraffur gehört
+   nach rechts. */
+.art[data-variant='1'] .canvas {
+  transform: translateX(-7%) scale(1.06);
+}
+
+.art[data-variant='2'] .canvas {
+  transform: translateX(5%) scale(1.03);
+}
+
+.art[data-variant='3'] .canvas {
+  transform: translateX(-3%) scale(1.14);
+}
+
+.art[data-variant='4'] .canvas {
+  transform: translateX(9%) scale(1.09);
+}

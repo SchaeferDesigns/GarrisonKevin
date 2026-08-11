@@ -37,6 +37,7 @@ export default function AblaufPage() {
   return (
     <>
       <PageHero
+        variant={3}
         kicker="Ablauf"
         title="Sie wissen vorher, was passiert"
         lead="Fünf Schritte von der Anfrage bis zur Übergabe. Die Preise auf dieser Seite sind Richtwerte – verbindlich wird der Preis erst nach der Besichtigung vor Ort."
@@ -152,7 +153,7 @@ export default function AblaufPage() {
           </div>
 
           <div className="btn-row mt-8">
-            <Link href="/preise" className="btn btn--ghost">
+            <Link href="/leistungen#preise" className="btn btn--ghost">
               Preise ansehen
               <Icon name="arrow-right" size={17} />
             </Link>

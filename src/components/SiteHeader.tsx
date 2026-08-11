@@ -8,10 +8,8 @@ import { business, telLink, whatsappLink } from '@/lib/business';
 import styles from './SiteHeader.module.css';
 
 const navItems = [
-  { href: '/leistungen', label: 'Leistungen' },
-  { href: '/preise', label: 'Preise' },
+  { href: '/leistungen', label: 'Leistungen & Preise' },
   { href: '/ablauf', label: 'Ablauf' },
-  { href: '/einsatzgebiet', label: 'Einsatzgebiet' },
   { href: '/ueber-mich', label: 'Über mich' },
   { href: '/faq', label: 'FAQ' },
 ];

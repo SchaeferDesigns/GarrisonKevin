@@ -8,26 +8,6 @@
   isolation: isolate;
 }
 
-/* Holzstruktur als dezente Textur hinter dem Farbverlauf */
-.texture {
-  position: absolute;
-  inset: 0;
-  background-image: var(--hero-image);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.16;
-  mix-blend-mode: luminosity;
-  z-index: -2;
-}
-
-.veil {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(120% 90% at 15% 0%, rgba(171, 151, 129, 0.2), transparent 58%),
-    radial-gradient(90% 80% at 100% 100%, rgba(53, 106, 83, 0.4), transparent 62%);
-  z-index: -1;
-}
-
 .inner {
   position: relative;
   display: flex;

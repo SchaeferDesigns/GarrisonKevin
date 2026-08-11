@@ -36,12 +36,7 @@ export default function DatenschutzPage() {
               <Icon name="info" size={21} />
               <div>
                 <h2>Datenschutzerklärung wird noch eingepflegt</h2>
-                <p>
-                  Der Text wird in der Datei <code>src/content/datenschutz.txt</code> hinterlegt und erscheint danach
-                  automatisch an dieser Stelle. Überschriften werden mit fünf Rauten ausgezeichnet:{' '}
-                  <code>#####Überschrift#####</code>. Diese Website setzt keine Cookies, bindet keine externen Dienste
-                  ein und lädt Schriften vom eigenen Server.
-                </p>
+                <p>Der Text folgt in Kürze.</p>
               </div>
             </div>
           )}

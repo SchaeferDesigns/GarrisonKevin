@@ -12,7 +12,6 @@ import {
   notOffered,
   prices,
   processSteps,
-  serviceAreas,
   services,
   notOfferedExtra,
   trustPoints,
@@ -35,6 +34,8 @@ const serviceIcons = {
 
 const waText =
   'Hallo Herr Garrison, ich habe Ihre Website gesehen und möchte ein Angebot anfragen. Es geht um folgende Arbeiten:';
+
+const waAreaText = 'Hallo Herr Garrison, kommen Sie auch nach ';
 
 export default function HomePage() {
   return (
@@ -113,7 +114,7 @@ export default function HomePage() {
               <p className={styles.priceFoot}>
                 Inklusive Dämmung und Anfahrt. Material stellt der Kunde. Verbindlich nach der Besichtigung.
               </p>
-              <Link href="/preise" className="btn btn--glass btn--block btn--sm">
+              <Link href="/leistungen#preise" className="btn btn--glass btn--block btn--sm">
                 Alle Preise ansehen
                 <Icon name="arrow-right" size={16} />
               </Link>
@@ -342,19 +343,15 @@ export default function HomePage() {
                 möglich.
               </p>
 
-              <ul className={`${styles.chipList} mt-6`}>
-                {serviceAreas.slice(0, 10).map((place) => (
-                  <li key={place} className="badge badge--dark">
-                    {place}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-4">
+                Ob Ihre Baustelle dazugehört, klären wir in einem Satz – fragen Sie einfach kurz nach.
+              </p>
 
               <div className="btn-row mt-6">
-                <Link href="/einsatzgebiet" className="btn btn--glass">
-                  Gesamtes Einsatzgebiet
-                  <Icon name="arrow-right" size={17} />
-                </Link>
+                <a href={whatsappLink(waAreaText)} className="btn btn--glass" target="_blank" rel="noreferrer">
+                  <Icon name="whatsapp" size={17} />
+                  Kurz nachfragen
+                </a>
               </div>
             </div>
           </div>

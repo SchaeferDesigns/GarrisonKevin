@@ -52,7 +52,7 @@ export default async function ServicePage({ params }: Params) {
           { name: 'Leistungen', path: '/leistungen' },
           { name: service.title, path: `/leistungen/${service.slug}` },
         ]}
-        image="/media/wood-detail.jpg"
+        variant={2}
       >
         {price && (
           <span className="badge badge--dark">
@@ -132,7 +132,7 @@ export default async function ServicePage({ params }: Params) {
                 Angebot für {service.title} anfragen
                 <Icon name="arrow-right" size={17} />
               </Link>
-              <Link href="/preise" className="btn btn--ghost btn--block btn--sm">
+              <Link href="/leistungen#preise" className="btn btn--ghost btn--block btn--sm">
                 <Icon name="calculator" size={16} />
                 Richtwert berechnen
               </Link>

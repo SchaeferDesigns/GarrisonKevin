@@ -36,11 +36,7 @@ export default function ImpressumPage() {
               <Icon name="info" size={21} />
               <div>
                 <h2>Impressum wird noch eingepflegt</h2>
-                <p>
-                  Der Impressumstext wird in der Datei <code>src/content/impressum.txt</code> hinterlegt. Sobald dort
-                  Text steht, erscheint er automatisch an dieser Stelle. Überschriften lassen sich mit fünf Rauten
-                  auszeichnen: <code>#####Überschrift#####</code>. Links und E-Mail-Adressen werden automatisch verlinkt.
-                </p>
+                <p>Der Text folgt in Kürze.</p>
               </div>
             </div>
           )}

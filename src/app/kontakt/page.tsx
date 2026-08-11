@@ -45,6 +45,7 @@ export default function KontaktPage() {
   return (
     <>
       <PageHero
+        variant={1}
         kicker="Kontakt"
         title="Anfrage stellen"
         lead="Beschreiben Sie kurz, was ansteht. Eine Rückmeldung kommt in der Regel innerhalb von 24 Stunden."

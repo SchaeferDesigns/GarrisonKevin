@@ -40,7 +40,7 @@ export default function NotFound() {
               Zur Anfrage
               <Icon name="arrow-right" size={17} />
             </Link>
-            <Link href="/preise" className="btn btn--ghost">
+            <Link href="/leistungen" className="btn btn--ghost">
               Preise ansehen
             </Link>
           </div>

@@ -2,30 +2,69 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
 import CtaSection from '@/components/CtaSection';
+import PriceCalculator from '@/components/PriceCalculator';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import { business, extras, notOffered, notOfferedExtra, prices, services } from '@/lib/business';
+import FaqList from '@/components/FaqList';
+import {
+  business,
+  extras,
+  faqs,
+  hourlyRate,
+  importantNotes,
+  notOffered,
+  notOfferedExtra,
+  prices,
+  services,
+} from '@/lib/business';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: 'Leistungen – Bodenverlegung, Sockelleisten & Fugen',
+  title: 'Leistungen & Preise – Bodenverlegung, Sockelleisten & Fugen',
   description:
-    'Alle Leistungen im Überblick: Laminat, Vinyl und Klickböden verlegen, Sockelleisten montieren, Acryl- und Silikonfugen erneuern – in Aalen und Umgebung.',
+    'Laminat, Vinyl und Klickböden verlegen ab 18 €/m² inklusive Trittschalldämmung und Anfahrt, Sockelleisten ab 7 €/lfm, Fugen ab 6 €/lfm – in Aalen und Umgebung. Mit Richtwert-Rechner.',
   alternates: { canonical: '/leistungen' },
 };
+
+const enthalten = [
+  'Verlegen von Laminat, Vinyl und Klickböden',
+  'Trittschalldämmung und Dampfsperre',
+  'Untergrund reinigen, grundieren, kleine Unebenheiten ausgleichen',
+  'Zuschnitt und Montage der Sockelleisten',
+  'Alte Fugen entfernen und neu ziehen',
+  'Anfahrt innerhalb des Einsatzgebiets',
+  'Besichtigung vor Ort und schriftliches Angebot',
+];
+
+const extraIcons = ['handshake', 'plank', 'skirting', 'ruler'] as const;
 
 export default function LeistungenPage() {
   return (
     <>
       <PageHero
-        kicker="Leistungen"
+        variant={1}
+        kicker="Leistungen & Preise"
         title="Boden, Leisten und Fugen aus einer Hand"
-        lead="Bodenverlegung, Sockelleisten und Fugenarbeiten. Alle Preise gelten für die Arbeitsleistung, das Material stellt der Kunde."
+        lead="Alle Preise gelten für die Arbeitsleistung. Das Material stellt und bezahlt der Kunde. Verbindlich wird der Preis im schriftlichen Angebot nach der Besichtigung vor Ort."
         crumbs={[{ name: 'Leistungen', path: '/leistungen' }]}
-      />
+      >
+        <span className="badge badge--dark">
+          <Icon name="euro" size={15} />
+          Ohne versteckte Positionen
+        </span>
+        <span className="badge badge--dark">
+          <Icon name="document" size={15} />
+          Festpreis nach Besichtigung
+        </span>
+        <span className="badge badge--dark">
+          <Icon name="map-pin" size={15} />
+          Anfahrt inklusive
+        </span>
+      </PageHero>
 
-      <section className="section">
+      {/* Die drei Leistungen mit Preis */}
+      <section className="section" id="preise">
         <div className="ambient" aria-hidden="true" />
         <div className="container">
           <div className="grid grid--3">
@@ -38,7 +77,24 @@ export default function LeistungenPage() {
                       <Icon name={service.icon} size={23} />
                     </span>
                     <h2 style={{ fontSize: '1.35rem' }}>{service.title}</h2>
-                    <p className="muted">{service.short}</p>
+
+                    {price && (
+                      <p>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: '2.1rem',
+                            lineHeight: 1.05,
+                            color: 'var(--forest-800)',
+                          }}
+                        >
+                          ab {price.from} €
+                        </span>{' '}
+                        <span className="small muted">{price.unitLong}</span>
+                      </p>
+                    )}
+
+                    <p className="muted small">{service.short}</p>
 
                     <ul className="list list--dense small mt-2">
                       {service.bullets.slice(0, 4).map((bullet) => (
@@ -49,89 +105,218 @@ export default function LeistungenPage() {
                       ))}
                     </ul>
 
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1rem',
-                        marginTop: 'auto',
-                        paddingTop: '1rem',
-                        borderTop: '1px solid var(--line)',
-                      }}
-                    >
-                      {price && (
-                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem' }}>
-                          ab {price.from} €
-                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'var(--muted)' }}>
-                            {' '}
-                            {price.unit}
-                          </span>
-                        </span>
-                      )}
+                    <span className="card__more">
                       <Link href={`/leistungen/${service.slug}`} className="link">
                         Mehr erfahren
                         <Icon name="arrow-right" size={16} />
                       </Link>
-                    </div>
+                    </span>
                   </article>
                 </Reveal>
               );
             })}
           </div>
+
+          <Reveal className="panel panel--muted mt-8">
+            <div className="split">
+              <div>
+                <h2 style={{ fontSize: '1.4rem' }}>Kleine Aufträge</h2>
+                <p className="small muted mt-2">
+                  Unter {hourlyRate.thresholdOrderValue} € Auftragswert wird nach Stunden abgerechnet: ab{' '}
+                  {hourlyRate.amount} € pro Stunde bei mindestens {hourlyRate.minHours.toLocaleString('de-DE')} Stunden.
+                </p>
+              </div>
+              <div>
+                <h2 style={{ fontSize: '1.4rem' }}>Anfahrt inklusive</h2>
+                <p className="small muted mt-2">
+                  Innerhalb des Einsatzgebiets – {business.serviceAreaLabel}, rund {business.serviceRadiusKm} km – ist
+                  die Anfahrt im Preis enthalten. Bezahlt wird per {business.paymentMethods}.
+                </p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="section section--sand">
+      {/* Richtwert-Rechner */}
+      <section className="section section--sand" id="rechner">
         <div className="ambient" aria-hidden="true" />
         <div className="container">
-          <div className="split split--wide-left">
-            <div>
-              <span className="kicker">Zusatzarbeiten</span>
-              <h2 className="mt-4">Was sich dazubuchen lässt</h2>
-              <p className="lead mt-4">
-                Diese Arbeiten gehören nicht automatisch dazu. Auf Wunsch stehen sie als eigene Position im Angebot.
-              </p>
+          <div className="section-head">
+            <span className="kicker">Richtwert-Rechner</span>
+            <h2>Grobe Einschätzung in 30 Sekunden</h2>
+            <p className="lead">Tragen Sie Ihre Maße ein und Sie sehen den Richtwert für die Arbeitsleistung.</p>
+          </div>
 
+          <PriceCalculator />
+        </div>
+      </section>
+
+      {/* Enthalten und nicht enthalten */}
+      <section className="section section--dark">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container">
+          <div className="split">
+            <div>
+              <span className="kicker">Enthalten</span>
+              <h2 className="mt-4">Das steckt im Preis</h2>
               <ul className="list mt-6">
-                {extras.map((extra) => (
-                  <li key={extra.title}>
+                {enthalten.map((item) => (
+                  <li key={item}>
                     <Icon name="check" size={18} />
-                    <strong>{extra.title}:</strong> {extra.text}
+                    {item}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <Reveal className="panel panel--muted">
-              <h3>Das mache ich nicht</h3>
-              <p className="small muted">
-                Verlegt werden Klicksysteme bei Laminat und Vinyl. Die folgenden Beläge und Arbeiten sind nicht im
-                Angebot.
-              </p>
-              <ul className="badge-row">
-                {[...notOffered, ...notOfferedExtra].map((item) => (
-                  <li key={item} className="badge badge--accent">
-                    <Icon name="ban" size={14} />
-                    {item}
-                  </li>
-                ))}
+            <div>
+              <span className="kicker">Nicht enthalten</span>
+              <h2 className="mt-4">Das kommt separat</h2>
+              <ul className="list mt-6">
+                <li>
+                  <Icon name="ban" size={18} />
+                  Material: Boden, Leisten, Profile und Silikon
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  Alten Belag entfernen und abtransportieren – nach Aufwand als eigene Position
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  Übergangsprofile und Türblätter kürzen – auf Wunsch, separat berechnet
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  Estricharbeiten und großflächiges Ausgleichen des Untergrunds
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  Beläge außerhalb des Angebots: {notOffered.join(', ')}
+                </li>
+                <li>
+                  <Icon name="ban" size={18} />
+                  {notOfferedExtra.join(', ')}
+                </li>
               </ul>
-              <hr className="rule" style={{ marginBlock: '0.5rem' }} />
-              <p className="small muted">
-                Gut zu wissen: Material stellt und bezahlt der Kunde – auf Wunsch suchen wir es gemeinsam aus und
-                ich liefere es gegen Transportkosten an. {business.vatNote}
-              </p>
-              <Link href="/preise" className="btn btn--ghost">
-                Preise ansehen
-                <Icon name="arrow-right" size={17} />
-              </Link>
-            </Reveal>
+
+              <div className="panel mt-8">
+                <h3 style={{ fontSize: '1.1rem' }}>Material stellt der Kunde</h3>
+                <p className="small">
+                  Sie kaufen den Boden zum Preis Ihres Händlers, berechnet wird ausschließlich die Arbeitsleistung.
+                </p>
+                <p className="small">
+                  Aussuchen müssen Sie es nicht allein: Auf Wunsch suchen wir das Material gemeinsam aus. Gegen
+                  Transportkosten liefere ich es auch an.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <CtaSection />
+      {/* Zusatzarbeiten */}
+      <section className="section section--sand">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container">
+          <div className="section-head">
+            <span className="kicker">Auf Wunsch</span>
+            <h2>Was sich dazubuchen lässt</h2>
+            <p className="lead">
+              Diese Arbeiten gehören nicht automatisch dazu. Wenn Sie sie brauchen, stehen sie als eigene Position im
+              Angebot – Sie sehen also genau, was sie kosten.
+            </p>
+          </div>
+
+          <div className="grid grid--4">
+            {extras.map((extra, i) => (
+              <Reveal key={extra.title} delay={i * 80}>
+                <article className="card" style={{ height: '100%' }}>
+                  <span className="card__icon">
+                    <Icon name={extraIcons[i] ?? 'check'} size={21} />
+                  </span>
+                  <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}>{extra.title}</h3>
+                  <p className="small muted">{extra.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Antwort auf den häufigsten Einwand */}
+      <section className="section">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container container--narrow">
+          <div className="section-head">
+            <span className="kicker">Ehrlich gerechnet</span>
+            <h2>„Das ist mir zu teuer“ – der häufigste Satz</h2>
+            <p className="lead">
+              Den Satz höre ich regelmäßig. Meistens liegt es daran, dass sich Angebote schlecht vergleichen lassen.
+              Drei Punkte, auf die es beim Vergleich ankommt.
+            </p>
+          </div>
+
+          <ul className="list">
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Es ist reine Arbeitsleistung.</strong> Das Material kaufen Sie selbst zum Preis Ihres Händlers.
+              Vergleichbar sind deshalb nicht Quadratmeterpreise, sondern Endsummen.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Trittschalldämmung, Dampfsperre und Anfahrt sind enthalten.</strong> Diese drei Positionen kommen
+              nicht zusätzlich auf die Rechnung.
+            </li>
+            <li>
+              <Icon name="check" size={18} />
+              <strong>Der Preis steht vor Beginn.</strong> Die Werte auf dieser Seite sind Richtwerte. Verbindlich wird
+              der Preis mit dem schriftlichen Angebot nach der Besichtigung.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Hinweise und Fragen */}
+      <section className="section">
+        <div className="ambient" aria-hidden="true" />
+        <div className="container container--narrow">
+          <div className="section-head">
+            <span className="kicker">Gut zu wissen</span>
+            <h2>Das Kleingedruckte in ganz normal</h2>
+          </div>
+          <ul className="list">
+            {importantNotes.map((note) => (
+              <li key={note}>
+                <Icon name="info" size={18} />
+                {note}
+              </li>
+            ))}
+          </ul>
+
+          <hr className="rule" />
+
+          <h2 style={{ fontSize: '1.6rem' }}>Fragen zum Preis</h2>
+          <div className="mt-6">
+            <FaqList items={faqs.slice(0, 3)} openFirst />
+          </div>
+
+          <div className="btn-row mt-8">
+            <Link href="/kontakt" className="btn btn--accent">
+              Verbindliches Angebot anfragen
+              <Icon name="arrow-right" size={17} />
+            </Link>
+            <Link href="/ablauf" className="btn btn--ghost">
+              Ablauf ansehen
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <CtaSection
+        title="Verbindlicher Preis nach der Besichtigung"
+        text="Die Werte auf dieser Seite sind Richtwerte für die Arbeitsleistung. Was Ihr Auftrag genau kostet, steht im schriftlichen Angebot nach der Besichtigung vor Ort."
+      />
 
       <JsonLd data={breadcrumbSchema([{ name: 'Leistungen', path: '/leistungen' }])} />
     </>

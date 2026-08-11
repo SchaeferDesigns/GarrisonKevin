@@ -31,6 +31,7 @@ export default function FaqPage() {
   return (
     <>
       <PageHero
+        variant={4}
         kicker="Häufige Fragen"
         title="Fragen und Antworten"
         lead="Antworten zu Preisen, Material, Vorbereitung und Terminen. Ist Ihre Frage nicht dabei, schreiben Sie mir einfach."
@@ -70,7 +71,7 @@ export default function FaqPage() {
                 Frage stellen
                 <Icon name="arrow-right" size={17} />
               </Link>
-              <Link href="/preise" className="btn btn--ghost">
+              <Link href="/leistungen#preise" className="btn btn--ghost">
                 Preise ansehen
               </Link>
             </div>

@@ -41,7 +41,7 @@ export default function UeberMichPage() {
         title="Kevin Garrison"
         lead="Maurergeselle und Vorarbeiter im Hochbau, über zehn Jahre Altbau und Neubau – heute Bodenbeläge und Fugen. Einzelbetrieb ohne Mitarbeiter."
         crumbs={[{ name: 'Über mich', path: '/ueber-mich' }]}
-        image="/media/wood-detail.jpg"
+        variant={3}
       >
         <span className="badge badge--dark">
           <Icon name="map-pin" size={15} />

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { cssUrl } from '@/lib/assets';
+import PageHeroArt from './PageHeroArt';
 import styles from './PageHero.module.css';
 
 export type Crumb = { name: string; path: string };
@@ -11,7 +11,8 @@ type PageHeroProps = {
   lead?: string;
   crumbs?: Crumb[];
   children?: ReactNode;
-  image?: string;
+  /** Verschiebt das Motiv, damit die Seitenköpfe sich unterscheiden. */
+  variant?: number;
 };
 
 /** Einheitlicher Seitenkopf für alle Unterseiten inklusive Brotkrümelnavigation. */
@@ -21,12 +22,11 @@ export default function PageHero({
   lead,
   crumbs = [],
   children,
-  image = '/media/wood-dark.jpg',
+  variant = 0,
 }: PageHeroProps) {
   return (
-    <section className={styles.hero} style={{ ['--hero-image' as string]: cssUrl(image) }}>
-      <div className={styles.texture} aria-hidden="true" />
-      <div className={styles.veil} aria-hidden="true" />
+    <section className={`${styles.hero} on-dark`}>
+      <PageHeroArt variant={variant} />
       <div className="container">
         <div className={styles.inner}>
           {crumbs.length > 0 && (
