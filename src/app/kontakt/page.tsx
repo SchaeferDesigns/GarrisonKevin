@@ -1,23 +1,45 @@
-import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
-import AnfrageForm from '@/components/AnfrageForm';
+import CtaSection from '@/components/CtaSection';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
 import { availability, business, mailtoLink, telLink, whatsappLink } from '@/lib/business';
-import { hasBackend } from '@/lib/anfrage';
 import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Kontakt & Anfrage',
   description:
-    'Anfrage für Bodenverlegung, Sockelleisten oder Fugenarbeiten in Aalen und Umgebung. Per WhatsApp, E-Mail oder Telefon, Montag bis Samstag von 8 bis 18 Uhr.',
+    'Kontakt für Bodenverlegung, Sockelleisten oder Fugenarbeiten in Aalen und Umgebung. Per WhatsApp, E-Mail oder Telefon, Montag bis Samstag von 8 bis 18 Uhr.',
   alternates: { canonical: '/kontakt' },
 };
 
 const waText =
   'Hallo Herr Garrison, ich möchte ein Angebot anfragen. Es geht um folgende Arbeiten:';
+
+/* Was eine Anfrage schnell einschätzbar macht. */
+const hilfreich = [
+  {
+    title: 'Worum es geht',
+    text: 'Boden verlegen, Sockelleisten, Fugen erneuern – oder eine Ausbesserung.',
+    icon: 'ruler' as const,
+  },
+  {
+    title: 'Ungefähre Größe',
+    text: 'Quadratmeter beim Boden, laufende Meter bei Leisten und Fugen. Geschätzt genügt.',
+    icon: 'calculator' as const,
+  },
+  {
+    title: 'Ort der Baustelle',
+    text: 'Ort oder Postleitzahl – damit klar ist, ob es im Einsatzgebiet liegt.',
+    icon: 'map-pin' as const,
+  },
+  {
+    title: 'Ein Foto des Raums',
+    text: 'Am schnellsten per WhatsApp. Ein Bild sagt mehr als eine lange Beschreibung.',
+    icon: 'image' as const,
+  },
+];
 
 export default function KontaktPage() {
   return (
@@ -42,59 +64,102 @@ export default function KontaktPage() {
         <div className="ambient" aria-hidden="true" />
         <div className="container">
           <div className="split split--wide-left">
-            {/* Formular */}
+            {/* Kontaktwege */}
             <div>
               <div className="section-head" style={{ marginBottom: '1.75rem' }}>
-                <span className="kicker">Anfrageformular</span>
-                <h2 style={{ fontSize: '1.85rem' }}>In fünf Schritten zur Anfrage</h2>
+                <span className="kicker">Direkter Draht</span>
+                <h2 style={{ fontSize: '1.85rem' }}>So erreichen Sie mich</h2>
                 <p className="muted small">
-                  Leistung, Umfang, Ort, Kontakt – am Ende sehen Sie alle Angaben noch einmal und können jede davon
-                  ändern.{' '}
-                  {hasBackend
-                    ? 'Danach geht die Anfrage direkt raus.'
-                    : 'Abgesendet wird sie anschließend über Ihr E-Mail-Programm oder WhatsApp.'}
+                  Am schnellsten geht es per WhatsApp – gerne mit einem Foto des Raums. Während der Arbeit auf der
+                  Baustelle ist ein Anruf nicht immer möglich; eine schriftliche Nachricht erreicht mich sicher.
                 </p>
               </div>
 
-              <Suspense fallback={<p className="muted">Formular wird geladen …</p>}>
-                <AnfrageForm />
-              </Suspense>
+              <div className="grid grid--3">
+                <Reveal>
+                  <a
+                    href={whatsappLink(waText)}
+                    className="card card--link"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ height: '100%' }}
+                  >
+                    <span className="card__icon">
+                      <Icon name="whatsapp" size={22} />
+                    </span>
+                    <h3 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-sans)' }}>WhatsApp</h3>
+                    <p className="small muted">{business.phone}</p>
+                    <span className="card__more">
+                      Nachricht schreiben
+                      <Icon name="arrow-right" size={16} />
+                    </span>
+                  </a>
+                </Reveal>
+
+                <Reveal delay={80}>
+                  <a href={telLink} className="card card--link" style={{ height: '100%' }}>
+                    <span className="card__icon">
+                      <Icon name="phone" size={22} />
+                    </span>
+                    <h3 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-sans)' }}>Telefon</h3>
+                    <p className="small muted">{business.phone}</p>
+                    <span className="card__more">
+                      Jetzt anrufen
+                      <Icon name="arrow-right" size={16} />
+                    </span>
+                  </a>
+                </Reveal>
+
+                <Reveal delay={160}>
+                  <a
+                    href={mailtoLink('Anfrage über die Website')}
+                    className="card card--link"
+                    style={{ height: '100%' }}
+                  >
+                    <span className="card__icon">
+                      <Icon name="mail" size={22} />
+                    </span>
+                    <h3 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-sans)' }}>E-Mail</h3>
+                    <p className="small muted">{business.email}</p>
+                    <span className="card__more">
+                      E-Mail schreiben
+                      <Icon name="arrow-right" size={16} />
+                    </span>
+                  </a>
+                </Reveal>
+              </div>
+
+              <hr className="rule" />
+
+              <div className="section-head" style={{ marginBottom: '1.5rem' }}>
+                <span className="kicker">Hilfreich</span>
+                <h2 style={{ fontSize: '1.5rem' }}>Was in die Nachricht gehört</h2>
+                <p className="muted small">
+                  Je mehr davon in der ersten Nachricht steht, desto genauer fällt die erste Einschätzung aus. Fehlt
+                  etwas, frage ich nach.
+                </p>
+              </div>
+
+              <div className="grid grid--2">
+                {hilfreich.map((item, i) => (
+                  <Reveal key={item.title} delay={i * 70}>
+                    <article className="card" style={{ height: '100%' }}>
+                      <span className="card__icon">
+                        <Icon name={item.icon} size={21} />
+                      </span>
+                      <h3 style={{ fontSize: '1.02rem', fontFamily: 'var(--font-sans)' }}>{item.title}</h3>
+                      <p className="small muted">{item.text}</p>
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
             </div>
 
-            {/* Direktkontakt */}
+            {/* Eckdaten */}
             <div className="stack" style={{ gap: '1.25rem' }}>
               <Reveal className="panel">
-                <span className="kicker">Direkt</span>
-                <h2 style={{ fontSize: '1.4rem' }}>Lieber sofort sprechen?</h2>
-                <p className="small muted">
-                  Erreichbar Montag bis Samstag von 8 bis 18 Uhr. Ein Foto des Raums hilft bei der ersten Einschätzung.
-                </p>
-
-                <a href={whatsappLink(waText)} className="btn btn--accent btn--block" target="_blank" rel="noreferrer">
-                  <Icon name="whatsapp" size={18} />
-                  WhatsApp schreiben
-                </a>
-                <a href={telLink} className="btn btn--ghost btn--block">
-                  <Icon name="phone" size={18} />
-                  {business.phone}
-                </a>
-                <a
-                  href={mailtoLink('Anfrage über die Website')}
-                  className="btn btn--ghost btn--block"
-                >
-                  <Icon name="mail" size={18} />
-                  E-Mail schreiben
-                </a>
-              </Reveal>
-
-              <Reveal className="panel" delay={90}>
-                <span className="kicker">Rückmeldung</span>
+                <span className="kicker">Erreichbarkeit</span>
                 <h3 style={{ fontSize: '1.2rem' }}>Antwort in der Regel binnen 24 Stunden</h3>
-                <p className="small muted">
-                  Während der Arbeit auf der Baustelle ist ein Anruf nicht immer möglich. Eine schriftliche Nachricht
-                  über WhatsApp oder E-Mail erreicht mich sicher und wird in der Regel innerhalb von 24 Stunden
-                  beantwortet.
-                </p>
                 <ul className="datalist" style={{ marginBottom: '0.4rem' }}>
                   {availability.map((slot) => (
                     <li key={slot.days}>
@@ -109,10 +174,6 @@ export default function KontaktPage() {
                 <ul className="list list--dense small">
                   <li>
                     <Icon name="check" size={16} />
-                    Am schnellsten: WhatsApp mit einem Foto des Raums
-                  </li>
-                  <li>
-                    <Icon name="check" size={16} />
                     Verbindlicher Preis erst mit dem schriftlichen Angebot
                   </li>
                   <li>
@@ -122,7 +183,7 @@ export default function KontaktPage() {
                 </ul>
               </Reveal>
 
-              <Reveal className="panel panel--muted" delay={160}>
+              <Reveal className="panel panel--muted" delay={90}>
                 <span className="kicker">Betrieb</span>
                 <ul className="datalist">
                   <li>
@@ -150,6 +211,13 @@ export default function KontaktPage() {
                       {business.serviceAreaLabel}, ca. {business.serviceRadiusKm} km Radius
                     </span>
                   </li>
+                  <li>
+                    <Icon name="euro" size={18} />
+                    <span>
+                      <span className="datalist__label">Zahlung</span>
+                      {business.paymentMethods}
+                    </span>
+                  </li>
                 </ul>
                 <p className="tiny">{business.vatNote}</p>
               </Reveal>
@@ -157,6 +225,8 @@ export default function KontaktPage() {
           </div>
         </div>
       </section>
+
+      <CtaSection />
 
       <JsonLd data={breadcrumbSchema([{ name: 'Kontakt', path: '/kontakt' }])} />
     </>

@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import Icon from './Icon';
-import { hourlyRate, prices } from '@/lib/business';
+import { hourlyRate, prices, whatsappLink } from '@/lib/business';
 import styles from './PriceCalculator.module.css';
 
 const euro = new Intl.NumberFormat('de-DE', {
@@ -53,7 +52,19 @@ export default function PriceCalculator() {
     setSkirting(String(Math.round((l + w) * 2 * 10) / 10));
   };
 
-  const requestHref = `/kontakt?flaeche=${values.a || ''}&leisten=${values.s || ''}&fugen=${values.j || ''}`;
+  /* Die berechneten Werte gleich in die WhatsApp-Nachricht schreiben –
+     so muss sie niemand abtippen. */
+  const requestText = [
+    'Hallo Herr Garrison, ich möchte ein Angebot anfragen.',
+    '',
+    values.a ? `Boden: ca. ${values.a} m²` : null,
+    values.s ? `Sockelleisten: ca. ${values.s} lfm` : null,
+    values.j ? `Fugen: ca. ${values.j} lfm` : null,
+    '',
+    'Die Baustelle ist in:',
+  ]
+    .filter((zeile) => zeile !== null)
+    .join('\n');
 
   return (
     <div className={styles.wrap}>
@@ -235,10 +246,15 @@ export default function PriceCalculator() {
           </p>
         )}
 
-        <Link href={requestHref} className="btn btn--accent btn--block">
+        <a
+          href={whatsappLink(requestText)}
+          className="btn btn--accent btn--block"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="whatsapp" size={18} />
           Mit diesen Werten anfragen
-          <Icon name="arrow-right" size={17} />
-        </Link>
+        </a>
 
         <p className={styles.disclaimer}>
           Unverbindlicher Richtwert für die Arbeitsleistung. Material stellt der Kunde. Der verbindliche Preis steht im

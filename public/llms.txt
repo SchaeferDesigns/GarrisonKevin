@@ -70,9 +70,9 @@ Zum Termin sollten der Raum und die Zuwege leer und begehbar sein. Boden und Lei
 - [Ablauf](https://kevin-garrison.de/ablauf/): Ablauf von der Anfrage bis zur Übergabe
 - [Einsatzgebiet](https://kevin-garrison.de/einsatzgebiet/): Orte im Umkreis von Aalen
 - [Über mich](https://kevin-garrison.de/ueber-mich/): Werdegang, Arbeitsweise und Grundsätze
-- [Häufige Fragen](https://kevin-garrison.de/faq/): Antworten zu Preis und Leistung, Material, Termin und Vorbereitung sowie Gebietn
-- [Kontakt](https://kevin-garrison.de/kontakt/): Anfrageformular und Direktkontakt
+- [Häufige Fragen](https://kevin-garrison.de/faq/): Antworten zu Preis und Leistung, Material, Termin und Vorbereitung sowie Gebiet
+- [Kontakt](https://kevin-garrison.de/kontakt/): Telefon, WhatsApp und E-Mail
 
 ## Hinweise zum Datenschutz
 
-Die Website setzt keine Cookies, bindet keine externen Dienste ein und lädt Schriften vom eigenen Server. Das Anfrageformular führt in fünf Schritten durch die Anfrage; derzeit werden dabei keine Formulardaten an einen Server übertragen, die fertige Nachricht wird vom Nutzer selbst per E-Mail-Programm oder WhatsApp versendet.
+Die Website setzt keine Cookies, bindet keine externen Dienste ein und lädt Schriften vom eigenen Server. Es gibt kein Kontaktformular; Anfragen laufen direkt über Telefon, WhatsApp oder E-Mail.

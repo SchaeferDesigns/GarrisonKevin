@@ -421,6 +421,30 @@ strong {
   border-color: rgba(196, 165, 116, 0.65);
 }
 
+/* Abschließende Zeile einer verlinkten Karte */
+.card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 550;
+  color: var(--forest-700);
+}
+
+.card__more svg {
+  transition: transform 0.3s var(--ease);
+}
+
+.card--link:hover .card__more {
+  color: var(--oak-700);
+}
+
+.card--link:hover .card__more svg {
+  transform: translateX(3px);
+}
+
 .section--dark .card {
   background-color: var(--glass-dark-bg);
   border-color: var(--glass-dark-border);

@@ -49,10 +49,6 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
           # Testdomain nicht indexieren lassen – vor dem Livegang auf der echten Domain entfernen.
           NEXT_PUBLIC_NOINDEX: 'true'
-          # Adresse der Lambda-Funktion aus aws/template.yaml, zu hinterlegen
-          # unter Settings -> Secrets and variables -> Actions -> Variables.
-          # Fehlt sie, übergibt das Formular an E-Mail und WhatsApp.
-          NEXT_PUBLIC_FORM_ENDPOINT: ${{ vars.NEXT_PUBLIC_FORM_ENDPOINT }}
         run: |
           npm run build
           touch out/.nojekyll
