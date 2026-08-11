@@ -49,6 +49,10 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
           # Testdomain nicht indexieren lassen – vor dem Livegang auf der echten Domain entfernen.
           NEXT_PUBLIC_NOINDEX: 'true'
+          # Ziel des Anfrageformulars. Ist die Edge Function noch nicht deployed,
+          # bleibt das Formular bedienbar und übergibt an E-Mail beziehungsweise
+          # WhatsApp – dann bitte diese Zeile auskommentieren.
+          NEXT_PUBLIC_FORM_ENDPOINT: https://ipbtvvnqrqxpgcoycqbj.supabase.co/functions/v1/anfrage
         run: |
           npm run build
           touch out/.nojekyll

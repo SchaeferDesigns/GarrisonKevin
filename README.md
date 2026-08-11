@@ -112,6 +112,44 @@ Geprüft wird im Browser; der Endpunkt sollte dieselben Grenzen noch einmal
 durchsetzen. HEIC-Fotos von iPhones melden je nach Browser gar keinen MIME-Typ
 und werden deshalb durchgelassen.
 
+#### Einrichtung in Supabase
+
+Projekt: `ipbtvvnqrqxpgcoycqbj`. Alles Nötige liegt im Ordner `supabase/`.
+
+1. **Tabelle und Bucket anlegen** – `supabase/migrations/20260810_garrison_anfragen.sql`
+   im SQL-Editor ausführen. Mehrfaches Ausführen ist unschädlich. Angelegt
+   werden `public.garrison_anfragen` (RLS an, bewusst ohne Policy – nur der
+   Service-Role-Key der Function kommt heran), der private Bucket
+   `garrison-anfragen` und die Aufräumfunktion
+   `garrison_anfragen_aufraeumen(monate)`.
+
+2. **Function deployen:**
+   ```bash
+   npm run supabase:sync   # Prüfregeln in die Function kopieren
+   supabase functions deploy anfrage --project-ref ipbtvvnqrqxpgcoycqbj --no-verify-jwt
+   ```
+   `--no-verify-jwt`, weil ein Kontaktformular keinen angemeldeten Nutzer hat.
+   Der Schutz liegt in der Function: Herkunftsprüfung, Spamfalle, höchstens
+   fünf Anfragen je Absender und Stunde, vollständige Wertprüfung.
+
+3. **Secrets setzen:**
+   ```bash
+   supabase secrets set ALLOWED_ORIGINS="https://schaeferdesigns.github.io,http://localhost:3000"
+   supabase secrets set IP_SALT="$(openssl rand -hex 32)"
+   ```
+   `SUPABASE_URL` und `SUPABASE_SERVICE_ROLE_KEY` setzt Supabase selbst.
+   Ohne `IP_SALT` unterbleibt die Sendebegrenzung, die IP wird nie im Klartext
+   gespeichert. `ALLOWED_ORIGINS` muss die echte Domain enthalten, sobald sie
+   steht – bei leerer Liste nimmt die Function jede Herkunft an.
+
+4. **Später für Resend:** `RESEND_API_KEY`, `MAIL_FROM` (verifizierte Domain)
+   und `MAIL_TO`. Solange kein Schlüssel gesetzt ist, wird die Anfrage
+   gespeichert und `mail_status` auf `deaktiviert` gesetzt – es geht nichts
+   verloren, die Weiterleitung lässt sich jederzeit nachrüsten.
+
+Der Stand jeder Weiterleitung steht in der Zeile: `offen`, `gesendet`,
+`fehler` (mit `mail_error`) oder `deaktiviert`.
+
 #### Beispiel Supabase Edge Function
 
 ```ts
