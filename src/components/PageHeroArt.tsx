@@ -12,6 +12,10 @@ type PageHeroArtProps = {
  * Untergrund, dazwischen die Kante, an der weitergearbeitet wird. Alles als
  * Inline-SVG und CSS – kein Foto, keine zusätzliche Datei, und es zeigt genau
  * das Handwerk, um das es geht.
+ *
+ * Beim Aufbau der Seite legt sich der Boden einmal von links nach rechts, und
+ * die Arbeitskante zeichnet sich dabei. Die Bewegung läuft einmal und hört
+ * dann auf – ein dauerhaft zappelnder Seitenkopf lenkt vom Text ab.
  */
 export default function PageHeroArt({ variant = 0 }: PageHeroArtProps) {
   const id = `verlegemuster-${variant}`;
@@ -60,7 +64,15 @@ export default function PageHeroArt({ variant = 0 }: PageHeroArtProps) {
           <rect width="1200" height="420" fill={`url(#${untergrundId})`} className={styles.underlay} />
         </g>
 
-        <line x1="660" y1="0" x2="540" y2="420" stroke={`url(#kante-${variant})`} strokeWidth="2" />
+        <line
+          className={styles.edge}
+          x1="660"
+          y1="0"
+          x2="540"
+          y2="420"
+          stroke={`url(#kante-${variant})`}
+          strokeWidth="2"
+        />
       </svg>
 
       <div className={styles.glow} />

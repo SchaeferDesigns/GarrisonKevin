@@ -46,13 +46,8 @@
 }
 
 /* Platz schaffen, damit die Leiste nichts überdeckt */
-.spacer {
-  height: 78px;
-}
-
 @media (min-width: 768px) {
-  .bar,
-  .spacer {
+  .bar {
     display: none;
   }
 }

@@ -12,6 +12,43 @@
   height: 112%;
 }
 
+/* Der Boden legt sich einmal quer durchs Bild. Die Maske ist breiter als das
+   Element und wandert von rechts nach links – dadurch schiebt sich die
+   sichtbare Kante über die Fläche. */
+.art {
+  -webkit-mask-image: linear-gradient(100deg, #000 42%, transparent 60%);
+  mask-image: linear-gradient(100deg, #000 42%, transparent 60%);
+  -webkit-mask-size: 280% 100%;
+  mask-size: 280% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: verlegen 1.15s cubic-bezier(0.32, 0.9, 0.36, 1) 0.05s both;
+}
+
+@keyframes verlegen {
+  from {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  to {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+
+/* Die Arbeitskante zeichnet sich, sobald der Boden liegt. */
+.edge {
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  animation: kanteZiehen 0.7s var(--ease) 0.75s both;
+}
+
+@keyframes kanteZiehen {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Verlegte Fläche: warm, aber sehr zurückhaltend – der Text steht davor. */
 .laid {
   opacity: 0.62;
@@ -72,4 +109,20 @@
 
 .art[data-variant='4'] .canvas {
   transform: translateX(9%) scale(1.09);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .edge {
+    animation: none;
+  }
+
+  .art {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .edge {
+    stroke-dashoffset: 0;
+  }
 }

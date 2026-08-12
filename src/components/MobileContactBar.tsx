@@ -13,7 +13,6 @@ const waText =
 export default function MobileContactBar() {
   return (
     <>
-      <div className={styles.spacer} aria-hidden="true" />
       <nav className={styles.bar} aria-label="Schnellkontakt">
         <a href={telLink} className={styles.item}>
           <Icon name="phone" size={19} />
