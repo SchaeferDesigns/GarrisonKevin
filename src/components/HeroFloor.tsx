@@ -11,8 +11,11 @@ import styles from './HeroFloor.module.css';
  * also keine Ladezeit und behauptet nichts, was nicht belegt ist. Gezeigt wird
  * die Sache selbst – Reihe für Reihe verlegte Dielen.
  *
- * Der Scrollwert wird einmal je Bild gesetzt und als CSS-Variable übergeben,
- * damit die Ebenen im Compositor laufen und nichts neu berechnet wird.
+ * Der Scrollwert wird einmal je Bild gesetzt und als CSS-Variable am Hero
+ * hinterlegt, damit die Ebenen im Compositor laufen und nichts neu berechnet
+ * wird. Weil die Variable am Abschnitt hängt, können auch Text und Preiskarte
+ * darauf reagieren – sie ziehen langsamer mit als der Boden, und genau dieser
+ * Unterschied erzeugt die Tiefe.
  */
 export default function HeroFloor() {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,13 +25,16 @@ export default function HeroFloor() {
     if (!element) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    /* Die Variable gehört an den Abschnitt, nicht an die Kulisse – so kommen
+       auch Überschrift und Preiskarte daran. */
+    const host = element.parentElement ?? element;
     let frame = 0;
 
     const update = () => {
       frame = 0;
       /* Über die Höhe des Heros normieren: 0 am Anfang, 1 beim Verlassen. */
       const fortschritt = Math.min(1, window.scrollY / Math.max(1, element.offsetHeight));
-      element.style.setProperty('--scroll', fortschritt.toFixed(4));
+      host.style.setProperty('--scroll', fortschritt.toFixed(4));
     };
 
     const onScroll = () => {
@@ -56,6 +62,8 @@ export default function HeroFloor() {
           <div className={styles.seams} />
         </div>
       </div>
+      {/* Vorderste Reihe: läuft am schnellsten durch und gibt die Nähe an. */}
+      <div className={styles.near} />
       <div className={styles.haze} />
     </div>
   );
