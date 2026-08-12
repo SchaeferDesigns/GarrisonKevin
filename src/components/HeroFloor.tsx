@@ -62,8 +62,6 @@ export default function HeroFloor() {
           <div className={styles.seams} />
         </div>
       </div>
-      {/* Vorderste Reihe: läuft am schnellsten durch und gibt die Nähe an. */}
-      <div className={styles.near} />
       <div className={styles.haze} />
     </div>
   );

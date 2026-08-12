@@ -29,8 +29,8 @@
   gap: 1.15rem;
   /* Text und Karte ziehen langsamer mit als der Boden – dieser Unterschied
      ist der eigentliche Tiefeneindruck. */
-  transform: translate3d(0, calc(var(--scroll, 0) * -90px), 0);
-  opacity: calc(1 - var(--scroll, 0) * 1.15);
+  transform: translate3d(0, calc(var(--scroll, 0) * -55px), 0);
+  opacity: calc(1 - var(--scroll, 0) * 0.9);
   will-change: transform, opacity;
 }
 
@@ -81,8 +81,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  transform: translate3d(0, calc(var(--scroll, 0) * -170px), 0);
-  opacity: calc(1 - var(--scroll, 0) * 1.3);
+  transform: translate3d(0, calc(var(--scroll, 0) * -100px), 0);
+  opacity: calc(1 - var(--scroll, 0) * 1);
   will-change: transform, opacity;
   padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
   border-radius: var(--r-xl);
