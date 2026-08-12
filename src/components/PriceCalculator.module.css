@@ -219,3 +219,10 @@
     position: static;
   }
 }
+
+/* Kleine Bedienelemente im Rechner reagieren wie die Buttons. */
+.roomHelper button:active,
+.wrap button:active {
+  transform: scale(0.955);
+  transition-duration: 0.09s;
+}

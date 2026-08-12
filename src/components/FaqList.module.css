@@ -33,7 +33,12 @@
   font-weight: 550;
   line-height: 1.45;
   color: var(--forest-800);
-  transition: color 0.25s var(--ease);
+  transition: color 0.25s var(--ease), transform 0.3s var(--ease);
+}
+
+.summary:active {
+  transform: scale(0.985);
+  transition-duration: 0.09s;
 }
 
 .summary::-webkit-details-marker {

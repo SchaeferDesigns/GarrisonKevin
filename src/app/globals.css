@@ -76,6 +76,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Kein blaues Rechteck beim Antippen – die Rückmeldung geben die
+     Druckzustände weiter unten. */
+  -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 28px);
 }
@@ -112,6 +115,16 @@ textarea {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Antippen soll sofort auslösen und nichts einfärben. */
+a,
+button,
+label,
+summary,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 :focus-visible {
@@ -423,6 +436,12 @@ strong {
   border-color: rgba(171, 151, 129, 0.65);
 }
 
+.card--link:active {
+  transform: translateY(-1px) scale(0.988);
+  transition-duration: 0.09s;
+  box-shadow: var(--shadow-md);
+}
+
 /* Abschließende Zeile einer verlinkten Karte */
 .card__more {
   display: inline-flex;
@@ -517,8 +536,12 @@ strong {
   box-shadow: 0 16px 30px -14px rgba(16, 29, 23, 0.75);
 }
 
+/* Kurzer Druck beim Klicken und Antippen: schnell hinein, ruhig zurück.
+   Statt filter ein Inset-Schatten, damit der Blur der Glasflächen bleibt. */
 .btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.965);
+  transition-duration: 0.09s;
+  box-shadow: 0 3px 10px -8px rgba(16, 29, 23, 0.8), inset 0 0 0 100px rgba(8, 16, 12, 0.09);
 }
 
 .btn--lg {
@@ -610,6 +633,11 @@ strong {
   gap: 0.6rem;
 }
 
+.link:active {
+  transform: scale(0.97);
+  transition-duration: 0.09s;
+}
+
 .section--dark .link {
   color: var(--oak-400);
   border-color: rgba(198, 184, 165, 0.4);
@@ -681,6 +709,11 @@ strong {
   color: var(--oak-700);
   border-color: rgba(171, 151, 129, 0.55);
   background-color: rgba(255, 255, 255, 0.72);
+}
+
+.chip:active {
+  transform: scale(0.955);
+  transition-duration: 0.09s;
 }
 
 .faq-section {

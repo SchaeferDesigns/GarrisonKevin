@@ -127,12 +127,17 @@
   font-weight: 500;
   color: rgba(238, 240, 234, 0.78);
   white-space: nowrap;
-  transition: color 0.28s var(--ease), background-color 0.28s var(--ease);
+  transition: color 0.28s var(--ease), background-color 0.28s var(--ease), transform 0.3s var(--ease);
 }
 
 .navLink:hover {
   color: #fbfaf6;
   background-color: rgba(255, 255, 255, 0.12);
+}
+
+.navLink:active {
+  transform: scale(0.94);
+  transition-duration: 0.09s;
 }
 
 .navLink[data-active='true'] {
@@ -165,11 +170,16 @@
   color: #fbfaf6;
   cursor: pointer;
   flex: none;
-  transition: background-color 0.3s var(--ease);
+  transition: background-color 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
 .burger:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+.burger:active {
+  transform: scale(0.9);
+  transition-duration: 0.09s;
 }
 
 /* ------------------------------------------------------------ Mobile-Panel */
@@ -277,7 +287,9 @@
 @media (prefers-reduced-motion: reduce) {
   .inner,
   .mark,
-  .brandRole {
+  .brandRole,
+  .navLink,
+  .burger {
     transition: none;
   }
 }

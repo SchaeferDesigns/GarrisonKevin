@@ -5,6 +5,7 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import MobileContactBar from '@/components/MobileContactBar';
 import JsonLd from '@/components/JsonLd';
+import ScrollReset from '@/components/ScrollReset';
 import { business } from '@/lib/business';
 import { cssUrl, noIndex } from '@/lib/assets';
 import { localBusinessSchema, websiteSchema } from '@/lib/schema';
@@ -104,6 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#inhalt" className="skip-link">
           Zum Inhalt springen
         </a>
+        <ScrollReset />
         <SiteHeader />
         <main id="inhalt">{children}</main>
         <SiteFooter />

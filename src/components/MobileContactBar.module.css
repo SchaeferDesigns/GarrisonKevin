@@ -34,7 +34,9 @@
 }
 
 .item:active {
-  transform: scale(0.97);
+  transform: scale(0.93);
+  transition-duration: 0.09s;
+  background-color: rgba(255, 255, 255, 0.62);
 }
 
 .itemPrimary {
