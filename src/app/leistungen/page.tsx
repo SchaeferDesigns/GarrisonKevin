@@ -244,46 +244,13 @@ export default function LeistungenPage() {
         </div>
       </section>
 
-      {/* Antwort auf den häufigsten Einwand */}
-      <section className="section">
-        <div className="ambient" aria-hidden="true" />
-        <div className="container container--narrow">
-          <div className="section-head">
-            <span className="kicker">Ehrlich gerechnet</span>
-            <h2>„Das ist mir zu teuer“ – der häufigste Satz</h2>
-            <p className="lead">
-              Den Satz höre ich regelmäßig. Meistens liegt es daran, dass sich Angebote schlecht vergleichen lassen.
-              Drei Punkte, auf die es beim Vergleich ankommt.
-            </p>
-          </div>
-
-          <ul className="list">
-            <li>
-              <Icon name="check" size={18} />
-              <strong>Es ist reine Arbeitsleistung.</strong> Das Material kaufen Sie selbst zum Preis Ihres Händlers.
-              Vergleichbar sind deshalb nicht Quadratmeterpreise, sondern Endsummen.
-            </li>
-            <li>
-              <Icon name="check" size={18} />
-              <strong>Trittschalldämmung, Dampfsperre und Anfahrt sind enthalten.</strong> Diese drei Positionen kommen
-              nicht zusätzlich auf die Rechnung.
-            </li>
-            <li>
-              <Icon name="check" size={18} />
-              <strong>Der Preis steht vor Beginn.</strong> Die Werte auf dieser Seite sind Richtwerte. Verbindlich wird
-              der Preis mit dem schriftlichen Angebot nach der Besichtigung.
-            </li>
-          </ul>
-        </div>
-      </section>
-
       {/* Hinweise und Fragen */}
       <section className="section">
         <div className="ambient" aria-hidden="true" />
         <div className="container container--narrow">
           <div className="section-head">
             <span className="kicker">Gut zu wissen</span>
-            <h2>Das Kleingedruckte in ganz normal</h2>
+            <h2>Konditionen auf einen Blick</h2>
           </div>
           <ul className="list">
             {importantNotes.map((note) => (

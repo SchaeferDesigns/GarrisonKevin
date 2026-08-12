@@ -30,7 +30,8 @@ export type IconName =
   | 'handshake'
   | 'info'
   | 'ban'
-  | 'image';
+  | 'image'
+  | 'plus';
 
 const paths: Record<IconName, React.ReactNode> = {
   plank: (
@@ -185,6 +186,11 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="8.8" />
       <path d="M5.8 5.8l12.4 12.4" />
+    </>
+  ),
+  plus: (
+    <>
+      <path d="M12 5.2v13.6M5.2 12h13.6" />
     </>
   ),
   image: (

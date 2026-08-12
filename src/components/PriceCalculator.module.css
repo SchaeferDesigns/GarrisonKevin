@@ -80,15 +80,123 @@
   cursor: pointer;
 }
 
-.roomHelper {
+.rooms {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.6rem;
-  padding: 0.95rem 1rem;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1rem;
   border-radius: var(--r-md);
   background-color: rgba(226, 217, 200, 0.4);
   border: 1px solid rgba(171, 151, 129, 0.32);
+}
+
+.roomsHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.roomList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.roomRow {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr 1fr 4.4rem 2rem;
+  align-items: end;
+  gap: 0.5rem;
+}
+
+.roomName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted-light);
+  font-variant-numeric: tabular-nums;
+  padding-bottom: 0.55rem;
+}
+
+.roomRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0.3rem;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--muted-light);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease), transform 0.25s var(--ease);
+}
+
+.roomRemove:hover:not(:disabled) {
+  color: #8c2f24;
+  background-color: rgba(160, 60, 45, 0.1);
+}
+
+.roomRemove:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.roomsFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-top: 0.2rem;
+}
+
+.roomAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 550;
+  color: var(--forest-700);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(29, 58, 46, 0.3);
+  transition: color 0.2s var(--ease), transform 0.25s var(--ease);
+}
+
+.roomAdd:hover {
+  color: var(--oak-700);
+}
+
+.roomsSum {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--forest-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.roomsNote {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--muted-light);
+}
+
+@media (max-width: 560px) {
+  .roomRow {
+    grid-template-columns: 1fr 1fr 3.6rem 2rem;
+  }
+
+  .roomName {
+    display: none;
+  }
 }
 
 .roomField {
@@ -225,4 +333,35 @@
 .wrap button:active {
   transform: scale(0.955);
   transition-duration: 0.09s;
+}
+
+.reset {
+  align-self: center;
+  padding: 0.2rem 0.2rem;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.79rem;
+  color: var(--muted-light);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), transform 0.25s var(--ease);
+}
+
+.reset:hover {
+  color: var(--forest-700);
+}
+
+/* Materialhinweis tritt zurück – er kostet nichts, er informiert nur. */
+.notice[data-ton='ruhig'] {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+/* Der Mindestbetrag ersetzt die Summe, deshalb abgesetzt. */
+.breakdownRow[data-hinweis] {
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+  margin-top: 0.15rem;
+  color: var(--oak-700);
 }
