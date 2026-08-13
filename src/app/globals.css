@@ -75,6 +75,12 @@
 }
 
 html {
+  /* Alles außerhalb des Inhalts nimmt die Farbe des Wurzelelements: das
+     Überscrollen oben und unten und – auf Android – die Systemleiste am
+     unteren Bildschirmrand. Cremeweiß steht dort als heller Streifen unter
+     der Seite, deshalb dieselbe dunkle Farbe wie am Fuß der Seite.
+     Der Inhalt bleibt hell, den Hintergrund setzt body. */
+  background-color: #0b1610;
   -webkit-text-size-adjust: 100%;
   /* Kein blaues Rechteck beim Antippen – die Rückmeldung geben die
      Druckzustände weiter unten. */

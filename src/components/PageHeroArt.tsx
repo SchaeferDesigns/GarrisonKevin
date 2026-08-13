@@ -1,80 +1,105 @@
+import type { CSSProperties } from 'react';
 import styles from './PageHeroArt.module.css';
 
 type PageHeroArtProps = {
-  /** Verschiebt Muster und Kante, damit nicht jede Seite gleich aussieht. */
+  /** Verschiebt Muster und Lichtpunkte, damit nicht jede Seite gleich aussieht. */
   variant?: number;
 };
 
 /**
- * Motiv im Seitenkopf: eine Verlegekante.
+ * Auf welcher Reihenfuge ein Lichtpunkt entlangläuft, wie lange er dafür
+ * braucht und in welche Richtung. Die y-Werte sind Fugen des Musters (alle 52
+ * Einheiten) und liegen auf jedem Format im sichtbaren Ausschnitt.
+ */
+const funken = [
+  { y: 156.5, dauer: 15, rueckwaerts: false },
+  { y: 208.5, dauer: 22, rueckwaerts: true },
+  { y: 260.5, dauer: 17.5, rueckwaerts: false },
+  { y: 312.5, dauer: 26, rueckwaerts: true },
+];
+
+/**
+ * Motiv im Seitenkopf: ein Laminatboden von oben.
  *
- * Links liegen fertig verlegte Dielen im Verband, rechts der vorbereitete
- * Untergrund, dazwischen die Kante, an der weitergearbeitet wird. Alles als
- * Inline-SVG und CSS – kein Foto, keine zusätzliche Datei, und es zeigt genau
- * das Handwerk, um das es geht.
+ * Die Dielen liegen im Drittelverband, so wie sie auch verlegt werden – jede
+ * Reihe ist um ein Drittel der Dielenlänge versetzt, erst die vierte Reihe
+ * wiederholt das Muster. In den Fugen wandern vier Lichtpunkte entlang,
+ * unterschiedlich schnell und in beide Richtungen, damit kein Takt entsteht.
+ * Alles Inline-SVG und CSS: kein Foto, keine zusätzliche Datei.
  *
- * Beim Aufbau der Seite legt sich der Boden einmal von links nach rechts, und
- * die Arbeitskante zeichnet sich dabei. Die Bewegung läuft einmal und hört
- * dann auf – ein dauerhaft zappelnder Seitenkopf lenkt vom Text ab.
+ * Beim Aufbau der Seite legt sich der Boden einmal von links nach rechts.
+ * Diese Bewegung läuft genau einmal, das Fugenlicht danach dauerhaft, aber
+ * langsam genug, dass es vom Text nicht ablenkt.
+ *
+ * Boden und Lichter liegen in zwei getrennten SVGs mit identischer Geometrie.
+ * So muss beim Animieren nur die kleine obere Ebene neu gezeichnet werden und
+ * nicht die gemusterte Fläche darunter.
  */
 export default function PageHeroArt({ variant = 0 }: PageHeroArtProps) {
-  const id = `verlegemuster-${variant}`;
-  const untergrundId = `untergrund-${variant}`;
+  const dielenId = `dielen-${variant}`;
+  const scheinId = `schein-${variant}`;
 
   return (
     <div className={styles.art} data-variant={variant} aria-hidden="true">
       <svg className={styles.canvas} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 420">
         <defs>
-          {/* Dielen im Verband: die Stöße jeder zweiten Reihe sind versetzt. */}
-          <pattern id={id} width="320" height="128" patternUnits="userSpaceOnUse">
-            <rect width="320" height="128" fill="none" />
+          <pattern id={dielenId} width="468" height="156" patternUnits="userSpaceOnUse">
+            {/* Leichte Tonunterschiede – kein Boden ist durchgehend gleich. */}
+            <rect x="0" y="0" width="468" height="52" className={styles.plankLight} />
+            <rect x="156" y="52" width="312" height="52" className={styles.plankDark} />
+            <rect x="0" y="104" width="312" height="52" className={styles.plankLight} />
+            <rect x="312" y="104" width="156" height="52" className={styles.plankDark} />
+
             {/* Reihenfugen */}
-            <path d="M0 0.5H320M0 64.5H320M0 127.5H320" className={styles.seam} />
-            {/* Stöße, Reihe für Reihe versetzt */}
-            <path d="M40 0.5V64M240 0.5V64" className={styles.joint} />
-            <path d="M140 64.5V128" className={styles.joint} />
-            {/* Andeutung der Maserung */}
-            <path d="M0 22H320M0 42H320M0 86H320M0 106H320" className={styles.grain} />
+            <path d="M0 0.5H468M0 52.5H468M0 104.5H468M0 155.5H468" className={styles.seam} />
+            {/* Stöße, je Reihe um ein Drittel der Diele versetzt */}
+            <path d="M0.5 0V52M467.5 0V52" className={styles.joint} />
+            <path d="M156.5 52V104" className={styles.joint} />
+            <path d="M312.5 104V156" className={styles.joint} />
+
+            {/* Maserung, in jeder Reihe anders gesetzt */}
+            <path d="M0 12H468M0 26H468M0 41H468" className={styles.grain} />
+            <path d="M0 66H468M0 81H468M0 95H468" className={styles.grain} />
+            <path d="M0 116H468M0 132H468M0 147H468" className={styles.grain} />
           </pattern>
-
-          {/* Untergrund: feine Schraffur wie Dämmunterlage. */}
-          <pattern id={untergrundId} width="18" height="18" patternUnits="userSpaceOnUse">
-            <path d="M-4 14L14 -4M4 22L22 4" className={styles.hatch} />
-          </pattern>
-
-          <linearGradient id={`kante-${variant}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(224,216,203,0)" />
-            <stop offset="45%" stopColor="rgba(224,216,203,0.55)" />
-            <stop offset="100%" stopColor="rgba(224,216,203,0)" />
-          </linearGradient>
-
-          {/* Die Kante teilt die Fläche: links verlegt, rechts vorbereitet. */}
-          <clipPath id={`verlegt-${variant}`}>
-            <polygon points="0,0 660,0 540,420 0,420" />
-          </clipPath>
-          <clipPath id={`offen-${variant}`}>
-            <polygon points="660,0 1200,0 1200,420 540,420" />
-          </clipPath>
         </defs>
 
-        <g clipPath={`url(#verlegt-${variant})`}>
-          <rect width="1200" height="420" fill={`url(#${id})`} className={styles.laid} />
-        </g>
-        <g clipPath={`url(#offen-${variant})`}>
-          <rect width="1200" height="420" fill={`url(#${untergrundId})`} className={styles.underlay} />
-        </g>
-
-        <line
-          className={styles.edge}
-          x1="660"
-          y1="0"
-          x2="540"
-          y2="420"
-          stroke={`url(#kante-${variant})`}
-          strokeWidth="2"
-        />
+        <rect width="1200" height="420" fill={`url(#${dielenId})`} className={styles.floor} />
       </svg>
 
+      {/* Lichtpunkte in den Fugen. Gleicher viewBox-Ausschnitt wie der Boden,
+          dadurch sitzen sie exakt auf den Fugen. */}
+      <svg className={styles.sparks} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 420">
+        <defs>
+          <radialGradient id={scheinId}>
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.62" />
+            <stop offset="32%" stopColor="#ffffff" stopOpacity="0.17" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {funken.map((funke, index) => (
+          <g
+            key={funke.y}
+            className={styles.spark}
+            data-rueckwaerts={funke.rueckwaerts || undefined}
+            style={
+              {
+                '--dauer': `${funke.dauer}s`,
+                /* Negativer Start: die Punkte sind beim Laden schon unterwegs
+                   und stehen nicht alle gleichzeitig am Rand. */
+                '--start': `${-(3.1 * index + 1.9 * variant + 1)}s`,
+              } as CSSProperties
+            }
+          >
+            <ellipse cx="0" cy={funke.y} rx="52" ry="15" fill={`url(#${scheinId})`} />
+            <ellipse cx="0" cy={funke.y} rx="15" ry="1.1" className={styles.sparkCore} />
+          </g>
+        ))}
+      </svg>
+
+      {/* Ganz oben: dämpft Fugen und Licht dort, wo der Text steht. Ein heller
+          Strich in Zeilenhöhe sähe sonst aus wie durchgestrichen. */}
       <div className={styles.glow} />
     </div>
   );

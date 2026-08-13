@@ -3,19 +3,9 @@
   inset: 0;
   overflow: hidden;
   z-index: -2;
-}
-
-.canvas {
-  position: absolute;
-  inset: -6% -4%;
-  width: 108%;
-  height: 112%;
-}
-
-/* Der Boden legt sich einmal quer durchs Bild. Die Maske ist breiter als das
-   Element und wandert von rechts nach links – dadurch schiebt sich die
-   sichtbare Kante über die Fläche. */
-.art {
+  /* Der Boden legt sich einmal quer durchs Bild. Die Maske ist breiter als das
+     Element und wandert von rechts nach links – dadurch schiebt sich die
+     sichtbare Kante über die Fläche. */
   -webkit-mask-image: linear-gradient(100deg, #000 42%, transparent 60%);
   mask-image: linear-gradient(100deg, #000 42%, transparent 60%);
   -webkit-mask-size: 280% 100%;
@@ -36,93 +26,153 @@
   }
 }
 
-/* Die Arbeitskante zeichnet sich, sobald der Boden liegt. */
-.edge {
-  stroke-dasharray: 440;
-  stroke-dashoffset: 440;
-  animation: kanteZiehen 0.7s var(--ease) 0.75s both;
-}
-
-@keyframes kanteZiehen {
-  to {
-    stroke-dashoffset: 0;
-  }
+/* Boden und Lichtebene teilen sich Ausschnitt und Geometrie. */
+.canvas,
+.sparks {
+  position: absolute;
+  inset: -6% -4%;
+  width: 108%;
+  height: 112%;
 }
 
 /* Verlegte Fläche: warm, aber sehr zurückhaltend – der Text steht davor. */
-.laid {
-  opacity: 0.62;
+.floor {
+  opacity: 0.85;
 }
 
-.underlay {
-  opacity: 0.24;
+.plankLight {
+  fill: rgba(224, 216, 203, 0.055);
 }
 
+.plankDark {
+  fill: rgba(6, 14, 10, 0.2);
+}
+
+/* Fugen dunkel, aber mit heller Oberkante – so wirkt die Diele wie eine
+   Kante mit Tiefe und nicht wie ein aufgemalter Strich. */
 .seam {
-  stroke: rgba(6, 14, 10, 0.55);
-  stroke-width: 2.5;
+  stroke: rgba(6, 14, 10, 0.7);
+  stroke-width: 3;
   fill: none;
 }
 
 .joint {
-  stroke: rgba(6, 14, 10, 0.45);
-  stroke-width: 2.5;
+  stroke: rgba(6, 14, 10, 0.6);
+  stroke-width: 3;
   fill: none;
 }
 
 .grain {
-  stroke: rgba(224, 216, 203, 0.07);
+  stroke: rgba(224, 216, 203, 0.075);
   stroke-width: 1;
   fill: none;
 }
 
-.hatch {
-  stroke: rgba(224, 216, 203, 0.13);
-  stroke-width: 1;
-  fill: none;
+/**
+ * Ein Lichtpunkt läuft die Fuge entlang. Er startet und endet außerhalb des
+ * Bildes und blendet an beiden Enden weg, damit er nirgends aufpoppt.
+ */
+.spark {
+  animation: fugenlicht var(--dauer, 18s) linear var(--start, 0s) infinite;
+  will-change: transform, opacity;
 }
 
-/* Licht auf der frisch verlegten Fläche. */
+.spark[data-rueckwaerts] {
+  animation-direction: reverse;
+}
+
+.sparkCore {
+  fill: #ffffff;
+  opacity: 0.62;
+}
+
+@keyframes fugenlicht {
+  0% {
+    transform: translateX(-90px);
+    opacity: 0;
+  }
+
+  12%,
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(1290px);
+    opacity: 0;
+  }
+}
+
+/* Licht auf der frisch verlegten Fläche – und ein Schleier auf der Textseite,
+   damit die Fugen nicht durch die Überschrift laufen. */
 .glow {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(70% 110% at 12% 0%, rgba(171, 151, 129, 0.28), transparent 58%),
-    radial-gradient(80% 90% at 96% 100%, rgba(53, 106, 83, 0.42), transparent 64%);
+    linear-gradient(100deg, rgba(11, 22, 16, 0.62) 0%, rgba(11, 22, 16, 0.26) 44%, rgba(11, 22, 16, 0) 74%),
+    radial-gradient(70% 110% at 12% 0%, rgba(171, 151, 129, 0.24), transparent 58%),
+    radial-gradient(80% 90% at 96% 100%, rgba(53, 106, 83, 0.4), transparent 64%);
 }
 
-/* Jede Seite verschiebt Muster und Kante ein Stück, damit die Köpfe sich
-   unterscheiden, ohne dass es ein zweites Motiv braucht. Nicht gespiegelt:
-   die verlegte Fläche bleibt immer auf der Textseite, die Schraffur gehört
-   nach rechts. */
-.art[data-variant='1'] .canvas {
+/* Auf schmalen Bildschirmen steht der Text über der ganzen Breite, der
+   Schleier muss also überall greifen. */
+@media (max-width: 640px) {
+  .glow {
+    background:
+      linear-gradient(160deg, rgba(11, 22, 16, 0.5) 0%, rgba(11, 22, 16, 0.34) 55%, rgba(11, 22, 16, 0.16) 100%),
+      radial-gradient(70% 110% at 12% 0%, rgba(171, 151, 129, 0.2), transparent 58%),
+      radial-gradient(80% 90% at 96% 100%, rgba(53, 106, 83, 0.34), transparent 64%);
+  }
+}
+
+/* Jede Seite verschiebt das Muster ein Stück, damit die Köpfe sich
+   unterscheiden, ohne dass es ein zweites Motiv braucht. Die Lichtebene wird
+   genauso verschoben, sonst säßen die Punkte neben den Fugen. */
+.art[data-variant='1'] .canvas,
+.art[data-variant='1'] .sparks {
   transform: translateX(-7%) scale(1.06);
 }
 
-.art[data-variant='2'] .canvas {
+.art[data-variant='2'] .canvas,
+.art[data-variant='2'] .sparks {
   transform: translateX(5%) scale(1.03);
 }
 
-.art[data-variant='3'] .canvas {
+.art[data-variant='3'] .canvas,
+.art[data-variant='3'] .sparks {
   transform: translateX(-3%) scale(1.14);
 }
 
-.art[data-variant='4'] .canvas {
+.art[data-variant='4'] .canvas,
+.art[data-variant='4'] .sparks {
   transform: translateX(9%) scale(1.09);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .art,
-  .edge {
-    animation: none;
-  }
-
   .art {
+    animation: none;
     -webkit-mask-image: none;
     mask-image: none;
   }
 
-  .edge {
-    stroke-dashoffset: 0;
+  /* Ohne Bewegung stehen die Punkte still über die Breite verteilt. */
+  .spark {
+    animation: none;
+  }
+
+  .spark:nth-of-type(1) {
+    transform: translateX(230px);
+  }
+
+  .spark:nth-of-type(2) {
+    transform: translateX(880px);
+  }
+
+  .spark:nth-of-type(3) {
+    transform: translateX(560px);
+  }
+
+  .spark:nth-of-type(4) {
+    transform: translateX(1010px);
   }
 }
