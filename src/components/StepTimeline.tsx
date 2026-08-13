@@ -10,7 +10,7 @@ import styles from './StepTimeline.module.css';
  *
  * Der Fortschritt hängt nicht daran, wie weit die Seite insgesamt gescrollt
  * ist, sondern daran, wie weit dieser Abschnitt an einer festen Höhe im Bild
- * vorbeigezogen ist – bei 58 Prozent der Fensterhöhe, also knapp unter der
+ * vorbeigezogen ist – bei 45 Prozent der Fensterhöhe, also knapp über der
  * Mitte, wo man beim Lesen hinschaut. Dadurch bleibt der Punkt beim Scrollen
  * immer an derselben Stelle im Verhältnis zum Abschnitt: weiter runter
  * gescrollt heißt weiter unten in der Linie.
@@ -57,7 +57,7 @@ export default function StepTimeline({ steps }: { steps: Step[] }) {
          Schritte hängen ebenfalls an ihr. Nur so endet die Füllung genau dort,
          wo die Nummer umschlägt. */
       const sk = schiene.getBoundingClientRect();
-      const marke = window.innerHeight * 0.58;
+      const marke = window.innerHeight * 0.45;
       const roh = (marke - sk.top) / Math.max(1, sk.height);
       element.style.setProperty('--fortschritt', Math.min(1, Math.max(0, roh)).toFixed(4));
     };
