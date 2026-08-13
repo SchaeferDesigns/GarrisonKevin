@@ -85,6 +85,11 @@ export const viewport: Viewport = {
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
+  /* Die Seite reicht bis unter die Systemleisten. Dadurch bleibt die
+     Gestenleiste am unteren Bildschirmrand durchsichtig und zeigt den
+     Seiteninhalt, statt einen eigenen Farbstreifen zu setzen. Die
+     Sicherheitsabstände holt das CSS über env(safe-area-inset-*) zurück. */
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

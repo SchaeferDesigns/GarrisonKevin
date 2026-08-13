@@ -57,6 +57,11 @@
   --container-narrow: 780px;
   --nav-h: 68px;
   --gutter: clamp(1.15rem, 4vw, 2.5rem);
+  /* Die Seite läuft bis unter die Systemleisten (viewport-fit=cover). Quer
+     gehaltene Geräte mit Aussparung brauchen deshalb seitlich mindestens den
+     Sicherheitsabstand, sonst steht Text unter der Kameraleiste. */
+  --gutter-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  --gutter-right: max(var(--gutter), env(safe-area-inset-right, 0px));
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
@@ -235,7 +240,8 @@ strong {
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-left: var(--gutter-left);
+  padding-right: var(--gutter-right);
 }
 
 .container--narrow {

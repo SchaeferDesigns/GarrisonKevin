@@ -4,7 +4,10 @@
   left: 0;
   right: 0;
   z-index: 100;
-  padding: clamp(0.6rem, 1.6vw, 1rem) var(--gutter);
+  /* Oben zusätzlich der Sicherheitsabstand: die Seite reicht bis unter die
+     Statusleiste, die Navigation darf nicht darunter verschwinden. */
+  padding: calc(clamp(0.6rem, 1.6vw, 1rem) + env(safe-area-inset-top, 0px)) var(--gutter-right)
+    clamp(0.6rem, 1.6vw, 1rem) var(--gutter-left);
   pointer-events: none;
 }
 
@@ -190,8 +193,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: var(--gutter);
-  padding-top: calc(var(--nav-h) + 1.5rem);
+  /* Deckt den ganzen Bildschirm ab, also überall den Sicherheitsabstand
+     einrechnen. Der Inhalt steht unten – ohne das läge der letzte Eintrag
+     unter der Gestenleiste. */
+  padding: var(--gutter) var(--gutter-right) max(var(--gutter), env(safe-area-inset-bottom, 0px))
+    var(--gutter-left);
+  padding-top: calc(var(--nav-h) + 1.5rem + env(safe-area-inset-top, 0px));
   background-color: rgba(16, 29, 23, 0.42);
   -webkit-backdrop-filter: blur(22px) saturate(150%);
   backdrop-filter: blur(22px) saturate(150%);
