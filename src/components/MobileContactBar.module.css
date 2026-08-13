@@ -56,14 +56,16 @@
   background-color: #ffffff;
 }
 
+/* Dasselbe Gold wie die auffordernde Schaltfläche im Seiteninhalt – die
+   Anfrage sieht überall auf der Seite gleich aus. */
 .itemPrimary {
   color: var(--forest-900);
-  background: linear-gradient(140deg, var(--oak-500), var(--oak-600));
-  border-color: rgba(171, 151, 129, 0.6);
+  background: linear-gradient(140deg, var(--gold-500), var(--gold-600));
+  border-color: rgba(201, 161, 99, 0.7);
 }
 
 .itemPrimary:active {
-  background: linear-gradient(140deg, var(--oak-400), var(--oak-500));
+  background: linear-gradient(140deg, var(--gold-400), var(--gold-500));
 }
 
 @media (min-width: 768px) {

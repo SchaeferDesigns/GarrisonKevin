@@ -19,6 +19,15 @@
   --oak-400: #c6b8a5;
   --oak-300: #e0d8cb;
 
+  /* Gold – ausschließlich für auffordernde Schaltflächen.
+     Gleicher Farbwinkel wie die Eiche, nur kräftiger und einen Tick gelber:
+     36–37° statt 31°, Sättigung rund 45 statt 25 Prozent. Dadurch gehört es
+     sichtbar zur Palette, sticht aber heraus.
+     Bewusst nur hier. Sobald Gold auch Flächen füllt, heißt es nichts mehr. */
+  --gold-400: #dcb87a;
+  --gold-500: #c9a163;
+  --gold-600: #ab8447;
+
   --cream: #f8f5ef;
   --sand: #efe9dd;
   --sand-deep: #e2d9c8;
@@ -566,19 +575,27 @@ strong {
   font-size: 0.86rem;
 }
 
+/* Die auffordernde Schaltfläche. Gold auf jedem Untergrund – vorher war sie
+   auf hellem Grund grün und auf dunklem creme, also zweimal dieselbe Rolle in
+   zwei Farben. Ein Ton für „hier geht es weiter" ist leichter zu merken.
+   Dunkler Text darauf: Gold ist zu hell für helle Schrift. */
 .btn--accent {
-  --btn-bg: linear-gradient(140deg, var(--forest-600), var(--forest-800));
-  --btn-fg: #f6f4ee;
-  box-shadow: 0 10px 26px -12px rgba(22, 40, 31, 0.9);
+  --btn-bg: linear-gradient(140deg, var(--gold-500), var(--gold-600));
+  --btn-fg: var(--forest-900);
+  box-shadow: 0 10px 26px -12px rgba(112, 82, 38, 0.75);
 }
 
-/* Auf dunklem Grund kehrt sich der Hauptbutton um – Grün auf Grün wäre
-   sonst kaum zu sehen. Helles Creme statt Gold. */
+.btn--accent:hover {
+  --btn-bg: linear-gradient(140deg, var(--gold-400), var(--gold-500));
+  box-shadow: 0 16px 32px -14px rgba(112, 82, 38, 0.8);
+}
+
+/* Auf dunklem Grund trägt der Schatten nicht – dort grenzt eine feine helle
+   Kante die Schaltfläche vom Hintergrund ab. */
 .section--dark .btn--accent,
 .on-dark .btn--accent {
-  --btn-bg: linear-gradient(140deg, #f7f5ef, #e4ddd0);
-  --btn-fg: var(--forest-900);
-  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.75);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
 }
 
 .btn--ghost {
