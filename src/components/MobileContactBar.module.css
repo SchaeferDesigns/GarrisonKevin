@@ -16,13 +16,13 @@
   gap: 0.3rem;
   padding: 0.34rem;
   border-radius: var(--r-xl);
-  /* Kräftig genug getönt, dass die Pille auch über hellem Inhalt als eigenes
-     Element steht und nicht als grauer Schleier. */
-  background-color: rgba(12, 23, 18, 0.76);
-  -webkit-backdrop-filter: blur(30px) saturate(170%);
-  backdrop-filter: blur(30px) saturate(170%);
+  /* Gleiches Glas wie die Navigationspille oben in ihrem gescrollten Zustand –
+     die Kontaktleiste liegt immer über Inhalt, nie über dem Seitenkopf. */
+  background-color: rgba(14, 26, 20, 0.4);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  backdrop-filter: blur(26px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 22px 50px -20px rgba(8, 16, 12, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  box-shadow: 0 18px 48px -22px rgba(8, 16, 12, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
