@@ -26,13 +26,18 @@
   }
 }
 
-/* Boden und Lichtebene teilen sich Ausschnitt und Geometrie. */
+/* Boden und Lichtebene teilen sich Ausschnitt und Geometrie.
+   Seitlich je 10 % Überstand: die Varianten unten verschieben das Muster,
+   und ohne diesen Vorrat stünde die Fläche am Rand vor dem Nichts. */
 .canvas,
 .sparks {
   position: absolute;
-  inset: -6% -4%;
-  width: 108%;
+  inset: -6% -10%;
+  width: 120%;
   height: 112%;
+  /* Der globale Reset deckelt SVG auf max-width: 100%. Das hat den Überstand
+     bisher wieder abgeschnitten – hier gilt die volle Breite. */
+  max-width: none;
 }
 
 /* Verlegte Fläche: warm, aber sehr zurückhaltend – der Text steht davor. */
@@ -127,25 +132,29 @@
 
 /* Jede Seite verschiebt das Muster ein Stück, damit die Köpfe sich
    unterscheiden, ohne dass es ein zweites Motiv braucht. Die Lichtebene wird
-   genauso verschoben, sonst säßen die Punkte neben den Fugen. */
+   genauso verschoben, sonst säßen die Punkte neben den Fugen.
+
+   Die Prozente beziehen sich auf die eigene Breite der Fläche, also auf 120 %
+   des Kopfbereichs. Bei 7 % sind das 8,4 % des Kopfes – der Überstand von
+   10 % je Seite trägt das. Vergrößert wird nur, nie verkleinert. */
 .art[data-variant='1'] .canvas,
 .art[data-variant='1'] .sparks {
-  transform: translateX(-7%) scale(1.06);
+  transform: translateX(-6%) scale(1.05);
 }
 
 .art[data-variant='2'] .canvas,
 .art[data-variant='2'] .sparks {
-  transform: translateX(5%) scale(1.03);
+  transform: translateX(4%);
 }
 
 .art[data-variant='3'] .canvas,
 .art[data-variant='3'] .sparks {
-  transform: translateX(-3%) scale(1.14);
+  transform: translateX(-3%) scale(1.12);
 }
 
 .art[data-variant='4'] .canvas,
 .art[data-variant='4'] .sparks {
-  transform: translateX(9%) scale(1.09);
+  transform: translateX(7%) scale(1.06);
 }
 
 @media (prefers-reduced-motion: reduce) {
