@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import Icon from '@/components/Icon';
 import HeroFloor from '@/components/HeroFloor';
+import StepTimeline from '@/components/StepTimeline';
 import Reveal from '@/components/Reveal';
 import FaqList from '@/components/FaqList';
 import CtaSection from '@/components/CtaSection';
@@ -218,17 +219,7 @@ export default function HomePage() {
           </div>
 
           <Reveal>
-            <ol className={styles.steps}>
-              {processSteps.map((step, i) => (
-                <li key={step.title} className={styles.step}>
-                  <span className={styles.stepNo} aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                </li>
-              ))}
-            </ol>
+            <StepTimeline steps={processSteps} />
           </Reveal>
 
           <div className="btn-row mt-8">

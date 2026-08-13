@@ -315,52 +315,6 @@
   margin-left: 0.25rem;
 }
 
-/* -------------------------------------------------------------- Ablauf */
-.steps {
-  display: grid;
-  gap: 1px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: 1.5rem 1.35rem;
-  background-color: rgba(10, 20, 15, 0.28);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-}
-
-.stepNo {
-  display: inline-grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-family: var(--font-display), serif;
-  font-size: 0.9rem;
-  color: var(--oak-400);
-  border: 1px solid rgba(171, 151, 129, 0.42);
-  background: rgba(171, 151, 129, 0.12);
-}
-
-.step h3 {
-  font-family: var(--font-sans), sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fbfaf6;
-}
-
-.step p {
-  font-size: 0.865rem;
-  line-height: 1.6;
-}
-
 /* ------------------------------------------------------- Klarheitsblock */
 .clarity {
   display: grid;

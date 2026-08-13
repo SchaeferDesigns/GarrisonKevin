@@ -1,0 +1,123 @@
+/**
+ * Senkrechte Zeitleiste. Auf jedem Bildschirm untereinander – nebeneinander
+ * hätte die Linie keine Richtung, an der man den Fortschritt ablesen könnte.
+ */
+.liste {
+  --fortschritt: 0;
+  --spur: 40px;
+  position: relative;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 1.2rem + 1.4vw, 2.6rem);
+  padding-left: 0;
+}
+
+/* Die Schiene läuft von der Mitte der ersten bis zur Mitte der letzten
+   Nummer, nicht über die ganze Höhe – sonst stünde oben und unten ein Stummel. */
+.schiene {
+  position: absolute;
+  left: calc(var(--spur) / 2 - 1px);
+  top: 21px;
+  bottom: 21px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.fuellung {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--fortschritt, 0) * 100%);
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold-600), var(--gold-400));
+  box-shadow: 0 0 12px -2px rgba(220, 184, 122, 0.7);
+}
+
+.schritt {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--spur) 1fr;
+  align-items: start;
+  gap: clamp(0.9rem, 0.7rem + 0.6vw, 1.4rem);
+}
+
+/**
+ * Erreicht die Füllung diesen Schritt, springt der Wert von 0 auf 1. Der
+ * Faktor 26 macht daraus einen kurzen Übergang statt eines harten Schalters.
+ */
+.nummer {
+  --erreicht: clamp(0, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 26), 1);
+  display: inline-grid;
+  place-items: center;
+  width: var(--spur);
+  height: var(--spur);
+  border-radius: 50%;
+  font-family: var(--font-display), serif;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--forest-900) calc(var(--erreicht) * 100%), var(--oak-400));
+  border: 1px solid color-mix(in srgb, var(--gold-400) calc(var(--erreicht) * 100%), rgba(171, 151, 129, 0.42));
+  /* Grundzustand dunkel. Das Gold liegt als eigene Ebene darüber und wird
+     erst eingeblendet, wenn die Füllung hier ankommt. */
+  background-color: rgba(10, 20, 15, 0.6);
+  box-shadow: 0 0 0 6px rgba(10, 20, 15, 0.55);
+  position: relative;
+  isolation: isolate;
+  transition: color 0.45s var(--ease-soft);
+}
+
+/* Die goldene Füllung der Nummer liegt als eigene Ebene darüber und wird
+   eingeblendet – ein Verlauf lässt sich nicht weich überblenden. */
+.nummer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--gold-400), var(--gold-600));
+  opacity: var(--erreicht, 0);
+  z-index: -1;
+  transition: opacity 0.45s var(--ease-soft);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 0.35rem;
+  /* Noch nicht erreichte Schritte stehen zurück, ohne unlesbar zu werden. */
+  opacity: clamp(0.5, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 26 + 0.5), 1);
+  transition: opacity 0.45s var(--ease-soft);
+}
+
+.text h3 {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #fbfaf6;
+}
+
+.text p {
+  font-size: 0.885rem;
+  line-height: 1.62;
+  max-width: 62ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Ohne Bewegung ist die Linie voll und alle Schritte stehen gleichwertig. */
+  .fuellung {
+    height: 100%;
+  }
+
+  .nummer::before {
+    opacity: 1;
+  }
+
+  .nummer {
+    color: var(--forest-900);
+  }
+
+  .text {
+    opacity: 1;
+  }
+}
