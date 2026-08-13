@@ -35,17 +35,40 @@ export default function StepTimeline({ steps }: { steps: Step[] }) {
 
     /* Schwelle je Schritt: wo seine Nummer auf der Schiene sitzt, gemessen an
        der Schiene selbst – die läuft von Nummernmitte zu Nummernmitte. */
+    const mitteVon = (eintrag: HTMLLIElement) => {
+      const nummer = eintrag.firstElementChild?.getBoundingClientRect();
+      return nummer ? nummer.top + nummer.height / 2 : null;
+    };
+
     const messeSchwellen = () => {
       const schiene = element.querySelector('[data-schiene]');
-      if (!schiene) return;
+      if (!(schiene instanceof HTMLElement)) return;
+
+      const eintraege = [...element.querySelectorAll<HTMLLIElement>('li')];
+      const erste = eintraege.length ? mitteVon(eintraege[0]) : null;
+      const letzte = eintraege.length ? mitteVon(eintraege[eintraege.length - 1]) : null;
+      if (erste === null || letzte === null) return;
+
+      /* Die Schiene läuft von der Mitte der ersten bis zur Mitte der letzten
+         Nummer. Ein fester Abstand zum Listenrand ließe unter dem letzten
+         Schritt einen Stummel stehen – der letzte Eintrag ist höher als seine
+         Nummer, weil sein Text darunter weiterläuft. */
+      const lk = element.getBoundingClientRect();
+      element.style.setProperty('--schiene-oben', `${(erste - lk.top).toFixed(1)}px`);
+      element.style.setProperty('--schiene-unten', `${(lk.bottom - letzte).toFixed(1)}px`);
+
+      /* Erst danach die Schwellen: sie hängen an der neuen Höhe der Schiene. */
       const sk = schiene.getBoundingClientRect();
       if (sk.height < 1) return;
 
-      element.querySelectorAll<HTMLLIElement>('li').forEach((eintrag) => {
-        const nummer = eintrag.firstElementChild?.getBoundingClientRect();
-        if (!nummer) return;
-        const mitte = nummer.top + nummer.height / 2;
-        eintrag.style.setProperty('--stufe', ((mitte - sk.top) / sk.height).toFixed(4));
+      eintraege.forEach((eintrag) => {
+        const mitte = mitteVon(eintrag);
+        if (mitte === null) return;
+        /* Ein kleiner Vorlauf, damit die Nummer aufleuchtet, sobald die
+           Füllung sie berührt – und damit der letzte Schritt am Ende
+           überhaupt umschlägt, denn dort steht der Fortschritt genau auf 1. */
+        const roh = (mitte - sk.top) / sk.height;
+        eintrag.style.setProperty('--stufe', Math.max(0, roh - 0.04).toFixed(4));
       });
     };
 

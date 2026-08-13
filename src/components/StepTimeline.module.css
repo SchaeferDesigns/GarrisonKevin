@@ -13,13 +13,14 @@
   padding-left: 0;
 }
 
-/* Die Schiene läuft von der Mitte der ersten bis zur Mitte der letzten
-   Nummer, nicht über die ganze Höhe – sonst stünde oben und unten ein Stummel. */
+/* Anfang und Ende kommen gemessen aus dem Bauteil – sie sitzen auf der Mitte
+   der ersten und der letzten Nummer. Die Werte hier sind nur die Vorbelegung
+   für den ersten Aufbau. */
 .schiene {
   position: absolute;
   left: calc(var(--spur) / 2 - 1px);
-  top: 21px;
-  bottom: 21px;
+  top: var(--schiene-oben, 20px);
+  bottom: var(--schiene-unten, 20px);
   width: 2px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.14);
@@ -45,10 +46,11 @@
 
 /**
  * Erreicht die Füllung diesen Schritt, springt der Wert von 0 auf 1. Der
- * Faktor 26 macht daraus einen kurzen Übergang statt eines harten Schalters.
+ * Faktor 40 macht daraus einen kurzen Übergang statt eines harten Schalters,
+ * weich gezogen wird er ohnehin von der Übergangszeit weiter unten.
  */
 .nummer {
-  --erreicht: clamp(0, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 26), 1);
+  --erreicht: clamp(0, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 40), 1);
   display: inline-grid;
   place-items: center;
   width: var(--spur);
@@ -86,7 +88,7 @@
   gap: 0.4rem;
   padding-top: 0.35rem;
   /* Noch nicht erreichte Schritte stehen zurück, ohne unlesbar zu werden. */
-  opacity: clamp(0.5, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 26 + 0.5), 1);
+  opacity: clamp(0.5, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 40 + 0.5), 1);
   transition: opacity 0.45s var(--ease-soft);
 }
 
