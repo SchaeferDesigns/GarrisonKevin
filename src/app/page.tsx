@@ -123,7 +123,7 @@ export default function HomePage() {
         </div>
 
         <div className={styles.scrollHint} aria-hidden="true">
-          <Icon name="chevron-down" size={24} />
+          <Icon name="chevron-down" size={30} />
         </div>
       </section>
 

@@ -168,9 +168,14 @@
   left: 50%;
   bottom: 0.75rem;
   transform: translateX(-50%);
-  color: rgba(240, 242, 236, 0.45);
+  color: rgba(240, 242, 236, 0.55);
   animation: bob 2.6s var(--ease-soft) infinite;
   z-index: 2;
+  pointer-events: none;
+  /* Verschwindet, sobald man losscrollt – er hat seine Aufgabe dann erfüllt.
+     Weil --scroll je Bild neu gesetzt wird, läuft das flüssig mit und kommt
+     beim Zurückscrollen von selbst wieder. */
+  opacity: calc(1 - var(--scroll, 0) * 7);
 }
 
 @keyframes bob {
@@ -195,6 +200,29 @@
 
   .scrollHint {
     display: none;
+  }
+
+  /**
+   * Auf dem Handy steht der Kopfbereich untereinander, man scrollt also durch
+   * ihn hindurch statt an ihm vorbei. Ein Verlauf, der sofort anfängt, macht
+   * Text und Preiskarte schon unlesbar, während man sie noch liest.
+   *
+   * Deshalb bleibt hier beides zunächst voll stehen und blendet erst in der
+   * zweiten Hälfte weg – bei der Preiskarte noch später als beim Text. Solange
+   * sie voll deckt, trägt auch ihr Blur; halbdurchsichtig läge die Schrift
+   * direkt auf dem wandernden Boden.
+   *
+   * Die Wege nach oben sind kürzer als am Rechner, sonst wandern die Elemente
+   * über die längere Strecke zu weit aus dem Bild.
+   */
+  .heroCopy {
+    transform: translate3d(0, calc(var(--scroll, 0) * -26px), 0);
+    opacity: calc(1 - max(0, var(--scroll, 0) - 0.42) * 1.7);
+  }
+
+  .priceCard {
+    transform: translate3d(0, calc(var(--scroll, 0) * -40px), 0);
+    opacity: calc(1 - max(0, var(--scroll, 0) - 0.62) * 2.6);
   }
 }
 
