@@ -11,7 +11,7 @@
    Fuß ein cremefarbener Streifen. */
 @media (max-width: 767px) {
   .footer {
-    padding-bottom: calc(4.9rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(6.2rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
