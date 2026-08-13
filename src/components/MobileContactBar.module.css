@@ -57,11 +57,54 @@
 }
 
 /* Dasselbe Gold wie die auffordernde Schaltfläche im Seiteninhalt – die
-   Anfrage sieht überall auf der Seite gleich aus. */
+   Anfrage sieht überall auf der Seite gleich aus, samt Glanz. */
 .itemPrimary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   color: var(--forest-900);
   background: linear-gradient(140deg, var(--gold-500), var(--gold-600));
   border-color: rgba(201, 161, 99, 0.7);
+}
+
+.itemPrimary::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg, transparent 12%, rgba(255, 255, 255, 0.78) 50%, transparent 88%);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: glanzLeiste 5.4s cubic-bezier(0.36, 0, 0.2, 1) 1.4s infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Gleicher Ablauf wie im Seiteninhalt. Eigene Bildfolge, weil CSS-Module
+   Namen umschreiben – ein Verweis auf die globale läuft ins Leere. */
+@keyframes glanzLeiste {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  5%,
+  22% {
+    opacity: 1;
+  }
+
+  26%,
+  100% {
+    transform: translateX(300%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .itemPrimary::after {
+    display: none;
+  }
 }
 
 .itemPrimary:active {

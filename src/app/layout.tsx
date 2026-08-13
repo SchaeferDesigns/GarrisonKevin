@@ -5,6 +5,7 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import MobileContactBar from '@/components/MobileContactBar';
 import JsonLd from '@/components/JsonLd';
+import PageTransition from '@/components/PageTransition';
 import ScrollReset from '@/components/ScrollReset';
 import { business } from '@/lib/business';
 import { cssUrl, noIndex } from '@/lib/assets';
@@ -112,7 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <ScrollReset />
         <SiteHeader />
-        <main id="inhalt">{children}</main>
+        <main id="inhalt">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <SiteFooter />
         <MobileContactBar />
         <JsonLd data={[localBusinessSchema, websiteSchema]} />

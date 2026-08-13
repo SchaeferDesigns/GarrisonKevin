@@ -590,6 +590,50 @@ strong {
   box-shadow: 0 16px 32px -14px rgba(112, 82, 38, 0.8);
 }
 
+/**
+ * Glanz auf dem Gold: ein schmales Lichtband wandert über die Fläche.
+ *
+ * Der Lauf dauert gut eine Sekunde, danach passiert vier Sekunden nichts.
+ * Diese Pause ist der ganze Punkt – ein dauerhaft laufendes Licht wirkt wie
+ * ein Werbebanner, ein seltenes wie geschliffenes Metall.
+ *
+ * Bewegt wird nur transform und opacity, das läuft im Compositor.
+ */
+.btn--accent::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg, transparent 12%, rgba(255, 255, 255, 0.78) 50%, transparent 88%);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: glanz 5.4s cubic-bezier(0.36, 0, 0.2, 1) 1.4s infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes glanz {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  22% {
+    opacity: 1;
+  }
+
+  26%,
+  100% {
+    transform: translateX(300%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
 /* Auf dunklem Grund trägt der Schatten nicht – dort grenzt eine feine helle
    Kante die Schaltfläche vom Hintergrund ab. */
 .section--dark .btn--accent,
@@ -833,6 +877,11 @@ strong {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  /* Der Glanz auf den Goldflächen ist reine Zierde – ohne Bewegung weg. */
+  .btn--accent::after {
+    display: none;
   }
 }
 
