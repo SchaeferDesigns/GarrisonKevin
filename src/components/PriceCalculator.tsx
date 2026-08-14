@@ -13,9 +13,33 @@ const euro = new Intl.NumberFormat('de-DE', {
 
 const zahl = (wert: number) => wert.toLocaleString('de-DE', { maximumFractionDigits: 1 });
 
-const num = (value: string) => {
+/**
+ * Obergrenzen für die Eingaben. Sie sollen Vertipper abfangen, keine echten
+ * Aufträge: 40 m Raumseite und 1000 m² Fläche liegen weit über allem, was in
+ * einer Wohnung oder einem Ladenlokal vorkommt. Wer wirklich mehr hat, ist mit
+ * einem Richtwert ohnehin nicht bedient und ruft besser an – der Hinweis
+ * darunter sagt das auch.
+ */
+const GRENZEN = {
+  seite: 40,
+  tueren: 12,
+  raeume: 20,
+  flaeche: 1000,
+  leisten: 1500,
+  fugen: 500,
+} as const;
+
+const num = (value: string, max = Number.POSITIVE_INFINITY) => {
   const parsed = Number.parseFloat(value.replace(',', '.'));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  if (!Number.isFinite(parsed) || parsed <= 0) return 0;
+  return Math.min(parsed, max);
+};
+
+/** Für die Anzeige: leert das Feld nicht, kürzt aber auf die Grenze ein. */
+const begrenze = (value: string, max: number) => {
+  const parsed = Number.parseFloat(value.replace(',', '.'));
+  if (!Number.isFinite(parsed) || parsed <= 0) return value;
+  return parsed > max ? String(max) : value;
 };
 
 const priceOf = (id: string) => prices.find((p) => p.id === id)?.from ?? 0;
@@ -50,25 +74,27 @@ export default function PriceCalculator() {
     let vollstaendig = 0;
 
     for (const raum of raeume) {
-      const l = num(raum.laenge);
-      const b = num(raum.breite);
+      const l = num(raum.laenge, GRENZEN.seite);
+      const b = num(raum.breite, GRENZEN.seite);
       if (!l || !b) continue;
       vollstaendig += 1;
       flaeche += l * b;
-      umfang += Math.max(0, 2 * (l + b) - num(raum.tueren) * TUERBREITE);
+      umfang += Math.max(0, 2 * (l + b) - num(raum.tueren, GRENZEN.tueren) * TUERBREITE);
     }
 
     return {
-      flaeche: Math.round(flaeche * 10) / 10,
-      umfang: Math.round(umfang * 10) / 10,
+      /* Auch die Summe aus vielen Räumen bleibt in dem Rahmen, den die Felder
+         darunter annehmen. */
+      flaeche: Math.min(GRENZEN.flaeche, Math.round(flaeche * 10) / 10),
+      umfang: Math.min(GRENZEN.leisten, Math.round(umfang * 10) / 10),
       vollstaendig,
     };
   }, [raeume]);
 
   const values = useMemo(() => {
-    const a = num(area);
-    const s = num(skirting);
-    const j = num(joints);
+    const a = num(area, GRENZEN.flaeche);
+    const s = num(skirting, GRENZEN.leisten);
+    const j = num(joints, GRENZEN.fugen);
 
     const costArea = a * priceOf('verlegung');
     const costSkirting = s * priceOf('sockelleisten');
@@ -84,6 +110,11 @@ export default function PriceCalculator() {
     return { a, s, j, costArea, costSkirting, costJoints, summe, total, kleinauftrag, mindestbetrag };
   }, [area, skirting, joints]);
 
+  /* Steht eine Menge auf ihrer Obergrenze, ist ein Richtwert das falsche
+     Werkzeug – dann lieber ein kurzer Anruf. */
+  const amGrenzwert =
+    values.a >= GRENZEN.flaeche || values.s >= GRENZEN.leisten || values.j >= GRENZEN.fugen;
+
   /* Wie viel Boden gekauft werden muss – Material stellt ja der Kunde. */
   const materialQm = values.a > 0 ? Math.ceil(values.a * (1 + VERSCHNITT)) : 0;
 
@@ -92,6 +123,7 @@ export default function PriceCalculator() {
 
   const raumHinzufuegen = () =>
     setRaeume((vorher) => {
+      if (vorher.length >= GRENZEN.raeume) return vorher;
       const id = Math.max(0, ...vorher.map((raum) => raum.id)) + 1;
       return [...vorher, neuerRaum(id, `Raum ${vorher.length + 1}`)];
     });
@@ -151,11 +183,12 @@ export default function PriceCalculator() {
                     type="number"
                     inputMode="decimal"
                     min="0"
-                    max="60"
+                    max={GRENZEN.seite}
                     step="0.1"
                     placeholder="5"
                     value={raum.laenge}
                     onChange={(e) => setzeRaum(raum.id, 'laenge', e.target.value)}
+                    onBlur={(e) => setzeRaum(raum.id, 'laenge', begrenze(e.target.value, GRENZEN.seite))}
                   />
                 </div>
 
@@ -166,11 +199,12 @@ export default function PriceCalculator() {
                     type="number"
                     inputMode="decimal"
                     min="0"
-                    max="60"
+                    max={GRENZEN.seite}
                     step="0.1"
                     placeholder="4"
                     value={raum.breite}
                     onChange={(e) => setzeRaum(raum.id, 'breite', e.target.value)}
+                    onBlur={(e) => setzeRaum(raum.id, 'breite', begrenze(e.target.value, GRENZEN.seite))}
                   />
                 </div>
 
@@ -181,7 +215,7 @@ export default function PriceCalculator() {
                     type="number"
                     inputMode="numeric"
                     min="0"
-                    max="9"
+                    max={GRENZEN.tueren}
                     step="1"
                     value={raum.tueren}
                     onChange={(e) => setzeRaum(raum.id, 'tueren', e.target.value)}
@@ -203,7 +237,12 @@ export default function PriceCalculator() {
           </ul>
 
           <div className={styles.roomsFoot}>
-            <button type="button" className={styles.roomAdd} onClick={raumHinzufuegen}>
+            <button
+              type="button"
+              className={styles.roomAdd}
+              onClick={raumHinzufuegen}
+              disabled={raeume.length >= GRENZEN.raeume}
+            >
               <Icon name="plus" size={15} />
               Raum hinzufügen
             </button>
@@ -227,6 +266,7 @@ export default function PriceCalculator() {
 
           <p className={styles.roomsNote}>
             Der Umfang zieht je Tür {zahl(TUERBREITE)} m ab – dort kommt keine Leiste hin.
+            {raeume.length >= GRENZEN.raeume && ` Mehr als ${GRENZEN.raeume} Räume nehme ich hier nicht auf – bei dem Umfang rechnen wir das besser gemeinsam durch.`}
           </p>
         </div>
 
@@ -245,9 +285,11 @@ export default function PriceCalculator() {
               type="number"
               inputMode="decimal"
               min="0"
+              max={GRENZEN.flaeche}
               step="0.5"
               value={area}
               onChange={(e) => setArea(e.target.value)}
+              onBlur={(e) => setArea(begrenze(e.target.value, GRENZEN.flaeche))}
             />
             <span className={styles.unit}>m²</span>
           </div>
@@ -278,9 +320,11 @@ export default function PriceCalculator() {
               type="number"
               inputMode="decimal"
               min="0"
+              max={GRENZEN.leisten}
               step="0.5"
               value={skirting}
               onChange={(e) => setSkirting(e.target.value)}
+              onBlur={(e) => setSkirting(begrenze(e.target.value, GRENZEN.leisten))}
             />
             <span className={styles.unit}>lfm</span>
           </div>
@@ -311,9 +355,11 @@ export default function PriceCalculator() {
               type="number"
               inputMode="decimal"
               min="0"
+              max={GRENZEN.fugen}
               step="0.5"
               value={joints}
               onChange={(e) => setJoints(e.target.value)}
+              onBlur={(e) => setJoints(begrenze(e.target.value, GRENZEN.fugen))}
             />
             <span className={styles.unit}>lfm</span>
           </div>
@@ -328,6 +374,14 @@ export default function PriceCalculator() {
             aria-label="Fugenlänge per Schieberegler wählen"
           />
         </div>
+
+        {amGrenzwert && (
+          <p className={styles.roomsNote}>
+            Der Rechner deckt bis {zahl(GRENZEN.flaeche)} m², {zahl(GRENZEN.leisten)} lfm Leisten und{' '}
+            {zahl(GRENZEN.fugen)} lfm Fugen ab. Darüber ist ein Richtwert zu grob – rufen Sie mich
+            kurz an, dann rechne ich das konkret.
+          </p>
+        )}
       </div>
 
       <aside className={styles.result} aria-live="polite">

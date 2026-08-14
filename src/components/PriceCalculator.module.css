@@ -172,8 +172,16 @@
   transition: color 0.2s var(--ease), transform 0.25s var(--ease);
 }
 
-.roomAdd:hover {
+.roomAdd:hover:not(:disabled) {
   color: var(--oak-700);
+}
+
+/* Bei erreichter Höchstzahl an Räumen abgeschaltet – der Hinweis darunter
+   sagt warum. */
+.roomAdd:disabled {
+  color: var(--muted-light);
+  border-bottom-color: transparent;
+  cursor: default;
 }
 
 .roomsSum {
