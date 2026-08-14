@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import PageHero from '@/components/PageHero';
 import CtaSection from '@/components/CtaSection';
 import Icon from '@/components/Icon';
+import StepTimeline from '@/components/StepTimeline';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
 import { business, processSteps } from '@/lib/business';
@@ -48,14 +49,7 @@ export default function AblaufPage() {
         <div className="ambient" aria-hidden="true" />
         <div className="container">
           <div className="split split--wide-left">
-            <ol className="timeline">
-              {processSteps.map((step) => (
-                <li key={step.title}>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                </li>
-              ))}
-            </ol>
+            <StepTimeline steps={processSteps} hell />
 
             <Reveal className="panel">
               <span className="kicker">Zeitrahmen</span>

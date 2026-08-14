@@ -19,12 +19,15 @@ import styles from './StepTimeline.module.css';
  * und die Zustände der Schritte lesen ihn in CSS – gerechnet wird also einmal
  * je Bild, gezeichnet ohne weiteres Zutun von JavaScript.
  *
+ * Mit `hell` steht die Leiste auf cremefarbenem statt auf dunklem Grund –
+ * gleiche Mechanik, andere Farben.
+ *
  * Wann ein Schritt als erreicht gilt, wird gemessen statt gerechnet: Die
  * Schritte sind unterschiedlich hoch, weil ihre Texte verschieden lang sind.
  * Eine gleichmäßige Verteilung ließe die Nummern aufleuchten, bevor die
  * Füllung bei ihnen ist.
  */
-export default function StepTimeline({ steps }: { steps: Step[] }) {
+export default function StepTimeline({ steps, hell = false }: { steps: Step[]; hell?: boolean }) {
   const ref = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -109,7 +112,7 @@ export default function StepTimeline({ steps }: { steps: Step[] }) {
   }, []);
 
   return (
-    <ol className={styles.liste} ref={ref}>
+    <ol className={styles.liste} data-ton={hell ? 'hell' : undefined} ref={ref}>
       {/* Die Linie und ihre Füllung liegen hinter den Schritten. */}
       <div className={styles.schiene} data-schiene aria-hidden="true">
         <div className={styles.fuellung} />

@@ -123,3 +123,24 @@
     opacity: 1;
   }
 }
+
+/* ------------------------------------------------------- Auf hellem Grund */
+.liste[data-ton='hell'] .schiene {
+  background: rgba(21, 32, 26, 0.13);
+}
+
+.liste[data-ton='hell'] .nummer {
+  background-color: rgba(255, 255, 255, 0.75);
+  border-color: color-mix(in srgb, var(--gold-500) calc(var(--erreicht) * 100%), var(--line-strong));
+  color: color-mix(in srgb, var(--forest-900) calc(var(--erreicht) * 100%), var(--oak-700));
+  /* Der Ring verdeckt die Linie hinter der Nummer, also in der Farbe der Seite. */
+  box-shadow: 0 0 0 6px var(--cream);
+}
+
+.liste[data-ton='hell'] .text h3 {
+  color: var(--forest-900);
+}
+
+.liste[data-ton='hell'] .text p {
+  color: var(--muted);
+}
