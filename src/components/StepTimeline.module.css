@@ -94,9 +94,12 @@
      der Untergrund ein und derselbe Kreis wirkt auf Creme grau statt grün.
      So zeigen dunkle und helle Seite dieselbe Farbe. Das Gold liegt als
      eigene Ebene darüber und wird erst eingeblendet, wenn die Füllung hier
-     ankommt. */
+     ankommt.
+
+     Bewusst ohne Ring in Seitenfarbe: Der lag als deckende Fläche über der
+     Linie und hat den Schein der Füllung mit einer harten Kante abgeschnitten.
+     Die Linie deckt der Kreis ohnehin selbst ab, er ist ja undurchsichtig. */
   background-color: var(--forest-900);
-  box-shadow: 0 0 0 6px rgba(10, 20, 15, 0.55);
   position: relative;
   isolation: isolate;
   transition: color 0.45s var(--ease-soft);
@@ -162,16 +165,6 @@
    Gewicht, nur seitenverkehrt – weiß auf Creme wäre schlicht unsichtbar. */
 .liste[data-ton='hell'] .schiene {
   background: rgba(21, 32, 26, 0.14);
-}
-
-/**
- * Die Nummern behalten bewusst die Farben der Startseite: dunkler Kreis,
- * Ziffer in Eiche, gefüllt in Gold. Nur der Ring, der die Linie dahinter
- * verdeckt, muss die Farbe der Seite tragen – sonst stünde dort ein dunkler
- * Fleck auf dem hellen Grund.
- */
-.liste[data-ton='hell'] .nummer {
-  box-shadow: 0 0 0 6px var(--cream);
 }
 
 .liste[data-ton='hell'] .text h3 {
