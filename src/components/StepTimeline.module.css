@@ -18,22 +18,43 @@
    für den ersten Aufbau. */
 .schiene {
   position: absolute;
-  left: calc(var(--spur) / 2 - 1px);
+  left: calc(var(--spur) / 2 - 1.5px);
   top: var(--schiene-oben, 20px);
   bottom: var(--schiene-unten, 20px);
-  width: 2px;
-  border-radius: 2px;
+  width: 3px;
+  border-radius: 3px;
   background: rgba(255, 255, 255, 0.14);
-  overflow: hidden;
 }
 
+/**
+ * Der gelaufene Teil der Linie. Er leuchtet nach außen – deshalb darf die
+ * Schiene nicht beschneiden. Ihr overflow: hidden hat den Schein vorher
+ * abgeschnitten, sichtbar blieb nur ein dünner Strich.
+ *
+ * Der Punkt an der Spitze zeigt, wo man gerade steht.
+ */
 .fuellung {
   position: absolute;
   inset: 0 0 auto 0;
   height: calc(var(--fortschritt, 0) * 100%);
-  border-radius: 2px;
+  border-radius: 3px;
   background: linear-gradient(180deg, var(--gold-600), var(--gold-400));
-  box-shadow: 0 0 12px -2px rgba(220, 184, 122, 0.7);
+  box-shadow:
+    0 0 8px rgba(220, 184, 122, 0.9),
+    0 0 22px rgba(201, 161, 99, 0.5);
+}
+
+.fuellung::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 9px;
+  height: 9px;
+  translate: -50% 50%;
+  border-radius: 50%;
+  background: var(--gold-400);
+  box-shadow: 0 0 10px 2px rgba(220, 184, 122, 0.85);
 }
 
 .schritt {
