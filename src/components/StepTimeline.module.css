@@ -45,18 +45,18 @@
 }
 
 /**
- * Die Spitze ist nur zwei Pixel breiter als die Linie – als Punkt soll sie
- * nicht auffallen. Die Wirkung macht der Schein: drei Lagen derselben Farbe,
- * von eng und hell nach weit und weich. Dadurch sieht es aus, als würde das
- * Ende der Linie glühen und ausfransen, statt dass dort etwas aufsitzt.
+ * Die Spitze ist genauso breit wie die Linie – sichtbar ist von ihr selbst
+ * also nichts. Sie trägt nur den Schein: drei Lagen derselben Farbe, von eng
+ * und hell nach weit und weich. Dadurch glüht das Ende der Linie und franst
+ * aus, ohne dass dort ein Punkt aufsitzt.
  */
 .fuellung::after {
   content: "";
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 3px;
   translate: -50% 50%;
   border-radius: 50%;
   background: var(--gold-400);
