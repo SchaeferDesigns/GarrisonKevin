@@ -25,7 +25,17 @@ export const business = {
   email: 'kevingarrison@outlook.de',
   adId: '3463842102',
   /** Wird für Canonical-URLs, Sitemap und JSON-LD verwendet. */
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kevin-garrison.de',
+  /**
+   * Absolute Adresse der Seite. Sie steckt in Canonical-Links, Sitemap und in
+   * den strukturierten Daten, wird also auch ohne feste Domain gebraucht.
+   *
+   * Es gibt noch keine Domain. Der Wert unten ist ein Platzhalter auf der dafür
+   * reservierten Endung .example – er kann nie versehentlich auf eine fremde
+   * Seite zeigen und fällt sofort auf. Gesetzt wird die echte Adresse über
+   * NEXT_PUBLIC_SITE_URL; im Deploy steht dort bereits die Testadresse.
+   * Vor dem Livegang die richtige Domain dort eintragen.
+   */
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kevin-garrison.example',
   serviceRadiusKm: 20,
   serviceAreaLabel: 'Aalen und Umgebung',
   vatNote: 'Preise ohne USt. gemäß Kleinunternehmerregelung § 19 UStG.',
@@ -39,13 +49,11 @@ export const business = {
   /**
    * Geokoordinaten des Betriebssitzes für die strukturierten Daten.
    *
-   * Bewusst leer: Falsche Koordinaten setzen den Betrieb in Karten und
-   * KI-Antworten an den falschen Ort – das ist schlechter als gar keine.
-   * Sobald die richtigen Werte vorliegen, hier eintragen, dann erscheinen sie
-   * von selbst im Schema. Ablesbar in Google Maps: Rechtsklick auf den
-   * Standort, der erste Eintrag ist „Breitengrad, Längengrad".
+   * Vom Betreiber aus Google Maps abgelesen und auf sechs Nachkommastellen
+   * gekürzt – das sind rund elf Zentimeter. Mehr Stellen wären
+   * Scheingenauigkeit, weniger würde den Betrieb im Ort verschieben.
    */
-  geo: null as { lat: number; lng: number } | null,
+  geo: { lat: 48.888735, lng: 10.100033 } as { lat: number; lng: number } | null,
 
   /**
    * Verweise auf Profile desselben Betriebs. Google verknüpft darüber
