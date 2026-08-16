@@ -1,48 +1,36 @@
 import styles from './PageHeroArt.module.css';
 
 type PageHeroArtProps = {
-  /** Verschiebt Muster und Licht, damit nicht jede Seite gleich aussieht. */
+  /** Verschiebt das Fugenbild, damit nicht jede Seite gleich aussieht. */
   variant?: number;
 };
 
 /**
  * Motiv im Seitenkopf: eine Bodenfläche in Bodenfarben.
  *
- * Die Fläche selbst ist ruhig – nur ein warmer Ton, keine Maserung, keine
- * abgesetzten Dielen. Gezeichnet sind allein die Fugen: dünne Linien im
- * Drittelverband, so wie ein Boden verlegt wird.
+ * Die Fläche selbst ist ruhig – nur ein warmer Ton. Gezeichnet sind allein die
+ * Fugen: dünne Linien im Drittelverband, so wie ein Boden verlegt wird.
  *
- * Darüber wandert ein großes, weiches Licht. Es liegt im Modus color-dodge
- * auf der Fläche: Dunkles bleibt dunkel, Helles reißt auf. Weil nur die Fugen
- * hell sind, leuchten genau sie auf, wenn das Licht über sie hinwegzieht –
- * die Fläche daneben bleibt ruhig. Das ist der ganze Trick, und er kommt ohne
- * eine einzige zusätzliche Ebene aus.
+ * Darunter wandert ein großes, weiches Licht. Man sieht es nie direkt: Seine
+ * Ebene ist mit genau demselben Fugenbild maskiert, es scheint also nur dort
+ * durch, wo eine Fuge ist. Zieht es vorbei, leuchten die Fugen der Reihe nach
+ * auf und gehen wieder aus – die Fläche daneben bleibt ruhig.
  *
- * Bewegt wird ausschließlich transform, das läuft im Compositor.
+ * Fugenbild und Maske sind dieselbe Datei, deshalb sitzen sie zwangsläufig
+ * aufeinander. Bewegt wird ausschließlich transform, das läuft im Compositor.
  */
 export default function PageHeroArt({ variant = 0 }: PageHeroArtProps) {
-  const fugenId = `fugen-${variant}`;
-
   return (
     <div className={styles.art} data-variant={variant} aria-hidden="true">
       <div className={styles.ton} />
+      <div className={styles.rillen} />
 
-      <svg className={styles.canvas} preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 420">
-        <defs>
-          <pattern id={fugenId} width="468" height="156" patternUnits="userSpaceOnUse">
-            {/* Reihenfugen */}
-            <path d="M0 0.5H468M0 52.5H468M0 104.5H468M0 155.5H468" className={styles.fuge} />
-            {/* Stöße, je Reihe um ein Drittel der Diele versetzt */}
-            <path d="M0.5 0V52M467.5 0V52" className={styles.fuge} />
-            <path d="M156.5 52V104" className={styles.fuge} />
-            <path d="M312.5 104V156" className={styles.fuge} />
-          </pattern>
-        </defs>
+      {/* Die Maske sitzt auf der ruhenden Hülle, bewegt wird das Licht darin.
+          Andersherum würden die Fugen mitwandern. */}
+      <div className={styles.fugenlicht}>
+        <div className={styles.licht} />
+      </div>
 
-        <rect width="1200" height="420" fill={`url(#${fugenId})`} />
-      </svg>
-
-      <div className={styles.licht} />
       <div className={styles.schleier} />
     </div>
   );
