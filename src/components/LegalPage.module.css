@@ -63,3 +63,76 @@
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--line);
 }
+
+/* --------------------------------------------------- Auszeichnung im Text */
+/* Die Rechtstexte kommen als HTML von Generatoren oder vom Anwalt. Was sie an
+   Elementen mitbringen, bekommt hier sein Aussehen – ohne dass am Text selbst
+   etwas geändert werden muss. */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--forest-800);
+  margin-top: 2.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose h1 {
+  font-size: 1.28rem;
+}
+
+.prose h2 {
+  font-size: 1.14rem;
+}
+
+.prose h3,
+.prose h4 {
+  font-size: 1rem;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose p {
+  margin-bottom: 0.9rem;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1rem 1.35rem;
+}
+
+.prose li {
+  margin-bottom: 0.35rem;
+}
+
+.prose strong,
+.prose b {
+  color: var(--forest-800);
+  font-weight: 600;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 1.8rem;
+}
+
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1.2rem;
+  font-size: 0.94em;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+}

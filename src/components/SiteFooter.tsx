@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Icon from './Icon';
 import { business, services, telLink, whatsappLink } from '@/lib/business';
+import { legalPages } from '@/lib/legal';
 import styles from './SiteFooter.module.css';
 
 const pages = [
@@ -107,12 +108,11 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {business.name} · {business.tagline}
           </span>
           <ul className={styles.legal}>
-            <li>
-              <Link href="/impressum">Impressum</Link>
-            </li>
-            <li>
-              <Link href="/datenschutz">Datenschutz</Link>
-            </li>
+            {legalPages.map((seite) => (
+              <li key={seite.slug}>
+                <Link href={`/${seite.slug}`}>{seite.title}</Link>
+              </li>
+            ))}
             <li>
               <Link href="/kontakt">Kontakt</Link>
             </li>
