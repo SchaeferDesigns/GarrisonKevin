@@ -1,6 +1,25 @@
-import { availability, business, faqs, prices, services, serviceAreas } from './business';
+import { availability, business, faqs, mapsLink, prices, services, serviceAreas } from './business';
 
 const url = business.siteUrl;
+
+/**
+ * Preisspanne über alle Leistungen, direkt aus den veröffentlichten Preisen.
+ * Keine Einschätzung, sondern der niedrigste und höchste Ab-Preis.
+ */
+const preisspanne = (() => {
+  const werte = prices.map((p) => p.from);
+  return `${Math.min(...werte)}–${Math.max(...werte)} €`;
+})();
+
+/**
+ * Felder, die nur erscheinen, wenn die Angaben wirklich vorliegen.
+ * Erfundene Koordinaten oder leere Profillisten schaden mehr, als sie nützen.
+ */
+const geoWennBekannt = business.geo
+  ? { geo: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lng } }
+  : {};
+
+const profileWennVorhanden = business.sameAs.length ? { sameAs: [...business.sameAs] } : {};
 
 /** Erreichbarkeit: Montag bis Samstag, 08:00–18:00 Uhr. */
 const openingHoursSpecification = [
@@ -26,6 +45,33 @@ export const localBusinessSchema = {
   image: `${url}/og-image.jpg`,
   currenciesAccepted: 'EUR',
   paymentAccepted: 'Barzahlung, Überweisung',
+  priceRange: preisspanne,
+  hasMap: mapsLink,
+  /* Worum es fachlich geht – hilft Suchmaschinen und KI-Antworten beim
+     Einordnen, ohne dass dafür Fließtext nötig wäre. */
+  knowsAbout: [
+    'Bodenverlegung',
+    'Laminat verlegen',
+    'Vinylboden verlegen',
+    'Klickboden verlegen',
+    'Trittschalldämmung',
+    'Dampfsperre',
+    'Sockelleisten montieren',
+    'Acrylfugen',
+    'Silikonfugen',
+    'Fugen erneuern',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    telephone: business.phoneE164,
+    email: business.email,
+    areaServed: 'DE',
+    availableLanguage: 'German',
+    hoursAvailable: openingHoursSpecification,
+  },
+  ...geoWennBekannt,
+  ...profileWennVorhanden,
   address: {
     '@type': 'PostalAddress',
     streetAddress: business.street,

@@ -15,6 +15,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ablauf', priority: 0.7, changeFrequency: 'yearly' },
     { path: '/ueber-mich', priority: 0.65, changeFrequency: 'yearly' },
     { path: '/faq', priority: 0.7, changeFrequency: 'monthly' },
+    /* Rechtstexte, die indexiert werden dürfen. Datenschutz und
+       Widerrufsbelehrung tragen ein noindex und gehören deshalb nicht hierher. */
+    { path: '/impressum', priority: 0.2, changeFrequency: 'yearly' },
+    { path: '/agb', priority: 0.2, changeFrequency: 'yearly' },
   ];
 
   return [

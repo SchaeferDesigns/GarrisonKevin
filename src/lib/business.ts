@@ -35,7 +35,30 @@ export const business = {
   experienceYears: 'über 10 Jahre',
   /** Vom Verkaufsschild übernommen. */
   slogan: 'Sauber, termingerecht, fair kalkuliert.',
+
+  /**
+   * Geokoordinaten des Betriebssitzes für die strukturierten Daten.
+   *
+   * Bewusst leer: Falsche Koordinaten setzen den Betrieb in Karten und
+   * KI-Antworten an den falschen Ort – das ist schlechter als gar keine.
+   * Sobald die richtigen Werte vorliegen, hier eintragen, dann erscheinen sie
+   * von selbst im Schema. Ablesbar in Google Maps: Rechtsklick auf den
+   * Standort, der erste Eintrag ist „Breitengrad, Längengrad".
+   */
+  geo: null as { lat: number; lng: number } | null,
+
+  /**
+   * Verweise auf Profile desselben Betriebs. Google verknüpft darüber
+   * Website und Unternehmensprofil miteinander – der stärkste einzelne
+   * Hebel für die lokale Suche. Sobald das Profil steht, hier eintragen.
+   */
+  sameAs: [] as string[],
 } as const;
+
+/** Kartenlink aus der Anschrift – braucht keine Koordinaten. */
+export const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${business.street}, ${business.postalCode} ${business.city}`,
+)}`;
 
 export const whatsappLink = (text?: string) =>
   `https://wa.me/${business.whatsappNumber}${text ? `?text=${encodeURIComponent(text)}` : ''}`;

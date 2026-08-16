@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: 'Impressum',
   description: 'Impressum und Anbieterkennzeichnung gemäß § 5 DDG.',
   alternates: { canonical: '/impressum' },
-  robots: { index: false, follow: true },
+  /* Indexierbar: Google prüft am Impressum und an den AGB, dass es den
+     Betrieb wirklich gibt. Sie auszusperren kostet Vertrauen. */
 };
 
 export default function ImpressumPage() {

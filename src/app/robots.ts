@@ -12,12 +12,22 @@ export default function robots(): MetadataRoute.Robots {
     return { rules: [{ userAgent: '*', disallow: '/' }] };
   }
 
+  /**
+   * Nichts wird gesperrt.
+   *
+   * Datenschutz und Widerrufsbelehrung tragen ein noindex in ihren Metadaten.
+   * Das wirkt aber nur, wenn die Seiten auch gelesen werden dürfen – eine
+   * Sperre hier verhindert genau das, und die Adressen können trotzdem nackt
+   * im Index landen.
+   *
+   * Impressum und AGB sind bewusst indexierbar: Google prüft daran, dass es
+   * den Betrieb wirklich gibt. Sie auszusperren kostet Vertrauen.
+   */
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/impressum', '/datenschutz'],
       },
     ],
     sitemap: `${business.siteUrl}/sitemap.xml`,
