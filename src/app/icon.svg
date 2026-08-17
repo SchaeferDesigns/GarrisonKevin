@@ -10,6 +10,6 @@
     <path d="M-9.8 145.8 L48 88 L105.8 145.8" fill="none" stroke="#000" stroke-width="6.5" stroke-linejoin="miter"/>
     <line x1="48" y1="-9.8" x2="48" y2="105.8" stroke="#000" stroke-width="6.5"/>
   </mask>
-  <rect width="96" height="96" rx="20" fill="#16281f"/>
+  <rect width="96" height="96" rx="20" fill="#1b4132"/>
   <circle cx="48" cy="48" r="42" fill="#c3a063" mask="url(#fuge)"/>
 </svg>

@@ -5,15 +5,16 @@
 
 :root {
   /* Farben */
-  /* Waldgrün, an das Logo angeglichen. Farbwinkel und Helligkeit stimmten
-     schon überein – es fehlte nur Sättigung: 33 statt 52 Prozent ließ die
-     Seite neben der Marke grau wirken. Die Reihe ist deshalb nicht neu
-     gemischt, sondern durchgehend kräftiger gezogen. */
-  --forest-900: #0b2217;
-  --forest-800: #0f2f1f;
-  --forest-700: #15422f;
-  --forest-600: #1d5a41;
-  --forest-500: #267955;
+  /* Waldgrün, aus dem Logo übernommen. --forest-700 ist exakt dessen Farbe:
+     #1B4132, vom Betreiber abgelesen. Die übrigen Stufen tragen denselben
+     Farbwinkel und dieselbe Sättigung und behalten ihre bisherigen
+     Helligkeiten – so bleibt die Abstufung erhalten und die Reihe stimmt
+     trotzdem zur Marke. Vorher fehlte ihr Sättigung, sie wirkte daneben grau. */
+  --forest-900: #0d2018;
+  --forest-800: #122c22;
+  --forest-700: #1b4132;
+  --forest-600: #235441;
+  --forest-500: #2f7056;
 
   /* Warmes Holz statt Gold: deutlich entsättigt, damit die Seite ruhiger
      wirkt und das Grün die Hauptfarbe bleibt. */
@@ -101,7 +102,7 @@ html {
      unteren Bildschirmrand. Cremeweiß steht dort als heller Streifen unter
      der Seite, deshalb dieselbe dunkle Farbe wie am Fuß der Seite.
      Der Inhalt bleibt hell, den Hintergrund setzt body. */
-  background-color: #081910;
+  background-color: #0a1712;
   -webkit-text-size-adjust: 100%;
   /* Kein blaues Rechteck beim Antippen – die Rückmeldung geben die
      Druckzustände weiter unten. */
@@ -274,7 +275,7 @@ strong {
 }
 
 .section--dark {
-  background: linear-gradient(165deg, var(--forest-800), var(--forest-900) 62%, #081b12);
+  background: linear-gradient(165deg, var(--forest-800), var(--forest-900) 62%, #0a1913);
   color: var(--sand);
   overflow: hidden;
 }

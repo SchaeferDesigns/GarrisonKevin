@@ -1,6 +1,6 @@
 .footer {
   position: relative;
-  background: linear-gradient(170deg, var(--forest-800), var(--forest-900) 70%, #081910);
+  background: linear-gradient(170deg, var(--forest-800), var(--forest-900) 70%, #0a1712);
   color: rgba(238, 240, 234, 0.74);
   overflow: hidden;
   padding-top: clamp(3rem, 2rem + 3vw, 4.5rem);
