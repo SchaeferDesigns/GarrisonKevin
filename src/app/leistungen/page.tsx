@@ -6,11 +6,9 @@ import PriceCalculator from '@/components/PriceCalculator';
 import Icon from '@/components/Icon';
 import Reveal from '@/components/Reveal';
 import JsonLd from '@/components/JsonLd';
-import FaqList from '@/components/FaqList';
 import {
   business,
   extras,
-  faqs,
   hourlyRate,
   importantNotes,
   notOffered,
@@ -29,7 +27,7 @@ export const metadata: Metadata = {
 
 const enthalten = [
   'Verlegen von Laminat, Vinyl und Klickböden',
-  'Trittschalldämmung und Dampfsperre',
+  'Einbringen von Trittschalldämmung und Dampfsperre',
   'Untergrund reinigen, grundieren, kleine Unebenheiten ausgleichen',
   'Zuschnitt und Montage der Sockelleisten',
   'Alte Fugen entfernen und neu ziehen',
@@ -176,7 +174,7 @@ export default function LeistungenPage() {
               <ul className="list mt-6">
                 <li>
                   <Icon name="ban" size={18} />
-                  Material: Boden, Leisten, Profile und Silikon
+                  Material: Boden, Leisten, Profile, Silikon, ggf. Trittschall, Folie und Ausgleichsmasse
                 </li>
                 <li>
                   <Icon name="ban" size={18} />
@@ -199,17 +197,6 @@ export default function LeistungenPage() {
                   {notOfferedExtra.join(', ')}
                 </li>
               </ul>
-
-              <div className="panel mt-8">
-                <h3 style={{ fontSize: '1.1rem' }}>Material stellt der Kunde</h3>
-                <p className="small">
-                  Sie kaufen den Boden zum Preis Ihres Händlers, berechnet wird ausschließlich die Arbeitsleistung.
-                </p>
-                <p className="small">
-                  Aussuchen müssen Sie es nicht allein: Auf Wunsch suchen wir das Material gemeinsam aus. Gegen
-                  Transportkosten liefere ich es auch an.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -260,23 +247,6 @@ export default function LeistungenPage() {
               </li>
             ))}
           </ul>
-
-          <hr className="rule" />
-
-          <h2 style={{ fontSize: '1.6rem' }}>Fragen zum Preis</h2>
-          <div className="mt-6">
-            <FaqList items={faqs.slice(0, 3)} openFirst />
-          </div>
-
-          <div className="btn-row mt-8">
-            <Link href="/kontakt" className="btn btn--accent">
-              Verbindliches Angebot anfragen
-              <Icon name="arrow-right" size={17} />
-            </Link>
-            <Link href="/ablauf" className="btn btn--ghost">
-              Ablauf ansehen
-            </Link>
-          </div>
         </div>
       </section>
 

@@ -99,7 +99,7 @@ export const prices: Price[] = [
     from: 18,
     unit: 'pro m²',
     unitLong: 'pro Quadratmeter',
-    note: 'Laminat, Vinyl und Klickböden. Trittschalldämmung und Dampfsperre sind enthalten.',
+    note: 'Laminat, Vinyl und Klickböden. Das Einbringen von Trittschalldämmung und Dampfsperre ist enthalten, das Material dafür kauft der Kunde.',
   },
   {
     id: 'sockelleisten',
@@ -141,21 +141,21 @@ export const services: Service[] = [
   {
     slug: 'bodenverlegung',
     title: 'Bodenverlegung',
-    short: 'Laminat, Vinyl und Klickböden – verlegt inklusive Trittschalldämmung und Dampfsperre.',
+    short: 'Laminat, Vinyl und Klickböden – verlegt inklusive Einbringung von Trittschalldämmung und Dampfsperre.',
     icon: 'plank',
     intro:
-      'Verlegt werden Laminat, Vinyl und Klickböden. Der Untergrund wird vorher gereinigt, grundiert und von kleinen Unebenheiten befreit. Trittschalldämmung und Dampfsperre sind im Quadratmeterpreis enthalten, das Material für den Belag selbst stellt der Kunde.',
+      'Verlegt werden Laminat, Vinyl und Klickböden. Der Untergrund wird vorher gereinigt, grundiert und von kleinen Unebenheiten befreit. Das Einbringen von Trittschalldämmung und Dampfsperre ist im Quadratmeterpreis enthalten – das Material stellt der Kunde.',
     bullets: [
       'Laminat, Vinyl und Klickböden – Klicksysteme',
       'Untergrund reinigen, grundieren und kleine Unebenheiten ausgleichen',
-      'Trittschalldämmung und Dampfsperre im Quadratmeterpreis enthalten',
+      'Einbringen von Trittschalldämmung und Dampfsperre im Quadratmeterpreis enthalten',
       'Ausbesserungen und Teilflächen, auch an Böden anderer Betriebe',
       'Besichtigung vor Ort und schriftliches Angebot',
     ],
     priceId: 'verlegung',
     metaTitle: 'Bodenverlegung Aalen – Laminat & Vinyl verlegen lassen',
     metaDescription:
-      'Laminat, Vinyl und Klickböden verlegen lassen in Aalen und Umgebung. Ab 18 €/m² inklusive Trittschalldämmung und Dampfsperre, Besichtigung und schriftliches Angebot.',
+      'Laminat, Vinyl und Klickböden verlegen lassen in Aalen und Umgebung. Ab 18 €/m² inklusive Einbringung von Trittschalldämmung und Dampfsperre, Besichtigung und schriftliches Angebot.',
   },
   {
     slug: 'sockelleisten',
@@ -184,7 +184,7 @@ export const services: Service[] = [
     bullets: [
       'Alte Acryl- und Silikonfugen entfernen',
       'Fugen neu ziehen',
-      `Kleiner Umfang unter ${250} €: nach Stunden, ab 40 €/Std. (mind. 1,5 Std.)`,
+      'Als eigener Auftrag oder zusammen mit der Bodenverlegung',
     ],
     priceId: 'fugen',
     metaTitle: 'Silikonfugen erneuern – Aalen und Umgebung',
@@ -222,7 +222,7 @@ export const extras = [
 export const importantNotes = [
   'Das Material stellt und bezahlt der Kunde – auf Wunsch wird es gemeinsam ausgesucht.',
   'Angeliefert wird das Material auf Wunsch gegen Transportkosten.',
-  'Trittschalldämmung und Dampfsperre sind in der Verlegung enthalten.',
+  'Das Einbringen von Trittschalldämmung und Dampfsperre ist in der Verlegung enthalten.',
   'Die Anfahrt im Einsatzgebiet ist im Preis enthalten.',
   `Aufträge unter ${250} €: ab 40 €/Std., mindestens 1,5 Std.`,
   'Bezahlung per Barzahlung oder Überweisung.',
@@ -274,13 +274,13 @@ export const faqs: Faq[] = [
   {
     question: 'Was kostet das Verlegen von Laminat oder Vinyl?',
     answer:
-      'Die Arbeitsleistung beginnt bei 18 € pro Quadratmeter, inklusive Trittschalldämmung und Dampfsperre. Sockelleisten kosten ab 7 € pro laufendem Meter, Acryl- und Silikonfugen ab 6 € pro laufendem Meter. Das sind Richtwerte – der verbindliche Preis steht nach der Besichtigung im schriftlichen Angebot.',
+      'Die Arbeitsleistung beginnt bei 18 € pro Quadratmeter, inklusive Einbringung von Trittschalldämmung und Dampfsperre. Sockelleisten kosten ab 7 € pro laufendem Meter, Acryl- und Silikonfugen ab 6 € pro laufendem Meter. Das sind Richtwerte – der verbindliche Preis steht nach der Besichtigung im schriftlichen Angebot.',
     group: 'Preis & Leistung',
   },
   {
     question: 'Ist das Material im Preis enthalten?',
     answer:
-      'Nein. Material stellt und bezahlt der Kunde, berechnet wird ausschließlich die Arbeitsleistung. Auf Wunsch suchen wir das Material gemeinsam aus, und gegen Transportkosten liefere ich es an. Trittschalldämmung und Dampfsperre sind dagegen im Quadratmeterpreis enthalten.',
+      'Nein. Material stellt und bezahlt der Kunde, berechnet wird ausschließlich die Arbeitsleistung. Auf Wunsch suchen wir das Material gemeinsam aus, und gegen Transportkosten liefere ich es an. Das gilt auch für Trittschalldämmung und Dampfsperre – nur das Einbringen ist im Quadratmeterpreis enthalten.',
     group: 'Material',
   },
   {
@@ -310,13 +310,13 @@ export const faqs: Faq[] = [
   {
     question: 'Was muss vor dem Termin vorbereitet sein?',
     answer:
-      'Der Raum sollte leer geräumt sein – Möbel, Teppiche und lose Gegenstände raus. Auch die Zuwege sollten begehbar sein, also Eingang, Flur und Treppenhaus. Boden und Leisten stellt der Kunde und sollten zum Termin vor Ort liegen. Trittschalldämmung und Dampfsperre bringe ich mit, sie sind im Quadratmeterpreis enthalten.',
+      'Der Raum sollte leer geräumt sein – Möbel, Teppiche und lose Gegenstände raus. Auch die Zuwege sollten begehbar sein, also Eingang, Flur und Treppenhaus. Benötigtes Material stellt der Kunde und sollte zum Start der Baustelle vor Ort sein.',
     group: 'Termin & Vorbereitung',
   },
   {
     question: 'Was ist im Quadratmeterpreis enthalten – und was kostet extra?',
     answer:
-      'Enthalten sind Trittschalldämmung und Dampfsperre, das Reinigen und Grundieren des Untergrunds, das Ausgleichen kleiner Unebenheiten sowie die Anfahrt innerhalb des Einsatzgebiets. Separat berechnet werden das Entfernen und Abtransportieren des alten Belags, Übergangsprofile an Türen und Raumwechseln sowie das Kürzen von Türblättern, wenn der neue Aufbau höher ist.',
+      'Enthalten ist die Arbeitsleistung: das Einbringen von Trittschalldämmung und Dampfsperre, das Reinigen und Grundieren des Untergrunds, das Ausgleichen kleiner Unebenheiten sowie die Anfahrt innerhalb des Einsatzgebiets. Separat berechnet werden das Entfernen und Abtransportieren des alten Belags, Übergangsprofile an Türen und Raumwechseln sowie das Kürzen von Türblättern, wenn der neue Aufbau höher ist.',
     group: 'Preis & Leistung',
   },
   {

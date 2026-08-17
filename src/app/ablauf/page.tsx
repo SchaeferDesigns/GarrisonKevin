@@ -24,7 +24,7 @@ const preparation = [
   },
   {
     title: 'Material vorhanden',
-    text: 'Boden und Leisten stellt der Kunde und sollten zum Termin vor Ort sein. Trittschalldämmung und Dampfsperre sind im Preis enthalten.',
+    text: 'Benötigtes Material stellt der Kunde und sollte zum Start der Baustelle vor Ort sein.',
     icon: 'plank' as const,
   },
   {
@@ -98,10 +98,7 @@ export default function AblaufPage() {
           <div className="section-head">
             <span className="kicker">Vorbereitung</span>
             <h2>Was Sie vorbereiten – und was ich mitbringe</h2>
-            <p className="lead">
-              Drei Punkte, die vor dem Termin geklärt sein sollten. Trittschalldämmung und Dampfsperre sind im
-              Quadratmeterpreis enthalten und werden mitgebracht.
-            </p>
+            <p className="lead">Drei Punkte, die vor dem Termin geklärt sein sollten.</p>
           </div>
 
           <div className="grid grid--3">
