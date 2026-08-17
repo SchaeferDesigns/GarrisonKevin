@@ -2,7 +2,7 @@
   position: relative;
   padding-top: calc(var(--nav-h) + clamp(3rem, 2rem + 4vw, 5.5rem));
   padding-bottom: clamp(2.75rem, 2rem + 3vw, 4.5rem);
-  background: linear-gradient(165deg, var(--forest-700), var(--forest-900) 68%, #0b1610);
+  background: linear-gradient(165deg, var(--forest-700), var(--forest-900) 68%, #081910);
   color: rgba(238, 240, 234, 0.8);
   overflow: hidden;
   isolation: isolate;

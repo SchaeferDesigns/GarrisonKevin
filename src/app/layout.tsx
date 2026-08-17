@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Fraunces } from 'next/font/google';
+import { Cormorant_Garamond, Inter } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -19,11 +19,19 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-const fraunces = Fraunces({
+/**
+ * Überschriftenschrift, ausgewählt nach dem Logo des Betreibers: eine
+ * Renaissance-Antiqua mit hohem Strichkontrast und feinen, spitzen Serifen.
+ * Fraunces stand hier vorher – sie ist weicher und runder gezeichnet und lag
+ * neben der Wortmarke sichtbar daneben.
+ *
+ * Cormorant zeichnet dünn, deshalb 600 statt der üblichen 400.
+ */
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-display',
-  axes: ['SOFT', 'WONK'],
+  weight: ['500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -82,7 +90,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#1d3a2e',
+  themeColor: '#15422f',
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
@@ -97,7 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="de"
-      className={`${inter.variable} ${fraunces.variable}`}
+      className={`${inter.variable} ${cormorant.variable}`}
       /* Hintergrundbilder als Variablen, damit sie auch unter einem Unterpfad geladen werden. */
       style={
         {
