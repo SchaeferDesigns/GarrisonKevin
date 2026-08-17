@@ -22,7 +22,6 @@ const zahl = (wert: number) => wert.toLocaleString('de-DE', { maximumFractionDig
  */
 const GRENZEN = {
   seite: 40,
-  tueren: 12,
   raeume: 20,
   flaeche: 1000,
   leisten: 1500,
@@ -44,27 +43,26 @@ const begrenze = (value: string, max: number) => {
 
 const priceOf = (id: string) => prices.find((p) => p.id === id)?.from ?? 0;
 
-/** Breite eines Türblatts – dort kommt keine Sockelleiste hin. */
-const TUERBREITE = 0.9;
-
 /** Üblicher Verschnitt beim Bodenkauf, wie in den häufigen Fragen genannt. */
 const VERSCHNITT = 0.1;
 
-type Raum = { id: number; name: string; laenge: string; breite: string; tueren: string };
+type Raum = { id: number; name: string; laenge: string; breite: string };
 
-const neuerRaum = (id: number, name: string): Raum => ({ id, name, laenge: '', breite: '', tueren: '1' });
+const neuerRaum = (id: number, name: string): Raum => ({ id, name, laenge: '', breite: '' });
 
 /**
  * Richtwert-Rechner für die Arbeitsleistung.
  *
  * Zwei Wege hinein: entweder die Maße je Raum eintragen und übernehmen lassen,
- * oder die Mengen direkt eingeben. Beim Umfang werden die Türen abgezogen –
- * dort kommt keine Leiste hin, sonst fällt die Schätzung zu hoch aus.
+ * oder die Mengen direkt eingeben. Der Umfang wird voll gerechnet; wie viel
+ * Leiste am Ende wirklich nötig ist, steht nach der Besichtigung fest.
  */
 export default function PriceCalculator() {
-  const [area, setArea] = useState('25');
-  const [skirting, setSkirting] = useState('20');
-  const [joints, setJoints] = useState('0');
+  /* Leer statt vorbelegt: Vorgefüllte Werte sahen aus wie ein Ergebnis und
+     standen dem Übernehmen aus den Raummaßen im Weg. */
+  const [area, setArea] = useState('');
+  const [skirting, setSkirting] = useState('');
+  const [joints, setJoints] = useState('');
   const [raeume, setRaeume] = useState<Raum[]>([neuerRaum(1, 'Raum 1')]);
 
   /* Was die eingetragenen Räume ergeben – wird erst auf Klick übernommen. */
@@ -79,7 +77,10 @@ export default function PriceCalculator() {
       if (!l || !b) continue;
       vollstaendig += 1;
       flaeche += l * b;
-      umfang += Math.max(0, 2 * (l + b) - num(raum.tueren, GRENZEN.tueren) * TUERBREITE);
+      /* Voller Umfang, ohne Abzug für Türen. Was wirklich an Leiste gebraucht
+         wird, misst Kevin bei der Besichtigung – ein Abzug hier täuschte nur
+         eine Genauigkeit vor, die ein Richtwert nicht hat. */
+      umfang += 2 * (l + b);
     }
 
     return {
@@ -185,7 +186,7 @@ export default function PriceCalculator() {
                     min="0"
                     max={GRENZEN.seite}
                     step="0.1"
-                    placeholder="5"
+                    placeholder="z. B. 5"
                     value={raum.laenge}
                     onChange={(e) => setzeRaum(raum.id, 'laenge', e.target.value)}
                     onBlur={(e) => setzeRaum(raum.id, 'laenge', begrenze(e.target.value, GRENZEN.seite))}
@@ -201,26 +202,13 @@ export default function PriceCalculator() {
                     min="0"
                     max={GRENZEN.seite}
                     step="0.1"
-                    placeholder="4"
+                    placeholder="z. B. 4"
                     value={raum.breite}
                     onChange={(e) => setzeRaum(raum.id, 'breite', e.target.value)}
                     onBlur={(e) => setzeRaum(raum.id, 'breite', begrenze(e.target.value, GRENZEN.seite))}
                   />
                 </div>
 
-                <div className={styles.roomField}>
-                  <label htmlFor={`raum-${raum.id}-tueren`}>Türen</label>
-                  <input
-                    id={`raum-${raum.id}-tueren`}
-                    type="number"
-                    inputMode="numeric"
-                    min="0"
-                    max={GRENZEN.tueren}
-                    step="1"
-                    value={raum.tueren}
-                    onChange={(e) => setzeRaum(raum.id, 'tueren', e.target.value)}
-                  />
-                </div>
 
                 <button
                   type="button"
@@ -264,10 +252,12 @@ export default function PriceCalculator() {
             </button>
           </div>
 
-          <p className={styles.roomsNote}>
-            Der Umfang zieht je Tür {zahl(TUERBREITE)} m ab – dort kommt keine Leiste hin.
-            {raeume.length >= GRENZEN.raeume && ` Mehr als ${GRENZEN.raeume} Räume nehme ich hier nicht auf – bei dem Umfang rechnen wir das besser gemeinsam durch.`}
-          </p>
+          {raeume.length >= GRENZEN.raeume && (
+            <p className={styles.roomsNote}>
+              Mehr als {GRENZEN.raeume} Räume nehme ich hier nicht auf – bei dem Umfang rechnen wir
+              das besser gemeinsam durch.
+            </p>
+          )}
         </div>
 
         <div className={styles.field}>

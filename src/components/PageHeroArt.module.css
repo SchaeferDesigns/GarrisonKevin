@@ -3,97 +3,27 @@
   inset: 0;
   overflow: hidden;
   z-index: -2;
-
-  /**
-   * Das Fugenbild: eine Kachel im Drittelverband, weiße Linien auf nichts.
-   * Reihen alle 60 Pixel, Dielen 420 lang, jede Reihe um ein Drittel versetzt.
-   *
-   * Es dient zweimal: einmal als Maske für die sichtbaren Fugen, einmal als
-   * Maske für das Licht darunter. Weil es dieselbe Datei mit denselben Maßen
-   * ist, sitzt das Licht zwangsläufig genau in den Fugen.
-   */
-  --fugen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='180'%3E%3Cg stroke='%23fff' stroke-width='1.4' fill='none'%3E%3Cpath d='M0 .5H420M0 60.5H420M0 120.5H420M0 179.5H420'/%3E%3Cpath d='M.7 0V60M419.3 0V60M140.5 60V120M280.5 120V180'/%3E%3C/g%3E%3C/svg%3E");
-  --fugen-groesse: 420px 180px;
-  --fugen-versatz: 0 0;
 }
 
-/* Der Boden als Ton, nicht als Zeichnung: ein warmer Hauch über dem Grün. */
+/* Weicher Verlauf statt Zeichnung: warmes Licht oben links, Grün nach unten
+   rechts. Nirgends eine Kante, an der sich das Auge festhält. */
 .ton {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 150% at 18% 0%, rgba(171, 151, 129, 0.16), transparent 62%),
-    radial-gradient(90% 130% at 92% 100%, rgba(53, 106, 83, 0.28), transparent 66%);
+    radial-gradient(120% 150% at 18% 0%, rgba(171, 151, 129, 0.18), transparent 62%),
+    radial-gradient(90% 130% at 92% 100%, rgba(53, 106, 83, 0.32), transparent 66%);
 }
 
-.rillen,
-.fugenlicht {
-  position: absolute;
-  inset: 0;
-  -webkit-mask-image: var(--fugen);
-  mask-image: var(--fugen);
-  -webkit-mask-size: var(--fugen-groesse);
-  mask-size: var(--fugen-groesse);
-  -webkit-mask-position: var(--fugen-versatz);
-  mask-position: var(--fugen-versatz);
-  -webkit-mask-repeat: repeat;
-  mask-repeat: repeat;
-}
-
-/* Die Fugen selbst – ruhig, damit sie auch ohne Licht als Boden lesbar sind. */
-.rillen {
-  background-color: rgba(224, 216, 203, 0.14);
-}
-
-/* Die Hülle bleibt stehen und schneidet zu, das Licht darin wandert. */
-.fugenlicht {
-  overflow: hidden;
-}
-
-/**
- * Das Licht unter dem Boden. Sichtbar wird davon nur, was durch die Fugen
- * fällt – deshalb darf es kräftig sein, ohne aufdringlich zu wirken.
- *
- * Ein Durchlauf dauert 26 Sekunden. Man soll es bemerken, wenn man hinsieht,
- * und nicht, wenn man liest.
- */
-.licht {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 58%;
-  aspect-ratio: 1.5 / 1;
-  translate: -50% -50%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 246, 228, 0.95), rgba(255, 240, 214, 0.4) 44%, transparent 76%);
-  filter: blur(18px);
-  animation: wandern 26s var(--ease-soft) infinite;
-  will-change: transform;
-}
-
-@keyframes wandern {
-  0% {
-    transform: translate3d(0, -16%, 0);
-  }
-
-  50% {
-    transform: translate3d(190%, 18%, 0);
-  }
-
-  100% {
-    transform: translate3d(0, -16%, 0);
-  }
-}
-
-/* Über allem: hält den Text lesbar, ohne die Fläche zuzukleistern. */
+/* Hält den Text lesbar. */
 .schleier {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     100deg,
-    rgba(11, 22, 16, 0.62) 0%,
-    rgba(11, 22, 16, 0.26) 44%,
-    rgba(11, 22, 16, 0) 74%
+    rgba(11, 22, 16, 0.42) 0%,
+    rgba(11, 22, 16, 0.16) 46%,
+    rgba(11, 22, 16, 0) 78%
   );
 }
 
@@ -101,61 +31,35 @@
   .schleier {
     background: linear-gradient(
       160deg,
-      rgba(11, 22, 16, 0.5) 0%,
-      rgba(11, 22, 16, 0.34) 55%,
-      rgba(11, 22, 16, 0.16) 100%
+      rgba(11, 22, 16, 0.34) 0%,
+      rgba(11, 22, 16, 0.2) 55%,
+      rgba(11, 22, 16, 0.08) 100%
     );
   }
-
-  /* Schmalere Kachel, sonst liegen auf dem Handy kaum zwei Dielen nebeneinander. */
-  .art {
-    --fugen-groesse: 300px 132px;
-  }
-
-  .licht {
-    width: 92%;
-  }
 }
 
-/* Jede Seite setzt Fugenbild und Licht anders an, damit die Köpfe sich
-   unterscheiden. Der Versatz gilt für beide Ebenen gemeinsam – sonst läge
-   das Licht neben den Fugen. */
-.art[data-variant='1'] {
-  --fugen-versatz: 140px 30px;
+/* Jede Seite setzt das Licht etwas anders an, damit die Köpfe sich leicht
+   unterscheiden, ohne dass es auffällt. */
+.art[data-variant='1'] .ton {
+  background:
+    radial-gradient(120% 150% at 32% 0%, rgba(171, 151, 129, 0.16), transparent 60%),
+    radial-gradient(95% 130% at 88% 100%, rgba(53, 106, 83, 0.3), transparent 68%);
 }
 
-.art[data-variant='1'] .licht {
-  animation-delay: -6s;
+.art[data-variant='2'] .ton {
+  background:
+    radial-gradient(115% 145% at 8% 4%, rgba(171, 151, 129, 0.2), transparent 64%),
+    radial-gradient(90% 125% at 96% 96%, rgba(53, 106, 83, 0.28), transparent 64%);
 }
 
-.art[data-variant='2'] {
-  --fugen-versatz: 280px 90px;
+.art[data-variant='3'] .ton {
+  background:
+    radial-gradient(130% 150% at 24% 0%, rgba(171, 151, 129, 0.15), transparent 58%),
+    radial-gradient(100% 135% at 84% 100%, rgba(53, 106, 83, 0.34), transparent 70%);
 }
 
-.art[data-variant='2'] .licht {
-  animation-delay: -12s;
-}
-
-.art[data-variant='3'] {
-  --fugen-versatz: 60px 60px;
-}
-
-.art[data-variant='3'] .licht {
-  animation-delay: -18s;
-}
-
-.art[data-variant='4'] {
-  --fugen-versatz: 350px 120px;
-}
-
-.art[data-variant='4'] .licht {
-  animation-delay: -23s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Ohne Bewegung steht das Licht ruhig neben dem Text. */
-  .licht {
-    animation: none;
-    transform: translate3d(120%, 0, 0);
-  }
+.art[data-variant='4'] .ton {
+  background:
+    radial-gradient(110% 140% at 14% 6%, rgba(171, 151, 129, 0.19), transparent 62%),
+    radial-gradient(88% 128% at 94% 92%, rgba(53, 106, 83, 0.26), transparent 66%);
 }
