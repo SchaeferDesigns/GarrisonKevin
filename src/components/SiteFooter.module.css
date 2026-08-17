@@ -36,17 +36,11 @@
   gap: 0.7rem;
 }
 
+/* Das Zeichen steht für sich – das Siegel bringt seine runde Form mit. */
 .mark {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: linear-gradient(145deg, rgba(171, 151, 129, 0.32), rgba(171, 151, 129, 0.08));
-  border: 1px solid rgba(171, 151, 129, 0.4);
-  color: var(--oak-400);
-  font-family: var(--font-display), serif;
-  font-weight: 600;
+  display: block;
+  width: 44px;
+  height: 44px;
   flex: none;
 }
 

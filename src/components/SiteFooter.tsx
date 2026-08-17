@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Icon from './Icon';
+import Marke from './Marke';
 import { business, services, telLink, whatsappLink } from '@/lib/business';
 import { legalPages } from '@/lib/legal';
 import styles from './SiteFooter.module.css';
@@ -20,9 +21,7 @@ export default function SiteFooter() {
         <div className={styles.grid}>
           <div className={styles.brand}>
             <span className={styles.brandTop}>
-              <span className={styles.mark} aria-hidden="true">
-                KG
-              </span>
+              <Marke size={44} className={styles.mark} />
               <span>
                 <span className={styles.brandName}>{business.name}</span>
                 <span className={styles.brandRole}>{business.tagline}</span>

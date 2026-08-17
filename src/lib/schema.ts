@@ -43,6 +43,7 @@ export const localBusinessSchema = {
   telephone: business.phoneE164,
   email: business.email,
   image: `${url}/og-image.jpg`,
+  logo: `${url}/marke.svg`,
   currenciesAccepted: 'EUR',
   paymentAccepted: 'Barzahlung, Überweisung',
   priceRange: preisspanne,

@@ -23,10 +23,13 @@
      Gleicher Farbwinkel wie die Eiche, nur kräftiger und einen Tick gelber:
      36–37° statt 31°, Sättigung rund 45 statt 25 Prozent. Dadurch gehört es
      sichtbar zur Palette, sticht aber heraus.
-     Bewusst nur hier. Sobald Gold auch Flächen füllt, heißt es nichts mehr. */
-  --gold-400: #dcb87a;
-  --gold-500: #c9a163;
-  --gold-600: #ab8447;
+     Bewusst nur hier. Sobald Gold auch Flächen füllt, heißt es nichts mehr.
+
+     --gold-500 ist exakt das Gold aus marke.svg. Dadurch zeigen Zeichen und
+     Schaltflächen denselben Ton, statt knapp danebenzuliegen. */
+  --gold-400: #d8b478;
+  --gold-500: #c3a063;
+  --gold-600: #a6814a;
 
   --cream: #f8f5ef;
   --sand: #efe9dd;

@@ -68,22 +68,14 @@
   padding-right: 0;
 }
 
+/* Das Zeichen steht für sich – ohne Kästchen drumherum, das Siegel hat seine
+   eigene runde Form. */
 .mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 36px;
   height: 36px;
-  transition: width 1s var(--ease-soft), height 1s var(--ease-soft);
-  border-radius: 11px;
-  background: linear-gradient(145deg, rgba(171, 151, 129, 0.3), rgba(171, 151, 129, 0.08));
-  border: 1px solid rgba(171, 151, 129, 0.42);
-  color: var(--oak-400);
-  font-family: var(--font-display), serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 4px 12px -6px rgba(16, 29, 23, 0.6);
   flex: none;
+  transition: width 1s var(--ease-soft), height 1s var(--ease-soft);
 }
 
 /* Name und Rolle wandern beim Scrollen gemeinsam weg. Sie schrumpfen über

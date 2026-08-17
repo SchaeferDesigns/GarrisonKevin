@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Icon from './Icon';
+import Marke from './Marke';
 import { business, telLink, whatsappLink } from '@/lib/business';
 import styles from './SiteHeader.module.css';
 
@@ -51,9 +52,7 @@ export default function SiteHeader() {
       <header className={styles.wrap}>
         <div className={`${styles.inner} on-dark`} data-scrolled={scrolled}>
           <Link href="/" className={styles.brand} aria-label={`${business.name} – zur Startseite`}>
-            <span className={styles.mark} aria-hidden="true">
-              KG
-            </span>
+            <Marke size={36} className={styles.mark} />
             <span className={styles.brandText}>
               <span className={styles.brandName}>{business.name}</span>
               <span className={styles.brandRole}>{business.tagline}</span>
