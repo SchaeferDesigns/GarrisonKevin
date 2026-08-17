@@ -52,13 +52,16 @@
   line-height: 1.2;
 }
 
+/* Wie im Kopf: Unterzeile in der Antiqua des Logos, gesperrt gesetzt. */
 .brandRole {
   display: block;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-display), serif;
+  font-size: 0.79rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--oak-500);
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
 }
 
 .colTitle {

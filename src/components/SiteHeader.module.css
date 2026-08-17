@@ -107,12 +107,16 @@
   letter-spacing: -0.01em;
 }
 
+/* Dieselbe Serifenschrift wie der Name – im Logo steht die Unterzeile
+   ebenfalls in der Antiqua, nur gesperrt. Etwas größer und in 600 gesetzt,
+   weil Cormorant in dieser Größe sonst zu dünn läuft. */
 .brandRole {
-  font-size: 0.665rem;
-  letter-spacing: 0.11em;
+  font-family: var(--font-display), serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--oak-500);
-  font-weight: 550;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   max-height: 1.4em;
