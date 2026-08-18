@@ -15,9 +15,17 @@
   transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
 }
 
-.item[open] {
+/* Der Rahmen folgt dem sichtbaren Zustand, nicht dem offenen: Beim Schließen
+   bleibt das Element noch offen, bis die Bewegung durch ist. */
+.item[data-auf] {
   border-color: rgba(171, 151, 129, 0.5);
   box-shadow: var(--shadow-md);
+}
+
+/* Trägt die Bewegung. Muss beschneiden, sonst schiebt der Inhalt beim
+   Aufklappen über den Rand hinaus. */
+.huelle {
+  overflow: hidden;
 }
 
 .summary {
@@ -55,7 +63,7 @@
   transition: transform 0.4s var(--ease);
 }
 
-.item[open] .summary svg {
+.item[data-auf] .summary svg {
   transform: rotate(180deg);
 }
 

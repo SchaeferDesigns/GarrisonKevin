@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { Cormorant_Garamond, Source_Serif_4 } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -13,7 +13,15 @@ import { localBusinessSchema, websiteSchema } from '@/lib/schema';
 
 /* Schriften werden von Next.js beim Build heruntergeladen und selbst ausgeliefert.
    Dadurch entsteht zur Laufzeit keine Verbindung zu Google-Servern (DSGVO). */
-const inter = Inter({
+/**
+ * Fließtextschrift. Eine Antiqua statt der bisherigen Grotesk, damit die ganze
+ * Seite in derselben Richtung liegt wie Logo und Überschriften.
+ *
+ * Source Serif ist eigens fürs Lesen am Bildschirm gezeichnet: offene Punzen,
+ * kräftige Striche, wenig Kontrast. Cormorant wäre als Fließtext viel zu dünn,
+ * sie bleibt den Überschriften vorbehalten.
+ */
+const fliesstext = Source_Serif_4({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
@@ -105,7 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="de"
-      className={`${inter.variable} ${cormorant.variable}`}
+      className={`${fliesstext.variable} ${cormorant.variable}`}
       /* Hintergrundbilder als Variablen, damit sie auch unter einem Unterpfad geladen werden. */
       style={
         {
