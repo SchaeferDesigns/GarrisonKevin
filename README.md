@@ -86,6 +86,24 @@ Unterseiten ohne Umschreibungsregeln. Eine `.htaccess` ist nicht nötig.
 
 Bei jeder inhaltlichen Änderung: erneut `npm run build`, `out` neu hochladen.
 
+### Kundenvorschau der Agentur
+
+Die Vorschau liegt in einem Unterordner unter
+`https://schaeferdesigns.de/demo/garrisonkevin/`:
+
+```bash
+npm run build:vorschau
+```
+
+Der Unterpfad und die Indexierungssperre stehen in
+`scripts/build-vorschau.mjs` und bewusst **nicht** in `site.config.mjs` – dort
+würden sie auch in den Bau für die echte Domain durchschlagen und beim Livegang
+sämtliche Verweise und Bilder ins Leere laufen lassen. `npm run build` bleibt
+dadurch immer der Bau für die echte Domain.
+
+Der Pfad wird beim Bauen fest in jede erzeugte Datei geschrieben. Wird der
+Ordner auf dem Server umbenannt, muss neu gebaut werden.
+
 ### Auf einem Anbieter mit Node.js
 
 In `site.config.mjs` `statischeDateien: false` setzen, dann `npm run build` und
