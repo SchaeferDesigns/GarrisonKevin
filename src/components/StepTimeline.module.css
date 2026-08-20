@@ -123,8 +123,11 @@
   flex-direction: column;
   gap: 0.4rem;
   padding-top: 0.35rem;
-  /* Noch nicht erreichte Schritte stehen zurück, ohne unlesbar zu werden. */
-  opacity: clamp(0.5, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 40 + 0.5), 1);
+  /* Noch nicht erreichte Schritte stehen zurück, ohne unlesbar zu werden.
+     Der Boden liegt bei 0,8: bei 0,5 fiel der Fließtext auf hellem Grund auf
+     2,1:1 und war für schwache Augen nicht mehr zu entziffern. Ab 0,8 hält
+     jeder Schritt die geforderten 4,5:1, auch bevor die Linie ihn erreicht. */
+  opacity: clamp(0.8, calc((var(--fortschritt, 0) - var(--stufe, 0)) * 8 + 0.8), 1);
   transition: opacity 0.45s var(--ease-soft);
 }
 
@@ -172,5 +175,7 @@
 }
 
 .liste[data-ton='hell'] .text p {
-  color: var(--muted);
+  /* Einen Ton dunkler als sonst: der Text wird zusätzlich abgeblendet und
+     muss auch im abgeblendeten Zustand lesbar bleiben. */
+  color: var(--ink-soft);
 }
