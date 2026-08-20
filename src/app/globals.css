@@ -42,8 +42,12 @@
 
   --ink: #15201a;
   --ink-soft: #3d4a42;
-  --muted: #5f6d64;
-  --muted-light: #8b968e;
+  /* Beide Grautoene tragen denselben Farbwinkel wie zuvor, sind aber so weit
+     abgedunkelt, dass sie auch als Kleinschrift auf Creme und Sand die von
+     der WCAG geforderten 4,5:1 erreichen. Vorher kam --muted-light auf 2,8:1
+     und war fuer Leser mit schwacher Sehkraft kaum zu entziffern. */
+  --muted: #54625a;
+  --muted-light: #616b63;
 
   --line: rgba(21, 32, 26, 0.1);
   --line-strong: rgba(21, 32, 26, 0.16);

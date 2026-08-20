@@ -124,6 +124,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
     >
       <body>
+        {/* Ohne JavaScript laeuft die Scroll-Einblendung nicht und der Inhalt
+            bliebe auf Deckkraft 0 stehen. Dann gilt die Seite als sichtbar. */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <a href="#inhalt" className="skip-link">
           Zum Inhalt springen
         </a>

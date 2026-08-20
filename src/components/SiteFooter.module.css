@@ -81,11 +81,16 @@
   list-style: none;
 }
 
+/* Die Innenabstaende vergroessern die Trefferflaeche auf ueber 24 Pixel, der
+   gleich grosse negative Aussenabstand nimmt sie aus dem Fluss wieder heraus.
+   Am Erscheinungsbild aendert sich dadurch nichts, nur am Treffen mit dem Finger. */
 .links a {
   font-size: 0.925rem;
   color: rgba(238, 240, 234, 0.74);
   transition: color 0.25s var(--ease), transform 0.25s var(--ease);
   display: inline-block;
+  padding-block: 0.28rem;
+  margin-block: -0.28rem;
 }
 
 .links a:hover {
@@ -112,6 +117,12 @@
   color: var(--oak-500);
   flex: none;
   margin-top: 0.16em;
+}
+
+.contactItem a {
+  display: inline-block;
+  padding-block: 0.26rem;
+  margin-block: -0.26rem;
 }
 
 .contactItem a:hover {
@@ -159,6 +170,12 @@
   flex-wrap: wrap;
   gap: 0.35rem 1.35rem;
   list-style: none;
+}
+
+.legal a {
+  display: inline-block;
+  padding-block: 0.32rem;
+  margin-block: -0.32rem;
 }
 
 .legal a:hover {

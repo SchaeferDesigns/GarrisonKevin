@@ -132,6 +132,9 @@ export default function HomePage() {
       <section className="section section--tight">
         <div className="ambient" aria-hidden="true" />
         <div className="container">
+          {/* Traegt die Ueberschriftenfolge: ohne sie springt die Seite von der
+              h1 direkt auf h3, und wer per Ueberschrift navigiert, verliert den Faden. */}
+          <h2 className="visually-hidden">Was Sie erwarten können</h2>
           <Reveal>
             <div className={styles.trustStrip}>
               {trustPoints.map((point, i) => (

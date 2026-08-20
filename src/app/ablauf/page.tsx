@@ -49,6 +49,8 @@ export default function AblaufPage() {
         <div className="ambient" aria-hidden="true" />
         <div className="container">
           <div className="split split--wide-left">
+            {/* Wie auf der Startseite: die Schritte sind h3, hier steht die Stufe darueber. */}
+            <h2 className="visually-hidden">Die fünf Schritte</h2>
             <StepTimeline steps={processSteps} hell />
 
             <Reveal className="panel">
