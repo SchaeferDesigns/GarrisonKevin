@@ -40,49 +40,72 @@ Sobald dort Text steht, wird er automatisch gerendert. Formatierung:
 - Überschriften: `#####Überschrift#####`
 - URLs und E-Mail-Adressen werden automatisch verlinkt
 
-### Domain setzen
+### Livegang
 
-Für Canonical-URLs, Sitemap und JSON-LD wird `NEXT_PUBLIC_SITE_URL` verwendet
-(Fallback: `https://kevin-garrison.de`):
+Alle Schalter stehen in **`site.config.mjs`** im Hauptverzeichnis. Das ist die
+einzige Datei, die dafür angefasst werden muss:
 
-```bash
-NEXT_PUBLIC_SITE_URL=https://ihre-domain.de npm run build
+```js
+export const seite = {
+  domain: 'https://kevin-garrison.de',  // echte Adresse, ohne Schrägstrich am Ende
+  unterordner: '',                      // nur bei Ablage in einem Unterordner
+  statischeDateien: true,               // true = reine HTML-Dateien in "out"
+};
 ```
+
+Die eingetragene Domain zieht durch die ganze Seite: Canonical-Adressen,
+Sitemap, `robots.txt`, die strukturierten Daten für Google und die
+Vorschaubilder beim Teilen. Solange das Feld leer ist, wird die Seite
+automatisch für Suchmaschinen gesperrt – eine halbfertige Adresse soll nicht in
+den Index geraten. Mit eingetragener Domain fällt die Sperre von selbst weg.
+
+Umgebungsvariablen (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_BASE_PATH`,
+`NEXT_OUTPUT`, `NEXT_PUBLIC_NOINDEX`) haben weiterhin Vorrang. Nur deshalb kann
+der Workflow für die Testumgebung eigene Werte setzen, ohne eine Datei im
+Projekt zu ändern.
 
 ## Deployment
 
-### GitHub Pages (Testumgebung)
+### Auf normalem Webspace (der Regelfall)
 
-`.github/workflows/deploy.yml` baut bei jedem Push einen statischen Export und
-veröffentlicht ihn auf GitHub Pages.
+Es wird kein Node.js auf dem Server gebraucht. Gebaut wird auf dem eigenen
+Rechner, hochgeladen werden fertige Dateien.
+
+```bash
+npm install     # nur beim ersten Mal
+npm run build
+```
+
+Danach liegt im Ordner **`out`** die vollständige Seite. Dessen *Inhalt* kommt
+per FTP in das Web-Verzeichnis des Anbieters (je nach Hoster `htdocs`,
+`public_html` oder `www`) – nicht der Ordner selbst, sondern das, was darin
+liegt.
+
+Weil die Seite Verzeichnisse mit `index.html` erzeugt, funktionieren alle
+Unterseiten ohne Umschreibungsregeln. Eine `.htaccess` ist nicht nötig.
+
+Bei jeder inhaltlichen Änderung: erneut `npm run build`, `out` neu hochladen.
+
+### Auf einem Anbieter mit Node.js
+
+In `site.config.mjs` `statischeDateien: false` setzen, dann `npm run build` und
+`npm run start`. In dieser Betriebsart setzt die Seite zusätzlich eigene
+Sicherheits-Header, die beim statischen Export nicht möglich sind.
+
+### GitHub Pages (nur noch Testumgebung)
+
+`.github/workflows/deploy.yml` baut bei jedem Push einen Export und
+veröffentlicht ihn unter `https://<owner>.github.io/<repo>/`. Das dient der
+Abstimmung während der Entwicklung; die Seite läuft dort nicht im Wirkbetrieb.
+Diese Fassung wird nicht indexiert, solange die Repository-Variable
+`SITE_DOMAIN` leer ist.
 
 **Einmalig nötig:** **Repository → Settings → Pages → Source: „GitHub Actions"**.
 Der Workflow versucht das zwar selbst, darf es aber nicht: Das Erstellen der
 Pages-Site verlangt Administrationsrechte, die der Workflow-Token nicht hat.
-Solange der Schalter nicht gesetzt ist, läuft der Build durch und nur der
-Deploy-Schritt bricht mit 404 ab. Danach genügt ein erneuter Lauf
-(„Re-run jobs" oder der nächste Push).
 
-Die Adresse lautet dann `https://<owner>.github.io/<repo>/`.
-
-Der Workflow setzt drei Umgebungsvariablen:
-
-| Variable | Zweck |
-| --- | --- |
-| `NEXT_OUTPUT=export` | statischer Export statt Server-Build |
-| `NEXT_PUBLIC_BASE_PATH` | Unterpfad, unter dem Pages ausliefert |
-| `NEXT_PUBLIC_NOINDEX=true` | Testadresse wird nicht indexiert |
-
-
-### Echte Domain
-
-Sobald die richtige Domain steht:
-
-1. `NEXT_PUBLIC_NOINDEX` im Workflow entfernen, damit die Seite indexiert wird
-2. `NEXT_PUBLIC_SITE_URL` auf die echte Domain setzen
-3. Bei eigener Domain auf Pages entfällt `NEXT_PUBLIC_BASE_PATH`
-4. Auf einem Host mit Node.js entfällt `NEXT_OUTPUT` – dann greifen zusätzlich
-   die Sicherheits-Header aus `next.config.mjs`
+Wird die Testumgebung nicht mehr gebraucht, kann `.github/workflows/deploy.yml`
+ersatzlos gelöscht werden. Auf den Rest des Projekts hat das keine Auswirkung.
 
 ## Datenschutz
 

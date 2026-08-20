@@ -35,7 +35,11 @@ export const business = {
    * NEXT_PUBLIC_SITE_URL; im Deploy steht dort bereits die Testadresse.
    * Vor dem Livegang die richtige Domain dort eintragen.
    */
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kevin-garrison.example',
+  /* Kommt aus site.config.mjs. Ist dort nichts eingetragen, steht hier eine
+     reservierte Beispieladresse – die kann niemandem gehören und führt daher
+     auch nicht versehentlich auf eine fremde Seite. */
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, '') || 'https://kevin-garrison.example',
   serviceRadiusKm: 20,
   serviceAreaLabel: 'Aalen und Umgebung',
   vatNote: 'Preise ohne USt. gemäß Kleinunternehmerregelung § 19 UStG.',
