@@ -41,17 +41,26 @@ jobs:
       - name: Abhängigkeiten installieren
         run: npm ci
 
+      # Der gesamte Livegang hängt an einer einzigen Repository-Variablen:
+      # Settings → Secrets and variables → Actions → Variables → SITE_DOMAIN.
+      # Ist sie leer, läuft die Seite auf der Testadresse von GitHub Pages,
+      # unter /<repo> und mit Indexierungssperre. Steht die echte Domain darin,
+      # liegt die Seite in der Wurzel, trägt ihre eigenen Adressen und darf in
+      # den Index. Am Code ist dafür nichts zu ändern.
       - name: Statischen Export bauen
         env:
           NEXT_OUTPUT: export
-          # GitHub Pages liefert das Projekt unter /<repo> aus.
-          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
-          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-          # Testdomain nicht indexieren lassen – vor dem Livegang auf der echten Domain entfernen.
-          NEXT_PUBLIC_NOINDEX: 'true'
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.SITE_DOMAIN == '' && format('/{0}', github.event.repository.name) || '' }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_DOMAIN != '' && format('https://{0}', vars.SITE_DOMAIN) || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+          NEXT_PUBLIC_NOINDEX: ${{ vars.SITE_DOMAIN == '' && 'true' || '' }}
         run: |
           npm run build
           touch out/.nojekyll
+
+      # GitHub Pages erkennt die eigene Domain an dieser Datei im Auslieferungsordner.
+      - name: Eigene Domain hinterlegen
+        if: vars.SITE_DOMAIN != ''
+        run: echo "${{ vars.SITE_DOMAIN }}" > out/CNAME
 
       - uses: actions/upload-pages-artifact@v3
         with:
