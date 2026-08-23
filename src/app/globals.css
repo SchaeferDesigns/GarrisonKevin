@@ -115,9 +115,17 @@ html {
   scroll-padding-top: calc(var(--nav-h) + 28px);
 }
 
+/* Der Cremeton liegt bewusst NICHT auf body, sondern auf dem Inhaltsbereich.
+   Quer gehaltene Geräte mit Aussparung blenden links und rechts einen
+   Sicherheitsstreifen ein und füllen ihn mit der Hintergrundfarbe der Seite.
+   Lag dort Creme, standen zwei weiße Balken neben dem dunklen Inhalt. Jetzt
+   trägt body dieselbe dunkle Farbe wie das Wurzelelement – der Streifen fällt
+   dadurch nicht mehr auf, egal welche der beiden Farben das Gerät heranzieht. */
 body {
   min-height: 100dvh;
-  background-color: var(--cream);
+  display: flex;
+  flex-direction: column;
+  background-color: #0a1712;
   color: var(--ink);
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: clamp(1rem, 0.97rem + 0.2vw, 1.075rem);
@@ -127,6 +135,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* Trägt die helle Fläche der Seite. Kopf- und Fußbereich bringen ihre eigene
+   dunkle Farbe mit, deshalb reicht der Inhaltsbereich. flex-grow füllt kurze
+   Seiten, damit unter dem Inhalt kein dunkler Rest stehen bleibt. */
+main {
+  flex: 1 0 auto;
+  background-color: var(--cream);
 }
 
 img,
