@@ -22,7 +22,7 @@ export const business = {
   phone: '0177 5436313',
   phoneE164: '+491775436313',
   whatsappNumber: '491775436313',
-  email: 'kevingarrison@outlook.de',
+  email: 'kontakt@garrison-bodentechnik.de',
   adId: '3463842102',
   /** Wird für Canonical-URLs, Sitemap und JSON-LD verwendet. */
   /**

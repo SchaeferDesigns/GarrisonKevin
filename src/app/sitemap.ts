@@ -21,15 +21,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/agb', priority: 0.2, changeFrequency: 'yearly' },
   ];
 
+  /* Die Seite liefert unter Adressen mit Schrägstrich am Ende aus, und genau
+     die stehen auch in den Canonical-Angaben. Ohne den Schrägstrich meldete
+     die Sitemap Adressen, die auf eine andere weiterleiten – Google führt das
+     als „Seite mit Weiterleitung" und krault zweimal für nichts. */
+  const mitSchraegstrich = (pfad: string) => (pfad === '/' ? '/' : `${pfad}/`);
+
   return [
     ...staticRoutes.map((route) => ({
-      url: `${base}${route.path}`,
+      url: `${base}${mitSchraegstrich(route.path)}`,
       lastModified: now,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),
     ...services.map((service) => ({
-      url: `${base}/leistungen/${service.slug}`,
+      url: `${base}/leistungen/${service.slug}/`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
       priority: 0.8,

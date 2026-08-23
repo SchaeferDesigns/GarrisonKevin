@@ -10,21 +10,21 @@ export const seite = {
    * Die Adresse, unter der die Seite später erreichbar ist.
    * Mit https:// davor, ohne Schrägstrich am Ende.
    *
-   *   Beispiel:  domain: 'https://kevin-garrison.de',
+   *   Beispiel:  domain: 'https://beispiel-domain.de',
    *
    * Solange hier nichts steht, gilt die Seite als Testfassung: Suchmaschinen
    * werden ausgesperrt, damit eine halbfertige Adresse nicht bei Google landet.
    * Sobald die echte Domain hier steht, wird die Sperre automatisch aufgehoben
    * und Sitemap, Canonical-Adressen und die Daten für Google zeigen dorthin.
    */
-  domain: '',
+  domain: 'https://garrison-bodentechnik.de',
 
   /**
    * Nur ausfüllen, wenn die Seite NICHT direkt unter der Domain liegt,
    * sondern in einem Unterordner.
    *
-   *   kevin-garrison.de           -> hier nichts eintragen
-   *   kevin-garrison.de/website   -> unterordner: '/website',
+   *   beispiel-domain.de           -> hier nichts eintragen
+   *   beispiel-domain.de/website   -> unterordner: '/website',
    */
   unterordner: '',
 

@@ -47,7 +47,7 @@ einzige Datei, die dafür angefasst werden muss:
 
 ```js
 export const seite = {
-  domain: 'https://kevin-garrison.de',  // echte Adresse, ohne Schrägstrich am Ende
+  domain: 'https://garrison-bodentechnik.de',  // echte Adresse, ohne Schrägstrich am Ende
   unterordner: '',                      // nur bei Ablage in einem Unterordner
   statischeDateien: true,               // true = reine HTML-Dateien in "out"
 };
